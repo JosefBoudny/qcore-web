@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-SCANNER — Post-Quantum Vulnerability Audit | Q-CORE SYSTEMS</title>
+    <meta name="description" content="Free PQC vulnerability scanner. Analyze your server's TLS configuration and quantum readiness. Built by Q-CORE SYSTEMS.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #07080c;
+            --bg-panel: #0c0e14;
+            --bg-elevated: #11141d;
+            --border: #1a1f2e;
+            --border-glow: #00e5ff22;
+            --text: #c8cdd8;
+            --text-dim: #5a6178;
+            --text-bright: #eaecf2;
+            --cyan: #00e5ff;
+            --cyan-dim: #00e5ff44;
+            --green: #00ff9d;
+            --green-dim: #00ff9d33;
+            --red: #ff3b5c;
+            --red-dim: #ff3b5c33;
+            --orange: #ff9f1c;
+            --orange-dim: #ff9f1c33;
+            --yellow: #ffd60a;
+            --purple: #a855f7;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-display: 'Outfit', sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-mono);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, #00e5ff06 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, #a855f708 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page-wrap { position: relative; z-index: 1; }
+
+        /* NAV */
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 2rem;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg)ee;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--cyan);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--cyan);
+            font-family: var(--font-mono);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-logo-icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--cyan-dim), transparent);
+        }
+
+        .nav-brand {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--text-bright);
+            letter-spacing: 0.02em;
+        }
+
+        .nav-brand span { color: var(--cyan); }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--cyan); }
+
+        .nav-github {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .nav-github:hover { border-color: var(--cyan); color: var(--cyan) !important; }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border: 1px solid var(--cyan-dim);
+            border-radius: 100px;
+            font-size: 0.7rem;
+            color: var(--cyan);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            background: var(--cyan-dim);
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            color: var(--text-bright);
+            line-height: 1.1;
+            margin-bottom: 1.25rem;
+            animation: fadeInDown 0.6s ease-out 0.1s both;
+        }
+
+        .hero h1 .accent { color: var(--cyan); }
+
+        .hero p {
+            font-size: 1rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            max-width: 560px;
+            margin: 0 auto 2.5rem;
+            font-family: var(--font-display);
+            font-weight: 300;
+            animation: fadeInDown 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* SCAN BOX */
+        .scan-box {
+            max-width: 620px;
+            margin: 0 auto 1.5rem;
+            animation: fadeInDown 0.6s ease-out 0.3s both;
+        }
+
+        .scan-input-wrap {
+            display: flex;
+            gap: 0;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-panel);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .scan-input-wrap:focus-within {
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px var(--cyan-dim), 0 0 30px var(--cyan-dim);
+        }
+
+        .scan-prefix {
+            display: flex;
+            align-items: center;
+            padding: 0 0 0 1.25rem;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .scan-input {
+            flex: 1;
+            padding: 1rem 0.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-bright);
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .scan-input::placeholder { color: var(--text-dim); opacity: 0.5; }
+
+        .scan-btn {
+            padding: 1rem 1.75rem;
+            background: var(--cyan);
+            color: var(--bg);
+            border: none;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            white-space: nowrap;
+        }
+
+        .scan-btn:hover { background: #33edff; }
+        .scan-btn:active { transform: scale(0.97); }
+        .scan-btn:disabled { background: var(--text-dim); cursor: not-allowed; }
+
+        .scan-hint {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-top: 0.75rem;
+            opacity: 0.6;
+        }
+
+        /* SCANNING ANIMATION */
+        .scan-progress {
+            display: none;
+            max-width: 620px;
+            margin: 0 auto 2rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-panel);
+        }
+
+        .scan-progress.active { display: block; animation: fadeIn 0.3s ease-out; }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .progress-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: var(--cyan);
+            letter-spacing: 0.05em;
+        }
+
+        .progress-log {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        .progress-log div { animation: fadeIn 0.3s ease-out; }
+        .progress-log .done { color: var(--green); }
+        .progress-log .active-step { color: var(--cyan); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ERROR */
+        .scan-error {
+            display: none;
+            max-width: 620px;
+            margin: 0 auto 2rem;
+            padding: 1.25rem;
+            border: 1px solid var(--red-dim);
+            border-radius: 12px;
+            background: #ff3b5c0a;
+            color: var(--red);
+            font-size: 0.85rem;
+        }
+
+        .scan-error.active { display: block; animation: fadeIn 0.3s; }
+
+        /* RESULTS */
+        .results {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .results.active { display: block; animation: fadeIn 0.5s ease-out; }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .results-target {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-bright);
+        }
+
+        .results-target span { color: var(--text-dim); font-weight: 300; font-size: 0.9rem; }
+
+        /* STATUS BADGE */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-SAFE { background: var(--green-dim); color: var(--green); border: 1px solid #00ff9d44; }
+        .status-SAFE::before { background: var(--green); }
+        .status-LOW_RISK { background: #ffd60a1a; color: var(--yellow); border: 1px solid #ffd60a33; }
+        .status-LOW_RISK::before { background: var(--yellow); }
+        .status-MEDIUM_RISK { background: var(--orange-dim); color: var(--orange); border: 1px solid #ff9f1c44; }
+        .status-MEDIUM_RISK::before { background: var(--orange); }
+        .status-VULNERABLE { background: var(--red-dim); color: var(--red); border: 1px solid #ff3b5c44; }
+        .status-VULNERABLE::before { background: var(--red); }
+        .status-CRITICAL { background: var(--red-dim); color: var(--red); border: 1px solid #ff3b5c44; }
+        .status-CRITICAL::before { background: var(--red); animation: pulse-dot 1s infinite; }
+        .status-ERROR { background: #5a617822; color: var(--text-dim); border: 1px solid var(--border); }
+        .status-ERROR::before { background: var(--text-dim); }
+
+        /* SCORE RING */
+        .score-section {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--bg-panel);
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .score-ring-wrap {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            flex-shrink: 0;
+        }
+
+        .score-ring-wrap svg { transform: rotate(-90deg); }
+
+        .score-ring-bg { fill: none; stroke: var(--border); stroke-width: 8; }
+
+        .score-ring-fill {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.2s ease-out, stroke 0.5s;
+        }
+
+        .score-value {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+        }
+
+        .score-number { font-size: 2.25rem; font-weight: 700; line-height: 1; }
+
+        .score-label {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        .score-details { flex: 1; min-width: 200px; }
+
+        .score-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8rem;
+        }
+
+        .score-detail-row:last-child { border: none; }
+        .score-detail-key { color: var(--text-dim); }
+        .score-detail-val { color: var(--text-bright); font-weight: 500; }
+
+        /* CARD GRID */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-panel);
+            transition: border-color 0.3s;
+        }
+
+        .card:hover { border-color: #2a3048; }
+
+        .card-label {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+        }
+
+        .card-value {
+            font-size: 1rem;
+            color: var(--text-bright);
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        .card-sub { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.35rem; }
+
+        /* QUANTUM RISKS TABLE */
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-bright);
+            margin: 2.5rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 3px;
+            height: 1.1em;
+            background: var(--cyan);
+            border-radius: 2px;
+        }
+
+        .risk-table {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-panel);
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .risk-table th {
+            text-align: left;
+            padding: 0.85rem 1.25rem;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-elevated);
+            font-weight: 500;
+        }
+
+        .risk-table td {
+            padding: 0.85rem 1.25rem;
+            font-size: 0.8rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .risk-table tr:last-child td { border-bottom: none; }
+
+        .risk-level {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .risk-SAFE { background: var(--green-dim); color: var(--green); }
+        .risk-LOW { background: #ffd60a1a; color: var(--yellow); }
+        .risk-MEDIUM { background: var(--orange-dim); color: var(--orange); }
+        .risk-HIGH { background: var(--red-dim); color: var(--red); }
+        .risk-CRITICAL { background: var(--red-dim); color: var(--red); }
+
+        .risk-detail { color: var(--text-dim); font-size: 0.75rem; margin-top: 0.3rem; }
+
+        /* RECOMMENDATIONS */
+        .recs-list {
+            list-style: none;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-panel);
+            margin-bottom: 1.5rem;
+        }
+
+        .recs-list li {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.82rem;
+            display: flex;
+            gap: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .recs-list li:last-child { border: none; }
+
+        .rec-num { color: var(--cyan); font-weight: 600; flex-shrink: 0; width: 1.5rem; }
+
+        /* PROTOCOLS */
+        .proto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .proto-item {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-panel);
+            text-align: center;
+        }
+
+        .proto-name { font-size: 0.85rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.4rem; }
+
+        .proto-status { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em; }
+
+        .proto-enabled { color: var(--green); }
+        .proto-disabled { color: var(--text-dim); }
+        .proto-critical { color: var(--red); }
+
+        /* HTTP HEADERS */
+        .headers-bar {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-panel);
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .headers-score { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; }
+        .headers-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+        .headers-missing { font-size: 0.8rem; color: var(--orange); }
+
+        /* CTA */
+        .cta-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem 5rem;
+        }
+
+        .cta-card {
+            border: 1px solid var(--cyan-dim);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            background: linear-gradient(135deg, #00e5ff06, #a855f706);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+        }
+
+        .cta-card h2 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-bright);
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-card p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-family: var(--font-display);
+            margin-bottom: 2rem;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 2rem;
+            background: var(--cyan);
+            color: var(--bg);
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-primary:hover { background: #33edff; transform: translateY(-1px); }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 2rem;
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+
+        /* FOOTER */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        .footer a { color: var(--text-dim); text-decoration: none; }
+        .footer a:hover { color: var(--cyan); }
+
+        /* FEATURES */
+        .features {
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .feature {
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-panel);
+        }
+
+        .feature-icon { font-size: 1.3rem; margin-bottom: 0.75rem; }
+
+        .feature h3 {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-bright);
+            margin-bottom: 0.4rem;
+        }
+
+        .feature p {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+            font-family: var(--font-display);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav { padding: 1rem; }
+            .nav-links { display: none; }
+            .hero { padding: 3rem 1.25rem 2rem; }
+            .features { grid-template-columns: 1fr; padding: 0 1.25rem; }
+            .results { padding: 0 1.25rem 3rem; }
+            .cta-section { padding: 0 1.25rem 3rem; }
+            .score-section { flex-direction: column; align-items: center; text-align: center; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .risk-table { font-size: 0.75rem; }
+            .risk-table th, .risk-table td { padding: 0.65rem 0.75rem; }
+            .scan-btn { padding: 1rem 1.25rem; font-size: 0.7rem; }
+        }
+
+        @media (max-width: 480px) {
+            .scan-prefix { display: none; }
+            .proto-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+
+        <!-- NAV -->
+        <nav class="nav">
+            <a href="/" class="nav-logo">
+                <div class="nav-logo-icon">Q</div>
+                <div class="nav-brand">Q-CORE <span>SYSTEMS</span></div>
+            </a>
+            <div class="nav-links">
+                <a href="#scanner">Scanner</a>
+                <a href="#features">Features</a>
+                <a href="#contact">Contact</a>
+                <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="nav-github">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+            </div>
+        </nav>
+
+        <!-- HERO -->
+        <section class="hero" id="scanner">
+            <div class="hero-badge">Q-SCANNER v2.0 — PQC Audit Engine</div>
+            <h1>Is your server ready for<br><span class="accent">quantum threats?</span></h1>
+            <p>Scan any domain to analyze TLS configuration, cipher suites, certificates,
+               and post-quantum cryptography readiness. Free, open-source, instant results.</p>
+
+            <div class="scan-box">
+                <div class="scan-input-wrap">
+                    <span class="scan-prefix">https://</span>
+                    <input type="text" class="scan-input" id="domainInput"
+                           placeholder="example.com" autocomplete="off" spellcheck="false">
+                    <button class="scan-btn" id="scanBtn" onclick="startScan()">Scan</button>
+                </div>
+                <div class="scan-hint">Try: google.com · github.com · cloudflare.com</div>
+            </div>
+
+            <div class="scan-progress" id="scanProgress">
+                <div class="progress-header">
+                    <div class="progress-spinner"></div>
+                    <div class="progress-text">Scanning target...</div>
+                </div>
+                <div class="progress-log" id="progressLog"></div>
+            </div>
+
+            <div class="scan-error" id="scanError"></div>
+        </section>
+
+        <!-- FEATURES -->
+        <section class="features" id="features">
+            <div class="feature">
+                <div class="feature-icon">⚛</div>
+                <h3>Quantum Risk Analysis</h3>
+                <p>Evaluates Shor's &amp; Grover's algorithm impact on your key exchange, encryption and certificates.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔐</div>
+                <h3>TLS Deep Scan</h3>
+                <p>Probes all TLS versions, cipher suites, certificate chain, and HTTP security headers.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🛡</div>
+                <h3>PQC Readiness</h3>
+                <p>Detects ML-KEM (Kyber), ML-DSA (Dilithium) and other NIST post-quantum standards.</p>
+            </div>
+        </section>
+
+        <!-- RESULTS -->
+        <div class="results" id="results"></div>
+
+        <!-- CONTACT / CTA -->
+        <section class="cta-section" id="contact">
+            <div class="cta-card">
+                <h2>Need quantum-safe migration?</h2>
+                <p>Q-CORE SYSTEMS helps organizations prepare for Y2Q.
+                   From audit to implementation — TLS hardening, PQC key exchange, certificate migration.</p>
+                <div class="cta-buttons">
+                    <a href="mailto:info@qcore.systems" class="btn-primary">
+                        ✉ info@qcore.systems
+                    </a>
+                    <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="btn-secondary">
+                        View on GitHub →
+                    </a>
+                    <a href="https://linkedin.com/in/josef-boudný-a274aa3aa/" target="_blank" rel="noopener" class="btn-secondary">
+                        in — LinkedIn
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            © 2024–2025 Q-CORE SYSTEMS · Built by <a href="https://linkedin.com/in/josef-boudný-a274aa3aa/" target="_blank" rel="noopener">Josef Boudny</a>
+            · <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener">Open Source</a>
+        </footer>
+
+    </div>
+
+    <script>
+    const domainInput = document.getElementById('domainInput');
+    const scanBtn = document.getElementById('scanBtn');
+    const progressEl = document.getElementById('scanProgress');
+    const progressLog = document.getElementById('progressLog');
+    const errorEl = document.getElementById('scanError');
+    const resultsEl = document.getElementById('results');
+
+    domainInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') startScan();
+    });
+
+    const SCAN_STEPS = [
+        'Resolving DNS...',
+        'Establishing TLS connection...',
+        'Analyzing cipher suite...',
+        'Inspecting certificate chain...',
+        'Probing supported TLS versions...',
+        'Checking HTTP security headers...',
+        'Evaluating quantum risks...',
+        'Generating report...',
+    ];
+
+    async function startScan() {
+        const domain = domainInput.value.trim();
+        if (!domain) { domainInput.focus(); return; }
+
+        errorEl.classList.remove('active');
+        resultsEl.classList.remove('active');
+        resultsEl.innerHTML = '';
+        progressEl.classList.add('active');
+        progressLog.innerHTML = '';
+        scanBtn.disabled = true;
+        scanBtn.textContent = 'Scanning...';
+
+        let stepIndex = 0;
+        const stepInterval = setInterval(() => {
+            if (stepIndex < SCAN_STEPS.length) {
+                const prev = progressLog.querySelector('.active-step');
+                if (prev) { prev.classList.remove('active-step'); prev.classList.add('done'); prev.textContent = '✓ ' + prev.textContent.replace('→ ', ''); }
+                const div = document.createElement('div');
+                div.className = 'active-step';
+                div.textContent = '→ ' + SCAN_STEPS[stepIndex];
+                progressLog.appendChild(div);
+                stepIndex++;
+            }
+        }, 800);
+
+        try {
+            const resp = await fetch('/api/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ domain }),
+            });
+
+            clearInterval(stepInterval);
+            const data = await resp.json();
+
+            if (!resp.ok) throw new Error(data.error || 'Scan failed');
+
+            const prev = progressLog.querySelector('.active-step');
+            if (prev) { prev.classList.remove('active-step'); prev.classList.add('done'); prev.textContent = '✓ ' + prev.textContent.replace('→ ', ''); }
+
+            await new Promise(r => setTimeout(r, 400));
+            progressEl.classList.remove('active');
+            renderResults(data);
+
+        } catch (err) {
+            clearInterval(stepInterval);
+            progressEl.classList.remove('active');
+            errorEl.textContent = '✕ ' + (err.message || 'Connection failed. Please try again.');
+            errorEl.classList.add('active');
+        } finally {
+            scanBtn.disabled = false;
+            scanBtn.textContent = 'Scan';
+        }
+    }
+
+    function scoreColor(score) {
+        if (score <= 20) return 'var(--green)';
+        if (score <= 40) return 'var(--yellow)';
+        if (score <= 65) return 'var(--orange)';
+        return 'var(--red)';
+    }
+
+    function riskClass(level) { return 'risk-' + (level || 'MEDIUM').toUpperCase(); }
+
+    function statusLabel(status) {
+        const map = {
+            'SAFE': 'Quantum Safe', 'LOW_RISK': 'Low Risk', 'MEDIUM_RISK': 'Medium Risk',
+            'VULNERABLE': 'Vulnerable', 'CRITICAL': 'Critical', 'ERROR': 'Error',
+        };
+        return map[status] || status;
+    }
+
+    function renderResults(d) {
+        const circumference = 2 * Math.PI * 54;
+        const offset = circumference - (d.overall_risk_score / 100) * circumference;
+        const color = scoreColor(d.overall_risk_score);
+
+        let html = `
+        <div class="results-header">
+            <div class="results-target">
+                ${esc(d.hostname)}
+                <span> · ${esc(d.ip_address)}:${d.port}</span>
+            </div>
+            <div class="status-badge status-${d.overall_pqc_status}">
+                ${statusLabel(d.overall_pqc_status)}
+            </div>
+        </div>
+
+        <div class="score-section">
+            <div class="score-ring-wrap">
+                <svg width="130" height="130" viewBox="0 0 130 130">
+                    <circle class="score-ring-bg" cx="65" cy="65" r="54"/>
+                    <circle class="score-ring-fill" cx="65" cy="65" r="54"
+                            stroke="${color}"
+                            stroke-dasharray="${circumference}"
+                            stroke-dashoffset="${offset}"/>
+                </svg>
+                <div class="score-value">
+                    <div class="score-number" style="color:${color}">${d.overall_risk_score}</div>
+                    <div class="score-label">Risk Score</div>
+                </div>
+            </div>
+            <div class="score-details">
+                <div class="score-detail-row">
+                    <span class="score-detail-key">TLS Version</span>
+                    <span class="score-detail-val">${esc(d.tls_version)}</span>
+                </div>
+                <div class="score-detail-row">
+                    <span class="score-detail-key">Cipher Suite</span>
+                    <span class="score-detail-val">${esc(d.cipher.name)}</span>
+                </div>
+                <div class="score-detail-row">
+                    <span class="score-detail-key">Key Exchange</span>
+                    <span class="score-detail-val">${esc(d.cipher.key_exchange)}</span>
+                </div>
+                <div class="score-detail-row">
+                    <span class="score-detail-key">Encryption</span>
+                    <span class="score-detail-val">${esc(d.cipher.encryption)} (${d.cipher.encryption_bits}-bit)</span>
+                </div>
+                <div class="score-detail-row">
+                    <span class="score-detail-key">PQC Key Exchange</span>
+                    <span class="score-detail-val" style="color: ${d.cipher.is_pqc ? 'var(--green)' : 'var(--red)'}">
+                        ${d.cipher.is_pqc ? '✓ YES' : '✕ NO'}
+                    </span>
+                </div>
+            </div>
+        </div>`;
+
+        const cert = d.certificate;
+        html += `
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-label">Certificate Subject</div>
+                <div class="card-value">${esc(cert.subject)}</div>
+                <div class="card-sub">Issuer: ${esc(cert.issuer)}</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Key Type</div>
+                <div class="card-value">${esc(cert.key_type)} (${cert.key_size}-bit)</div>
+                <div class="card-sub">Sig: ${esc(cert.signature_algorithm)}</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Expiry</div>
+                <div class="card-value" style="color: ${cert.is_expired ? 'var(--red)' : cert.days_until_expiry < 30 ? 'var(--orange)' : 'var(--text-bright)'}">
+                    ${cert.is_expired ? 'EXPIRED' : cert.days_until_expiry + ' days'}
+                </div>
+                <div class="card-sub">${esc(cert.not_after)}</div>
+            </div>
+        </div>`;
+
+        if (d.quantum_risks && d.quantum_risks.length > 0) {
+            html += `<div class="section-title">Quantum Risk Assessment</div>
+            <table class="risk-table">
+                <thead><tr><th>Component</th><th>Level</th><th>Threat</th><th>Details</th></tr></thead><tbody>`;
+            for (const r of d.quantum_risks) {
+                html += `<tr>
+                    <td style="color:var(--text-bright);font-weight:500">${esc(r.component)}</td>
+                    <td><span class="risk-level ${riskClass(r.level)}">${esc(r.level)}</span></td>
+                    <td>${esc(r.threat)}</td>
+                    <td><div>${esc(r.detail)}</div><div class="risk-detail">→ ${esc(r.recommendation)}</div></td>
+                </tr>`;
+            }
+            html += '</tbody></table>';
+        }
+
+        if (d.supported_protocols && d.supported_protocols.length > 0) {
+            html += `<div class="section-title">Supported TLS Versions</div><div class="proto-grid">`;
+            for (const p of d.supported_protocols) {
+                const cls = p.supported ? (p.status === 'CRITICAL' ? 'proto-critical' : 'proto-enabled') : 'proto-disabled';
+                const label = p.supported ? (p.status === 'CRITICAL' ? '⚠ ENABLED' : '✓ Enabled') : '— Disabled';
+                html += `<div class="proto-item"><div class="proto-name">${esc(p.protocol)}</div><div class="proto-status ${cls}">${label}</div></div>`;
+            }
+            html += '</div>';
+        }
+
+        if (d.http_headers) {
+            const h = d.http_headers;
+            const hColor = h.score >= 80 ? 'var(--green)' : h.score >= 50 ? 'var(--orange)' : 'var(--red)';
+            html += `<div class="section-title">HTTP Security Headers</div>
+            <div class="headers-bar">
+                <div><div class="headers-score" style="color:${hColor}">${h.score}/100</div><div class="headers-label">Header Score</div></div>`;
+            if (h.missing_headers && h.missing_headers.length > 0) {
+                html += `<div class="headers-missing">Missing: ${h.missing_headers.map(esc).join(', ')}</div>`;
+            }
+            html += '</div>';
+        }
+
+        if (d.recommendations && d.recommendations.length > 0) {
+            html += `<div class="section-title">Recommendations</div><ul class="recs-list">`;
+            d.recommendations.forEach((rec, i) => { html += `<li><span class="rec-num">${i + 1}.</span> ${esc(rec)}</li>`; });
+            html += '</ul>';
+        }
+
+        if (d.chain_issues && d.chain_issues.length > 0) {
+            html += `<div class="section-title">⚠ Warnings</div><ul class="recs-list">`;
+            d.chain_issues.forEach(issue => { html += `<li><span class="rec-num" style="color:var(--orange)">!</span> ${esc(issue)}</li>`; });
+            html += '</ul>';
+        }
+
+        if (d.errors && d.errors.length > 0) {
+            html += `<div class="section-title" style="color:var(--red)">Errors</div><ul class="recs-list">`;
+            d.errors.forEach(err => { html += `<li><span class="rec-num" style="color:var(--red)">✕</span> ${esc(err)}</li>`; });
+            html += '</ul>';
+        }
+
+        resultsEl.innerHTML = html;
+        resultsEl.classList.add('active');
+        resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function esc(str) {
+        if (str === null || str === undefined) return '';
+        const div = document.createElement('div');
+        div.textContent = String(str);
+        return div.innerHTML;
+    }
+    </script>
+</body>
+</html>
