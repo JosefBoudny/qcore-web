@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,6 @@
             --bg-panel: #0c0e14;
             --bg-elevated: #11141d;
             --border: #1a1f2e;
-            --border-glow: #00e5ff22;
             --text: #c8cdd8;
             --text-dim: #5a6178;
             --text-bright: #eaecf2;
@@ -33,7 +32,6 @@
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { scroll-behavior: smooth; }
 
         body {
@@ -84,7 +82,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: var(--bg)ee;
+            background: rgba(7,8,12,0.92);
         }
 
         .nav-logo {
@@ -94,27 +92,9 @@
             text-decoration: none;
         }
 
-        .nav-logo-icon {
+        .nav-logo svg {
             width: 36px;
             height: 36px;
-            border: 2px solid var(--cyan);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: var(--cyan);
-            font-family: var(--font-mono);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-logo-icon::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--cyan-dim), transparent);
         }
 
         .nav-brand {
@@ -306,47 +286,25 @@
             border-radius: 12px;
             background: var(--bg-panel);
         }
-
         .scan-progress.active { display: block; animation: fadeIn 0.3s ease-out; }
 
-        .progress-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
+        .progress-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
 
         .progress-spinner {
-            width: 18px;
-            height: 18px;
+            width: 18px; height: 18px;
             border: 2px solid var(--border);
             border-top: 2px solid var(--cyan);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .progress-text {
-            font-size: 0.8rem;
-            color: var(--cyan);
-            letter-spacing: 0.05em;
-        }
-
-        .progress-log {
-            font-size: 0.72rem;
-            color: var(--text-dim);
-            line-height: 1.8;
-        }
-
+        .progress-text { font-size: 0.8rem; color: var(--cyan); letter-spacing: 0.05em; }
+        .progress-log { font-size: 0.72rem; color: var(--text-dim); line-height: 1.8; }
         .progress-log div { animation: fadeIn 0.3s ease-out; }
         .progress-log .done { color: var(--green); }
         .progress-log .active-step { color: var(--cyan); }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* ERROR */
         .scan-error {
@@ -360,57 +318,27 @@
             color: var(--red);
             font-size: 0.85rem;
         }
-
         .scan-error.active { display: block; animation: fadeIn 0.3s; }
 
         /* RESULTS */
-        .results {
-            display: none;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 2rem 4rem;
-        }
-
+        .results { display: none; max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem; }
         .results.active { display: block; animation: fadeIn 0.5s ease-out; }
 
         .results-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
         }
 
-        .results-target {
-            font-family: var(--font-display);
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--text-bright);
-        }
-
+        .results-target { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: var(--text-bright); }
         .results-target span { color: var(--text-dim); font-weight: 300; font-size: 0.9rem; }
 
         /* STATUS BADGE */
         .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1.25rem;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.5rem 1.25rem; border-radius: 100px;
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
         }
-
-        .status-badge::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
+        .status-badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; }
         .status-SAFE { background: var(--green-dim); color: var(--green); border: 1px solid #00ff9d44; }
         .status-SAFE::before { background: var(--green); }
         .status-LOW_RISK { background: #ffd60a1a; color: var(--yellow); border: 1px solid #ffd60a33; }
@@ -426,375 +354,203 @@
 
         /* SCORE RING */
         .score-section {
-            display: flex;
-            align-items: center;
-            gap: 2.5rem;
-            padding: 2rem;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            background: var(--bg-panel);
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
+            display: flex; align-items: center; gap: 2.5rem; padding: 2rem;
+            border: 1px solid var(--border); border-radius: 16px;
+            background: var(--bg-panel); margin-bottom: 1.5rem; flex-wrap: wrap;
         }
-
-        .score-ring-wrap {
-            position: relative;
-            width: 130px;
-            height: 130px;
-            flex-shrink: 0;
-        }
-
+        .score-ring-wrap { position: relative; width: 130px; height: 130px; flex-shrink: 0; }
         .score-ring-wrap svg { transform: rotate(-90deg); }
-
         .score-ring-bg { fill: none; stroke: var(--border); stroke-width: 8; }
-
-        .score-ring-fill {
-            fill: none;
-            stroke-width: 8;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 1.2s ease-out, stroke 0.5s;
-        }
-
-        .score-value {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-display);
-        }
-
+        .score-ring-fill { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1.2s ease-out, stroke 0.5s; }
+        .score-value { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--font-display); }
         .score-number { font-size: 2.25rem; font-weight: 700; line-height: 1; }
-
-        .score-label {
-            font-size: 0.6rem;
-            color: var(--text-dim);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-top: 0.25rem;
-        }
-
+        .score-label { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.25rem; }
         .score-details { flex: 1; min-width: 200px; }
-
-        .score-detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.8rem;
-        }
-
+        .score-detail-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
         .score-detail-row:last-child { border: none; }
         .score-detail-key { color: var(--text-dim); }
         .score-detail-val { color: var(--text-bright); font-weight: 500; }
 
         /* CARD GRID */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .card {
-            padding: 1.5rem;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--bg-panel);
-            transition: border-color 0.3s;
-        }
-
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .card { padding: 1.5rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-panel); transition: border-color 0.3s; }
         .card:hover { border-color: #2a3048; }
-
-        .card-label {
-            font-size: 0.65rem;
-            color: var(--text-dim);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 0.6rem;
-        }
-
-        .card-value {
-            font-size: 1rem;
-            color: var(--text-bright);
-            font-weight: 500;
-            word-break: break-all;
-        }
-
+        .card-label { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem; }
+        .card-value { font-size: 1rem; color: var(--text-bright); font-weight: 500; word-break: break-all; }
         .card-sub { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.35rem; }
 
-        /* QUANTUM RISKS TABLE */
+        /* SECTION TITLE */
         .section-title {
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-bright);
-            margin: 2.5rem 0 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
+            color: var(--text-bright); margin: 2.5rem 0 1rem;
+            display: flex; align-items: center; gap: 0.5rem;
         }
+        .section-title::before { content: ''; width: 3px; height: 1.1em; background: var(--cyan); border-radius: 2px; }
 
-        .section-title::before {
-            content: '';
-            width: 3px;
-            height: 1.1em;
-            background: var(--cyan);
-            border-radius: 2px;
-        }
-
-        .risk-table {
-            width: 100%;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            background: var(--bg-panel);
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-bottom: 1.5rem;
-        }
-
-        .risk-table th {
-            text-align: left;
-            padding: 0.85rem 1.25rem;
-            font-size: 0.65rem;
-            color: var(--text-dim);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg-elevated);
-            font-weight: 500;
-        }
-
-        .risk-table td {
-            padding: 0.85rem 1.25rem;
-            font-size: 0.8rem;
-            border-bottom: 1px solid var(--border);
-            vertical-align: top;
-        }
-
+        /* RISK TABLE */
+        .risk-table { width: 100%; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg-panel); border-collapse: separate; border-spacing: 0; margin-bottom: 1.5rem; }
+        .risk-table th { text-align: left; padding: 0.85rem 1.25rem; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; border-bottom: 1px solid var(--border); background: var(--bg-elevated); font-weight: 500; }
+        .risk-table td { padding: 0.85rem 1.25rem; font-size: 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
         .risk-table tr:last-child td { border-bottom: none; }
-
-        .risk-level {
-            display: inline-block;
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-        }
-
+        .risk-level { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; }
         .risk-SAFE { background: var(--green-dim); color: var(--green); }
         .risk-LOW { background: #ffd60a1a; color: var(--yellow); }
         .risk-MEDIUM { background: var(--orange-dim); color: var(--orange); }
         .risk-HIGH { background: var(--red-dim); color: var(--red); }
         .risk-CRITICAL { background: var(--red-dim); color: var(--red); }
-
         .risk-detail { color: var(--text-dim); font-size: 0.75rem; margin-top: 0.3rem; }
 
-        /* RECOMMENDATIONS */
-        .recs-list {
-            list-style: none;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            background: var(--bg-panel);
-            margin-bottom: 1.5rem;
-        }
-
-        .recs-list li {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.82rem;
-            display: flex;
-            gap: 0.75rem;
-            line-height: 1.6;
-        }
-
+        /* RECS LIST */
+        .recs-list { list-style: none; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg-panel); margin-bottom: 1.5rem; }
+        .recs-list li { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.82rem; display: flex; gap: 0.75rem; line-height: 1.6; }
         .recs-list li:last-child { border: none; }
-
         .rec-num { color: var(--cyan); font-weight: 600; flex-shrink: 0; width: 1.5rem; }
 
         /* PROTOCOLS */
-        .proto-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .proto-item {
-            padding: 1rem;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            background: var(--bg-panel);
-            text-align: center;
-        }
-
+        .proto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+        .proto-item { padding: 1rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-panel); text-align: center; }
         .proto-name { font-size: 0.85rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.4rem; }
-
         .proto-status { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em; }
-
         .proto-enabled { color: var(--green); }
         .proto-disabled { color: var(--text-dim); }
         .proto-critical { color: var(--red); }
 
         /* HTTP HEADERS */
-        .headers-bar {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-            padding: 1.25rem 1.5rem;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--bg-panel);
-            margin-bottom: 0.75rem;
-            flex-wrap: wrap;
-        }
-
+        .headers-bar { display: flex; align-items: center; gap: 1.25rem; padding: 1.25rem 1.5rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-panel); margin-bottom: 0.75rem; flex-wrap: wrap; }
         .headers-score { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; }
         .headers-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
         .headers-missing { font-size: 0.8rem; color: var(--orange); }
 
-        /* CTA */
-        .cta-section {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 2rem 5rem;
+        /* FEATURES */
+        .features {
+            max-width: 900px; margin: 0 auto 3rem; padding: 0 2rem;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
         }
+        .feature { padding: 1.5rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-panel); }
+        .feature-icon { font-size: 1.3rem; margin-bottom: 0.75rem; }
+        .feature h3 { font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.4rem; }
+        .feature p { font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; font-family: var(--font-display); }
 
-        .cta-card {
-            border: 1px solid var(--cyan-dim);
-            border-radius: 16px;
-            padding: 3rem;
+        /* SERVICES SECTION */
+        .services-section {
+            max-width: 900px; margin: 0 auto 3rem; padding: 0 2rem;
+        }
+        .services-header {
+            text-align: center; margin-bottom: 2.5rem;
+        }
+        .services-header h2 {
+            font-family: var(--font-display); font-size: 2rem; font-weight: 700;
+            color: var(--text-bright); margin-bottom: 0.75rem;
+        }
+        .services-header h2 .accent { color: var(--cyan); }
+        .services-header p {
+            font-family: var(--font-display); font-size: 0.95rem;
+            color: var(--text-dim); max-width: 500px; margin: 0 auto; line-height: 1.6;
+        }
+        .services-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;
+        }
+        .service-card {
+            padding: 2rem; border: 1px solid var(--border); border-radius: 14px;
+            background: var(--bg-panel); transition: border-color 0.3s, transform 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .service-card:hover { border-color: var(--cyan-dim); transform: translateY(-2px); }
+        .service-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--purple)); opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .service-card:hover::before { opacity: 1; }
+        .service-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+        .service-card h3 {
+            font-family: var(--font-display); font-size: 1rem; font-weight: 600;
+            color: var(--text-bright); margin-bottom: 0.5rem;
+        }
+        .service-card p {
+            font-family: var(--font-display); font-size: 0.82rem;
+            color: var(--text-dim); line-height: 1.6;
+        }
+        .service-tag {
+            display: inline-block; margin-top: 0.75rem; padding: 0.25rem 0.6rem;
+            border-radius: 4px; font-size: 0.65rem; font-weight: 500;
+            letter-spacing: 0.05em; text-transform: uppercase;
+        }
+        .tag-available { background: var(--green-dim); color: var(--green); }
+        .tag-coming { background: var(--cyan-dim); color: var(--cyan); }
+
+        /* ABOUT SECTION */
+        .about-section {
+            max-width: 900px; margin: 0 auto 3rem; padding: 0 2rem;
+        }
+        .about-card {
+            border: 1px solid var(--border); border-radius: 16px;
+            padding: 3rem; background: var(--bg-panel);
+            display: flex; gap: 3rem; align-items: center; flex-wrap: wrap;
+        }
+        .about-content { flex: 1; min-width: 280px; }
+        .about-content h2 {
+            font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
+            color: var(--text-bright); margin-bottom: 1rem;
+        }
+        .about-content h2 .accent { color: var(--cyan); }
+        .about-content p {
+            font-family: var(--font-display); font-size: 0.9rem;
+            color: var(--text-dim); line-height: 1.7; margin-bottom: 1rem;
+        }
+        .about-stats {
+            display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;
+        }
+        .about-stat {
             text-align: center;
-            background: linear-gradient(135deg, #00e5ff06, #a855f706);
-            position: relative;
-            overflow: hidden;
         }
+        .about-stat-num {
+            font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; color: var(--cyan);
+        }
+        .about-stat-label {
+            font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;
+            letter-spacing: 0.1em; margin-top: 0.25rem;
+        }
+        .about-logo {
+            flex-shrink: 0; width: 180px; height: 180px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .about-logo svg { width: 160px; height: 160px; }
 
-        .cta-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+        /* CTA */
+        .cta-section { max-width: 900px; margin: 0 auto; padding: 0 2rem 5rem; }
+        .cta-card {
+            border: 1px solid var(--cyan-dim); border-radius: 16px; padding: 3rem;
+            text-align: center; background: linear-gradient(135deg, #00e5ff06, #a855f706);
+            position: relative; overflow: hidden;
         }
-
-        .cta-card h2 {
-            font-family: var(--font-display);
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: var(--text-bright);
-            margin-bottom: 0.75rem;
-        }
-
-        .cta-card p {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            font-family: var(--font-display);
-            margin-bottom: 2rem;
-            max-width: 480px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
-
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
+        .cta-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+        .cta-card h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.75rem; }
+        .cta-card p { color: var(--text-dim); font-size: 0.9rem; font-family: var(--font-display); margin-bottom: 2rem; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+        .cta-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
 
         .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.85rem 2rem;
-            background: var(--cyan);
-            color: var(--bg);
-            border: none;
-            border-radius: 8px;
-            font-family: var(--font-mono);
-            font-weight: 600;
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
-            text-decoration: none;
-            cursor: pointer;
+            display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem;
+            background: var(--cyan); color: var(--bg); border: none; border-radius: 8px;
+            font-family: var(--font-mono); font-weight: 600; font-size: 0.8rem;
+            letter-spacing: 0.05em; text-decoration: none; cursor: pointer;
             transition: background 0.2s, transform 0.1s;
         }
-
         .btn-primary:hover { background: #33edff; transform: translateY(-1px); }
 
         .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.85rem 2rem;
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-family: var(--font-mono);
-            font-weight: 500;
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
-            text-decoration: none;
-            cursor: pointer;
-            transition: border-color 0.2s, color 0.2s;
+            display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem;
+            background: transparent; color: var(--text); border: 1px solid var(--border);
+            border-radius: 8px; font-family: var(--font-mono); font-weight: 500;
+            font-size: 0.8rem; letter-spacing: 0.05em; text-decoration: none;
+            cursor: pointer; transition: border-color 0.2s, color 0.2s;
         }
-
         .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
 
         /* FOOTER */
-        .footer {
-            border-top: 1px solid var(--border);
-            padding: 2rem;
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-dim);
-        }
-
+        .footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; font-size: 0.7rem; color: var(--text-dim); }
         .footer a { color: var(--text-dim); text-decoration: none; }
         .footer a:hover { color: var(--cyan); }
-
-        /* FEATURES */
-        .features {
-            max-width: 900px;
-            margin: 0 auto 3rem;
-            padding: 0 2rem;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-        }
-
-        .feature {
-            padding: 1.5rem;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--bg-panel);
-        }
-
-        .feature-icon { font-size: 1.3rem; margin-bottom: 0.75rem; }
-
-        .feature h3 {
-            font-family: var(--font-display);
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-bright);
-            margin-bottom: 0.4rem;
-        }
-
-        .feature p {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            line-height: 1.5;
-            font-family: var(--font-display);
-        }
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
@@ -802,12 +558,17 @@
             .nav-links { display: none; }
             .hero { padding: 3rem 1.25rem 2rem; }
             .features { grid-template-columns: 1fr; padding: 0 1.25rem; }
+            .services-section { padding: 0 1.25rem; }
+            .services-grid { grid-template-columns: 1fr; }
+            .about-section { padding: 0 1.25rem; }
+            .about-card { padding: 2rem; flex-direction: column; text-align: center; }
+            .about-logo { width: 120px; height: 120px; }
+            .about-logo svg { width: 100px; height: 100px; }
+            .about-stats { justify-content: center; }
             .results { padding: 0 1.25rem 3rem; }
             .cta-section { padding: 0 1.25rem 3rem; }
             .score-section { flex-direction: column; align-items: center; text-align: center; }
             .cards-grid { grid-template-columns: 1fr; }
-            .risk-table { font-size: 0.75rem; }
-            .risk-table th, .risk-table td { padding: 0.65rem 0.75rem; }
             .scan-btn { padding: 1rem 1.25rem; font-size: 0.7rem; }
         }
 
@@ -823,12 +584,31 @@
         <!-- NAV -->
         <nav class="nav">
             <a href="/" class="nav-logo">
-                <div class="nav-logo-icon">Q</div>
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Atom orbits -->
+                    <ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g1)" stroke-width="2.5" transform="rotate(-30 50 50)" opacity="0.9"/>
+                    <ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g2)" stroke-width="2.5" transform="rotate(30 50 50)" opacity="0.9"/>
+                    <ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g3)" stroke-width="2.5" transform="rotate(90 50 50)" opacity="0.9"/>
+                    <!-- Core -->
+                    <circle cx="50" cy="50" r="6" fill="url(#gc)"/>
+                    <circle cx="50" cy="50" r="10" fill="none" stroke="var(--cyan)" stroke-width="1" opacity="0.3"/>
+                    <!-- Electrons -->
+                    <circle cx="22" cy="30" r="3" fill="#a855f7"/>
+                    <circle cx="78" cy="30" r="3" fill="var(--cyan)"/>
+                    <circle cx="50" cy="82" r="3" fill="#33edff"/>
+                    <defs>
+                        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>
+                        <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#33edff"/></linearGradient>
+                        <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></linearGradient>
+                        <radialGradient id="gc"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></radialGradient>
+                    </defs>
+                </svg>
                 <div class="nav-brand">Q-CORE <span>SYSTEMS</span></div>
             </a>
             <div class="nav-links">
                 <a href="#scanner">Scanner</a>
-                <a href="#features">Features</a>
+                <a href="#services">Services</a>
+                <a href="#about">About</a>
                 <a href="#contact">Contact</a>
                 <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="nav-github">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
@@ -861,7 +641,6 @@
                 </div>
                 <div class="progress-log" id="progressLog"></div>
             </div>
-
             <div class="scan-error" id="scanError"></div>
         </section>
 
@@ -887,12 +666,88 @@
         <!-- RESULTS -->
         <div class="results" id="results"></div>
 
+        <!-- SERVICES -->
+        <section class="services-section" id="services">
+            <div class="services-header">
+                <h2>Our <span class="accent">Services</span></h2>
+                <p>From vulnerability scanning to full post-quantum migration. We help you stay ahead of quantum threats.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">📊</div>
+                    <h3>PQC Vulnerability Report</h3>
+                    <p>Comprehensive audit of your TLS configuration, cipher suites, and certificates with actionable recommendations for quantum readiness.</p>
+                    <span class="service-tag tag-available">Available now</span>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🔍</div>
+                    <h3>Security Consultation</h3>
+                    <p>One-on-one session to review your scan results, explain quantum risks, and build a prioritized migration roadmap.</p>
+                    <span class="service-tag tag-available">Available now</span>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">⚡</div>
+                    <h3>TLS Hardening</h3>
+                    <p>Server configuration to enforce TLS 1.3, disable weak protocols, implement strong cipher suites, and add security headers.</p>
+                    <span class="service-tag tag-coming">Coming soon</span>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🔄</div>
+                    <h3>PQC Migration</h3>
+                    <p>Full migration to post-quantum key exchange (ML-KEM / Kyber) and quantum-safe certificates (ML-DSA). Future-proof your infrastructure.</p>
+                    <span class="service-tag tag-coming">Coming soon</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section class="about-section" id="about">
+            <div class="about-card">
+                <div class="about-content">
+                    <h2>About <span class="accent">Q-CORE Systems</span></h2>
+                    <p>Q-CORE Systems is a cybersecurity company focused on post-quantum cryptography. We build open-source tools that help organizations understand and prepare for the quantum computing era.</p>
+                    <p>Founded by Josef Boudny in the Czech Republic, our mission is to make post-quantum security accessible — before it's too late.</p>
+                    <div class="about-stats">
+                        <div class="about-stat">
+                            <div class="about-stat-num">117</div>
+                            <div class="about-stat-label">Tests passing</div>
+                        </div>
+                        <div class="about-stat">
+                            <div class="about-stat-num">9</div>
+                            <div class="about-stat-label">Scan areas</div>
+                        </div>
+                        <div class="about-stat">
+                            <div class="about-stat-num">100%</div>
+                            <div class="about-stat-label">Open source</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-logo">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#ga1)" stroke-width="1.5" transform="rotate(-30 50 50)" opacity="0.7"/>
+                        <ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#ga2)" stroke-width="1.5" transform="rotate(30 50 50)" opacity="0.7"/>
+                        <ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#ga3)" stroke-width="1.5" transform="rotate(90 50 50)" opacity="0.7"/>
+                        <circle cx="50" cy="50" r="8" fill="url(#gac)"/>
+                        <circle cx="50" cy="50" r="14" fill="none" stroke="var(--cyan)" stroke-width="0.5" opacity="0.2"/>
+                        <circle cx="20" cy="28" r="3.5" fill="#a855f7" opacity="0.8"/>
+                        <circle cx="80" cy="28" r="3.5" fill="#00e5ff" opacity="0.8"/>
+                        <circle cx="50" cy="84" r="3.5" fill="#33edff" opacity="0.8"/>
+                        <defs>
+                            <linearGradient id="ga1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>
+                            <linearGradient id="ga2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#33edff"/></linearGradient>
+                            <linearGradient id="ga3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></linearGradient>
+                            <radialGradient id="gac"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></radialGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
         <!-- CONTACT / CTA -->
         <section class="cta-section" id="contact">
             <div class="cta-card">
-                <h2>Need quantum-safe migration?</h2>
-                <p>Q-CORE SYSTEMS helps organizations prepare for Y2Q.
-                   From audit to implementation — TLS hardening, PQC key exchange, certificate migration.</p>
+                <h2>Your server is vulnerable?</h2>
+                <p>Let's fix that. Get in touch for a free initial consultation. We'll review your scan results and recommend next steps.</p>
                 <div class="cta-buttons">
                     <a href="mailto:info@qcore.systems" class="btn-primary">
                         ✉ info@qcore.systems
@@ -923,19 +778,12 @@
     const errorEl = document.getElementById('scanError');
     const resultsEl = document.getElementById('results');
 
-    domainInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter') startScan();
-    });
+    domainInput.addEventListener('keydown', e => { if (e.key === 'Enter') startScan(); });
 
     const SCAN_STEPS = [
-        'Resolving DNS...',
-        'Establishing TLS connection...',
-        'Analyzing cipher suite...',
-        'Inspecting certificate chain...',
-        'Probing supported TLS versions...',
-        'Checking HTTP security headers...',
-        'Evaluating quantum risks...',
-        'Generating report...',
+        'Resolving DNS...', 'Establishing TLS connection...', 'Analyzing cipher suite...',
+        'Inspecting certificate chain...', 'Probing supported TLS versions...',
+        'Checking HTTP security headers...', 'Evaluating quantum risks...', 'Generating report...',
     ];
 
     async function startScan() {
@@ -969,10 +817,8 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ domain }),
             });
-
             clearInterval(stepInterval);
             const data = await resp.json();
-
             if (!resp.ok) throw new Error(data.error || 'Scan failed');
 
             const prev = progressLog.querySelector('.active-step');
@@ -981,7 +827,6 @@
             await new Promise(r => setTimeout(r, 400));
             progressEl.classList.remove('active');
             renderResults(data);
-
         } catch (err) {
             clearInterval(stepInterval);
             progressEl.classList.remove('active');
@@ -999,14 +844,9 @@
         if (score <= 65) return 'var(--orange)';
         return 'var(--red)';
     }
-
     function riskClass(level) { return 'risk-' + (level || 'MEDIUM').toUpperCase(); }
-
     function statusLabel(status) {
-        const map = {
-            'SAFE': 'Quantum Safe', 'LOW_RISK': 'Low Risk', 'MEDIUM_RISK': 'Medium Risk',
-            'VULNERABLE': 'Vulnerable', 'CRITICAL': 'Critical', 'ERROR': 'Error',
-        };
+        const map = { 'SAFE': 'Quantum Safe', 'LOW_RISK': 'Low Risk', 'MEDIUM_RISK': 'Medium Risk', 'VULNERABLE': 'Vulnerable', 'CRITICAL': 'Critical', 'ERROR': 'Error' };
         return map[status] || status;
     }
 
@@ -1017,23 +857,14 @@
 
         let html = `
         <div class="results-header">
-            <div class="results-target">
-                ${esc(d.hostname)}
-                <span> · ${esc(d.ip_address)}:${d.port}</span>
-            </div>
-            <div class="status-badge status-${d.overall_pqc_status}">
-                ${statusLabel(d.overall_pqc_status)}
-            </div>
+            <div class="results-target">${esc(d.hostname)} <span> · ${esc(d.ip_address)}:${d.port}</span></div>
+            <div class="status-badge status-${d.overall_pqc_status}">${statusLabel(d.overall_pqc_status)}</div>
         </div>
-
         <div class="score-section">
             <div class="score-ring-wrap">
                 <svg width="130" height="130" viewBox="0 0 130 130">
                     <circle class="score-ring-bg" cx="65" cy="65" r="54"/>
-                    <circle class="score-ring-fill" cx="65" cy="65" r="54"
-                            stroke="${color}"
-                            stroke-dasharray="${circumference}"
-                            stroke-dashoffset="${offset}"/>
+                    <circle class="score-ring-fill" cx="65" cy="65" r="54" stroke="${color}" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"/>
                 </svg>
                 <div class="score-value">
                     <div class="score-number" style="color:${color}">${d.overall_risk_score}</div>
@@ -1041,64 +872,26 @@
                 </div>
             </div>
             <div class="score-details">
-                <div class="score-detail-row">
-                    <span class="score-detail-key">TLS Version</span>
-                    <span class="score-detail-val">${esc(d.tls_version)}</span>
-                </div>
-                <div class="score-detail-row">
-                    <span class="score-detail-key">Cipher Suite</span>
-                    <span class="score-detail-val">${esc(d.cipher.name)}</span>
-                </div>
-                <div class="score-detail-row">
-                    <span class="score-detail-key">Key Exchange</span>
-                    <span class="score-detail-val">${esc(d.cipher.key_exchange)}</span>
-                </div>
-                <div class="score-detail-row">
-                    <span class="score-detail-key">Encryption</span>
-                    <span class="score-detail-val">${esc(d.cipher.encryption)} (${d.cipher.encryption_bits}-bit)</span>
-                </div>
-                <div class="score-detail-row">
-                    <span class="score-detail-key">PQC Key Exchange</span>
-                    <span class="score-detail-val" style="color: ${d.cipher.is_pqc ? 'var(--green)' : 'var(--red)'}">
-                        ${d.cipher.is_pqc ? '✓ YES' : '✕ NO'}
-                    </span>
-                </div>
+                <div class="score-detail-row"><span class="score-detail-key">TLS Version</span><span class="score-detail-val">${esc(d.tls_version)}</span></div>
+                <div class="score-detail-row"><span class="score-detail-key">Cipher Suite</span><span class="score-detail-val">${esc(d.cipher.name)}</span></div>
+                <div class="score-detail-row"><span class="score-detail-key">Key Exchange</span><span class="score-detail-val">${esc(d.cipher.key_exchange)}</span></div>
+                <div class="score-detail-row"><span class="score-detail-key">Encryption</span><span class="score-detail-val">${esc(d.cipher.encryption)} (${d.cipher.encryption_bits}-bit)</span></div>
+                <div class="score-detail-row"><span class="score-detail-key">PQC Key Exchange</span><span class="score-detail-val" style="color: ${d.cipher.is_pqc ? 'var(--green)' : 'var(--red)'}">${d.cipher.is_pqc ? '✓ YES' : '✕ NO'}</span></div>
             </div>
         </div>`;
 
         const cert = d.certificate;
         html += `
         <div class="cards-grid">
-            <div class="card">
-                <div class="card-label">Certificate Subject</div>
-                <div class="card-value">${esc(cert.subject)}</div>
-                <div class="card-sub">Issuer: ${esc(cert.issuer)}</div>
-            </div>
-            <div class="card">
-                <div class="card-label">Key Type</div>
-                <div class="card-value">${esc(cert.key_type)} (${cert.key_size}-bit)</div>
-                <div class="card-sub">Sig: ${esc(cert.signature_algorithm)}</div>
-            </div>
-            <div class="card">
-                <div class="card-label">Expiry</div>
-                <div class="card-value" style="color: ${cert.is_expired ? 'var(--red)' : cert.days_until_expiry < 30 ? 'var(--orange)' : 'var(--text-bright)'}">
-                    ${cert.is_expired ? 'EXPIRED' : cert.days_until_expiry + ' days'}
-                </div>
-                <div class="card-sub">${esc(cert.not_after)}</div>
-            </div>
+            <div class="card"><div class="card-label">Certificate Subject</div><div class="card-value">${esc(cert.subject)}</div><div class="card-sub">Issuer: ${esc(cert.issuer)}</div></div>
+            <div class="card"><div class="card-label">Key Type</div><div class="card-value">${esc(cert.key_type)} (${cert.key_size}-bit)</div><div class="card-sub">Sig: ${esc(cert.signature_algorithm)}</div></div>
+            <div class="card"><div class="card-label">Expiry</div><div class="card-value" style="color: ${cert.is_expired ? 'var(--red)' : cert.days_until_expiry < 30 ? 'var(--orange)' : 'var(--text-bright)'}">${cert.is_expired ? 'EXPIRED' : cert.days_until_expiry + ' days'}</div><div class="card-sub">${esc(cert.not_after)}</div></div>
         </div>`;
 
         if (d.quantum_risks && d.quantum_risks.length > 0) {
-            html += `<div class="section-title">Quantum Risk Assessment</div>
-            <table class="risk-table">
-                <thead><tr><th>Component</th><th>Level</th><th>Threat</th><th>Details</th></tr></thead><tbody>`;
+            html += `<div class="section-title">Quantum Risk Assessment</div><table class="risk-table"><thead><tr><th>Component</th><th>Level</th><th>Threat</th><th>Details</th></tr></thead><tbody>`;
             for (const r of d.quantum_risks) {
-                html += `<tr>
-                    <td style="color:var(--text-bright);font-weight:500">${esc(r.component)}</td>
-                    <td><span class="risk-level ${riskClass(r.level)}">${esc(r.level)}</span></td>
-                    <td>${esc(r.threat)}</td>
-                    <td><div>${esc(r.detail)}</div><div class="risk-detail">→ ${esc(r.recommendation)}</div></td>
-                </tr>`;
+                html += `<tr><td style="color:var(--text-bright);font-weight:500">${esc(r.component)}</td><td><span class="risk-level ${riskClass(r.level)}">${esc(r.level)}</span></td><td>${esc(r.threat)}</td><td><div>${esc(r.detail)}</div><div class="risk-detail">→ ${esc(r.recommendation)}</div></td></tr>`;
             }
             html += '</tbody></table>';
         }
@@ -1116,12 +909,8 @@
         if (d.http_headers) {
             const h = d.http_headers;
             const hColor = h.score >= 80 ? 'var(--green)' : h.score >= 50 ? 'var(--orange)' : 'var(--red)';
-            html += `<div class="section-title">HTTP Security Headers</div>
-            <div class="headers-bar">
-                <div><div class="headers-score" style="color:${hColor}">${h.score}/100</div><div class="headers-label">Header Score</div></div>`;
-            if (h.missing_headers && h.missing_headers.length > 0) {
-                html += `<div class="headers-missing">Missing: ${h.missing_headers.map(esc).join(', ')}</div>`;
-            }
+            html += `<div class="section-title">HTTP Security Headers</div><div class="headers-bar"><div><div class="headers-score" style="color:${hColor}">${h.score}/100</div><div class="headers-label">Header Score</div></div>`;
+            if (h.missing_headers && h.missing_headers.length > 0) html += `<div class="headers-missing">Missing: ${h.missing_headers.map(esc).join(', ')}</div>`;
             html += '</div>';
         }
 
