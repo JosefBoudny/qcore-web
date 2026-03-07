@@ -10,6 +10,7 @@ import time
 import threading
 from datetime import datetime, timezone
 from flask import Flask, render_template, request, jsonify
+from dataclasses import asdict  # ✅ PŘIDÁNO
 
 # Importy tvojich modulov (uisti sa, že sú v rovnakej zložke)
 from q_scanner import QScanner
@@ -78,15 +79,9 @@ def api_scan():
             check_headers=True
         )
         
-        # Prevod výsledku na slovník pre frontend
-        return jsonify({
-            "hostname": result.hostname,
-            "tls_version": result.tls_version,
-            "cipher": result.active_cipher.name,
-            "key_type": result.certificate.key_type,
-            "overall_pqc_status": result.overall_pqc_status,
-            "recommendations": result.recommendations
-        })
+        # ✅ POSIELAME KOMPLETNÝ VÝSLEDOK
+        return jsonify(asdict(result))
+        
     except Exception as e:
         return jsonify({"error": f"Audit zlyhal: {str(e)}"}), 500
 
