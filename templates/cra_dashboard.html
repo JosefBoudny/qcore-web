@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-CRA Dashboard — EU Cyber Resilience Act Compliance | Q-CORE Systems</title>
+    <meta name="description" content="Automated CRA compliance reports. Map Q-SCANNER results to EU Cyber Resilience Act articles. ECDSA-signed PDF reports.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #07080c;
+            --bg-panel: #0c0e14;
+            --bg-elevated: #11141d;
+            --border: #1a1f2e;
+            --text: #c8cdd8;
+            --text-dim: #5a6178;
+            --text-bright: #eaecf2;
+            --cyan: #00e5ff;
+            --cyan-dim: #00e5ff44;
+            --green: #00ff9d;
+            --green-dim: #00ff9d33;
+            --red: #ff3b5c;
+            --red-dim: #ff3b5c33;
+            --orange: #ff9f1c;
+            --orange-dim: #ff9f1c33;
+            --yellow: #ffd60a;
+            --purple: #a855f7;
+            --purple-dim: #a855f744;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-display: 'Outfit', sans-serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-mono);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background: linear-gradient(var(--border) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.15; pointer-events: none; z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, #00e5ff06 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, #a855f708 0%, transparent 50%);
+            pointer-events: none; z-index: 0;
+        }
+        .page-wrap { position: relative; z-index: 1; }
+
+        /* NAV — identical to index */
+        .nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.25rem 2rem; border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100;
+            background: rgba(7,8,12,0.92);
+        }
+        .nav-logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .nav-logo svg { width: 36px; height: 36px; }
+        .nav-brand { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; color: var(--text-bright); letter-spacing: 0.02em; }
+        .nav-brand span { color: var(--cyan); }
+        .nav-links { display: flex; gap: 1.75rem; align-items: center; }
+        .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.75rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+        .nav-github { display: flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.75rem; transition: border-color 0.2s, color 0.2s; }
+        .nav-github:hover { border-color: var(--cyan); color: var(--cyan) !important; }
+
+        /* HERO */
+        .hero { text-align: center; padding: 5rem 2rem 3rem; max-width: 800px; margin: 0 auto; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.4rem 1rem; border: 1px solid var(--cyan-dim); border-radius: 100px;
+            font-size: 0.7rem; color: var(--cyan); letter-spacing: 0.1em; text-transform: uppercase;
+            margin-bottom: 2rem; background: var(--cyan-dim); animation: fadeInDown 0.6s ease-out;
+        }
+        .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; color: var(--text-bright); line-height: 1.1; margin-bottom: 1.25rem; animation: fadeInDown 0.6s ease-out 0.1s both; }
+        .hero h1 .accent { color: var(--cyan); }
+        .hero p { font-size: 1rem; color: var(--text-dim); line-height: 1.7; max-width: 580px; margin: 0 auto 2.5rem; font-family: var(--font-display); font-weight: 300; animation: fadeInDown 0.6s ease-out 0.2s both; }
+        .hero-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; animation: fadeInDown 0.6s ease-out 0.3s both; }
+
+        .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem; background: var(--cyan); color: var(--bg); border: none; border-radius: 8px; font-family: var(--font-mono); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.05em; text-decoration: none; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+        .btn-primary:hover { background: #33edff; transform: translateY(-1px); }
+        .btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.05em; text-decoration: none; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+        .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+
+        /* SECTIONS */
+        .content-section { max-width: 920px; margin: 0 auto; padding: 0 2rem 3rem; }
+        .section-heading { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--text-bright); margin-bottom: 0.5rem; }
+        .section-heading .accent { color: var(--cyan); }
+        .section-sub { font-family: var(--font-display); font-size: 0.9rem; color: var(--text-dim); margin-bottom: 2rem; }
+
+        /* REPORT PREVIEW */
+        .report-card { border: 1px solid var(--border); border-radius: 16px; background: var(--bg-panel); overflow: hidden; margin-bottom: 2rem; }
+        .report-top { padding: 1.5rem 2rem; border-bottom: 2px solid var(--cyan); background: var(--bg-elevated); }
+        .report-top h3 { font-size: 0.7rem; color: var(--cyan); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.4rem; }
+        .report-top h2 { font-family: var(--font-display); font-size: 1.1rem; color: var(--text-bright); }
+        .report-body { padding: 2rem; }
+
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-box { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; text-align: center; }
+        .stat-num { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; }
+        .stat-num.c-cyan { color: var(--cyan); }
+        .stat-num.c-green { color: var(--green); }
+        .stat-num.c-orange { color: var(--orange); }
+        .stat-num.c-red { color: var(--red); }
+        .stat-lbl { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.25rem; }
+
+        /* CRA TABLE */
+        .cra-tbl { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .cra-tbl th { text-align: left; padding: 0.75rem 1rem; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; background: var(--bg-elevated); border-bottom: 1px solid var(--border); font-weight: 500; }
+        .cra-tbl td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+        .cra-tbl tr:hover { background: rgba(0,229,255,0.03); }
+        .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.04em; }
+        .badge-green { background: var(--green-dim); color: var(--green); }
+        .badge-orange { background: var(--orange-dim); color: var(--orange); }
+        .badge-red { background: var(--red-dim); color: var(--red); }
+
+        /* FEATURES GRID */
+        .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .feat-card { padding: 1.5rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-panel); transition: border-color 0.3s, transform 0.2s; }
+        .feat-card:hover { border-color: var(--cyan-dim); transform: translateY(-2px); }
+        .feat-icon { font-size: 1.3rem; margin-bottom: 0.75rem; }
+        .feat-card h3 { font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.4rem; }
+        .feat-card p { font-size: 0.75rem; color: var(--text-dim); line-height: 1.6; font-family: var(--font-display); }
+
+        /* CLI */
+        .cli-box { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; overflow-x: auto; }
+        .cli-box pre { font-family: var(--font-mono); font-size: 0.75rem; line-height: 1.9; color: var(--text-dim); }
+        .cli-box .p { color: var(--green); }
+        .cli-box .c { color: var(--text-bright); }
+        .cli-box .h { color: var(--cyan); }
+
+        /* TIER TAGS */
+        .tier-row { display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+        .tier-tag { font-size: 0.65rem; padding: 0.25rem 0.7rem; border-radius: 4px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+        .tier-tag.free { background: var(--green-dim); color: var(--green); }
+        .tier-tag.pro { background: var(--cyan-dim); color: var(--cyan); }
+        .tier-tag.ent { background: var(--purple-dim); color: var(--purple); }
+
+        /* CTA */
+        .cta-section { max-width: 920px; margin: 0 auto; padding: 0 2rem 5rem; }
+        .cta-card { border: 1px solid var(--cyan-dim); border-radius: 16px; padding: 3rem; text-align: center; background: linear-gradient(135deg, #00e5ff06, #a855f706); position: relative; overflow: hidden; }
+        .cta-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+        .cta-card h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.75rem; }
+        .cta-card p { color: var(--text-dim); font-size: 0.9rem; font-family: var(--font-display); margin-bottom: 2rem; }
+        .cta-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+        .footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; font-size: 0.7rem; color: var(--text-dim); }
+        .footer a { color: var(--text-dim); text-decoration: none; }
+        .footer a:hover { color: var(--cyan); }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero { padding: 3rem 1.25rem 2rem; }
+            .content-section, .cta-section { padding: 0 1.25rem 3rem; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .cra-tbl { font-size: 0.7rem; }
+            .cra-tbl th, .cra-tbl td { padding: 0.5rem 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrap">
+
+    <!-- NAV -->
+    <nav class="nav">
+        <a href="/" class="nav-logo">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g1)" stroke-width="2.5" transform="rotate(-30 50 50)" opacity="0.9"/>
+                <ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g2)" stroke-width="2.5" transform="rotate(30 50 50)" opacity="0.9"/>
+                <ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g3)" stroke-width="2.5" transform="rotate(90 50 50)" opacity="0.9"/>
+                <circle cx="50" cy="50" r="6" fill="url(#gc)"/><circle cx="50" cy="50" r="10" fill="none" stroke="var(--cyan)" stroke-width="1" opacity="0.3"/>
+                <circle cx="22" cy="30" r="3" fill="#a855f7"/><circle cx="78" cy="30" r="3" fill="var(--cyan)"/><circle cx="50" cy="82" r="3" fill="#33edff"/>
+                <defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient><linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#33edff"/></linearGradient><linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></linearGradient><radialGradient id="gc"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></radialGradient></defs>
+            </svg>
+            <div class="nav-brand">Q-CORE <span>SYSTEMS</span></div>
+        </a>
+        <div class="nav-links">
+            <a href="/">Scanner</a>
+            <a href="/cra-dashboard" class="active">CRA Dashboard</a>
+            <a href="/academy">Academy</a>
+            <a href="/#pricing">Pricing</a>
+            <a href="/#contact">Contact</a>
+            <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="nav-github">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-badge">Q-CRA Dashboard v1.0 — Pro + Enterprise</div>
+        <h1>EU <span class="accent">Cyber Resilience Act</span><br>Compliance Reports</h1>
+        <p>Automatically map Q-SCANNER results to specific CRA articles. Generate ECDSA-signed PDF compliance reports ready for auditors, regulators, and NUKIB.</p>
+        <div class="hero-buttons">
+            <a href="/static/cra_report_demo.pdf" class="btn-primary" download>Download Demo Report (PDF)</a>
+            <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" class="btn-secondary">View on GitHub</a>
+        </div>
+    </section>
+
+    <!-- REPORT PREVIEW -->
+    <div class="content-section">
+        <h2 class="section-heading">Live <span class="accent">Report Preview</span></h2>
+        <p class="section-sub">Real output from Q-CRA Dashboard — demo scan of a sample product</p>
+
+        <div class="report-card">
+            <div class="report-top">
+                <h3>Q-CORE Systems | CRA Compliance Report</h3>
+                <h2>Target: demo.example-product.eu</h2>
+            </div>
+            <div class="report-body">
+                <div class="stats-row">
+                    <div class="stat-box"><div class="stat-num c-cyan">84.2%</div><div class="stat-lbl">Overall Score</div></div>
+                    <div class="stat-box"><div class="stat-num c-cyan">12</div><div class="stat-lbl">CRA Articles</div></div>
+                    <div class="stat-box"><div class="stat-num c-green">6</div><div class="stat-lbl">Compliant</div></div>
+                    <div class="stat-box"><div class="stat-num c-orange">5</div><div class="stat-lbl">Partial</div></div>
+                    <div class="stat-box"><div class="stat-num c-red">1</div><div class="stat-lbl">Non-Compliant</div></div>
+                </div>
+
+                <table class="cra-tbl">
+                    <thead><tr><th>Article</th><th>Category</th><th>Severity</th><th>Score</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <tr><td>Art.10(1)</td><td>Product Security</td><td>CRITICAL</td><td>90.0%</td><td><span class="badge badge-green">COMPLIANT</span></td></tr>
+                        <tr><td>Art.10(2)</td><td>Vulnerability Mgmt</td><td>CRITICAL</td><td>50.0%</td><td><span class="badge badge-red">NON-COMPLIANT</span></td></tr>
+                        <tr><td>Art.10(3)</td><td>Update Management</td><td>HIGH</td><td>100%</td><td><span class="badge badge-green">COMPLIANT</span></td></tr>
+                        <tr><td>Art.10(4)</td><td>Secure Defaults</td><td>HIGH</td><td>100%</td><td><span class="badge badge-green">COMPLIANT</span></td></tr>
+                        <tr><td>Art.10(5)</td><td>Data Protection</td><td>CRITICAL</td><td>62.5%</td><td><span class="badge badge-orange">PARTIAL</span></td></tr>
+                        <tr><td>Art.10(6)</td><td>Attack Surface</td><td>HIGH</td><td>75.0%</td><td><span class="badge badge-orange">PARTIAL</span></td></tr>
+                        <tr><td>Art.11(1)</td><td>Reporting</td><td>CRITICAL</td><td>100%</td><td><span class="badge badge-green">COMPLIANT</span></td></tr>
+                        <tr><td>Art.11(2)</td><td>User Communication</td><td>HIGH</td><td>100%</td><td><span class="badge badge-green">COMPLIANT</span></td></tr>
+                        <tr><td>Art.13</td><td>Supply Chain</td><td>MEDIUM</td><td>83.3%</td><td><span class="badge badge-orange">PARTIAL</span></td></tr>
+                        <tr><td>Art.14</td><td>Supply Chain</td><td>MEDIUM</td><td>75.0%</td><td><span class="badge badge-orange">PARTIAL</span></td></tr>
+                        <tr><td>Annex I.1</td><td>Security Design</td><td>CRITICAL</td><td>100%</td><td><span class="badge badge-green">COMPLIANT</span></td></tr>
+                        <tr><td>Annex I.2</td><td>Vuln. Handling</td><td>HIGH</td><td>75.0%</td><td><span class="badge badge-orange">PARTIAL</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="content-section">
+        <h2 class="section-heading">What Q-CRA Dashboard <span class="accent">Does</span></h2>
+        <p class="section-sub">Automated compliance assessment — from scan to signed PDF in seconds</p>
+
+        <div class="feat-grid">
+            <div class="feat-card"><div class="feat-icon">📋</div><h3>12 CRA Articles Mapped</h3><p>Art.10, Art.11, Art.13, Art.14, Annex I — every essential cybersecurity requirement covered with specific scanner checks.</p></div>
+            <div class="feat-card"><div class="feat-icon">🔏</div><h3>ECDSA P-384 Signed</h3><p>Every report is digitally signed with ECDSA P-384 + SHA-384. Tamper detection built in. Verifiable with CLI.</p></div>
+            <div class="feat-card"><div class="feat-icon">⚛️</div><h3>PQC Readiness Check</h3><p>Detects missing post-quantum cryptography (ML-KEM, ML-DSA) and flags harvest-now-decrypt-later risk.</p></div>
+            <div class="feat-card"><div class="feat-icon">📊</div><h3>Scoring Methodology</h3><p>Transparent scoring: PASS=100%, WARNING=50%, FAIL=0%. Compliant ≥90%, Partial ≥60%, Non-Compliant &lt;60%.</p></div>
+            <div class="feat-card"><div class="feat-icon">🖥️</div><h3>CLI &amp; Interactive</h3><p>Full command-line interface with --demo, --interactive, and --verify modes. Scriptable for CI/CD pipelines.</p></div>
+            <div class="feat-card"><div class="feat-icon">🏢</div><h3>Enterprise Ready</h3><p>Persistent signing keys, batch processing, JSON metadata export, API integration ready. Free demo available.</p></div>
+        </div>
+    </div>
+
+    <!-- CLI -->
+    <div class="content-section">
+        <h2 class="section-heading">Quick <span class="accent">Start</span></h2>
+        <p class="section-sub">Three commands to your first CRA compliance report</p>
+
+        <div class="cli-box"><pre><span class="p">$</span> <span class="c">pip install reportlab cryptography</span>
+
+<span class="p">$</span> <span class="c">python q_cra_dashboard.py --demo</span>
+
+<span class="h">============================================================
+  REPORT GENERATED SUCCESSFULLY
+============================================================
+  report         : cra_report_20260307.pdf
+  signature      : cra_report_20260307.sig
+  public_key     : cra_report_20260307.pub.pem
+  metadata       : cra_report_20260307.meta.json
+============================================================</span>
+
+<span class="p">$</span> <span class="c">python q_cra_dashboard.py --verify report.pdf report.sig</span>
+<span class="h">  [PASS] Report signature is VALID
+  Algorithm: ECDSA-P384-SHA384</span></pre></div>
+
+        <div class="tier-row">
+            <span class="tier-tag free">Free: Demo mode</span>
+            <span class="tier-tag pro">Pro: Full reports + signing</span>
+            <span class="tier-tag ent">Enterprise: API + batch</span>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="cta-card">
+            <h2>Ready for CRA compliance?</h2>
+            <p>Download the demo report or contact us for enterprise integration.</p>
+            <div class="cta-buttons">
+                <a href="/static/cra_report_demo.pdf" class="btn-primary" download>Download Demo PDF</a>
+                <a href="mailto:info@qcore.systems" class="btn-secondary">info@qcore.systems</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        &copy; 2024&ndash;2026 Q-CORE SYSTEMS &middot;
+        <a href="/">Scanner</a> &middot;
+        <a href="/academy">Academy</a> &middot;
+        <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank">GitHub</a> &middot;
+        <a href="mailto:info@qcore.systems">Contact</a>
+    </footer>
+</div>
+</body>
+</html>

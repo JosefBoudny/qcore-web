@@ -91,6 +91,16 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/cra-dashboard")
+def cra_dashboard():
+    return render_template("cra_dashboard.html")
+
+
+@app.route("/academy")
+def academy():
+    return render_template("academy.html")
+
+
 @app.route("/api/scan", methods=["POST"])
 def api_scan():
     """Run a scan and return JSON results."""
