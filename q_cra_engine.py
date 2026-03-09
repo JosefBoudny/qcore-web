@@ -52,17 +52,17 @@ try:
     _f_boldit = _find_font("DejaVuSans-BoldOblique.ttf")
 
     if _f_regular and _f_bold:
-        pdfmetrics.registerFont(TTFont("DejaVu", _f_regular))
-        pdfmetrics.registerFont(TTFont("DejaVu-Bold", _f_bold))
+        pdfmetrics.registerFont(TTFont("QCoreDV", _f_regular))
+        pdfmetrics.registerFont(TTFont("QCoreDV-Bold", _f_bold))
         if _f_italic:
-            pdfmetrics.registerFont(TTFont("DejaVu-Italic", _f_italic))
+            pdfmetrics.registerFont(TTFont("QCoreDV-Italic", _f_italic))
         if _f_boldit:
-            pdfmetrics.registerFont(TTFont("DejaVu-BoldItalic", _f_boldit))
-        registerFontFamily("DejaVu", normal="DejaVu", bold="DejaVu-Bold",
-                          italic="DejaVu-Italic" if _f_italic else "DejaVu",
-                          boldItalic="DejaVu-BoldItalic" if _f_boldit else "DejaVu-Bold")
-        _UNICODE_FONT = "DejaVu"
-        _UNICODE_FONT_BOLD = "DejaVu-Bold"
+            pdfmetrics.registerFont(TTFont("QCoreDV-BoldItalic", _f_boldit))
+        registerFontFamily("QCoreDV", normal="QCoreDV", bold="QCoreDV-Bold",
+                          italic="QCoreDV-Italic" if _f_italic else "QCoreDV",
+                          boldItalic="QCoreDV-BoldItalic" if _f_boldit else "QCoreDV-Bold")
+        _UNICODE_FONT = "QCoreDV"
+        _UNICODE_FONT_BOLD = "QCoreDV-Bold"
     elif os.path.exists("C:/Windows/Fonts/arial.ttf"):
         pdfmetrics.registerFont(TTFont("Arial", "C:/Windows/Fonts/arial.ttf"))
         pdfmetrics.registerFont(TTFont("Arial-Bold", "C:/Windows/Fonts/arialbd.ttf"))
