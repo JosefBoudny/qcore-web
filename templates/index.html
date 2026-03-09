@@ -331,26 +331,25 @@
                 <div class="nav-brand">Q-CORE <span>SYSTEMS</span></div>
             </a>
         <div class="nav-links">
-    <a href="/">Scanner</a>
-    <a href="/cra-dashboard" style="color: var(--cyan); font-weight: 600;">CRA Dashboard</a>
-    <a href="/academy" style="color: var(--purple); font-weight: 600;">Q-Academy</a>
-    <a href="#stack">Platform</a>
-    <a href="#pricing">Pricing</a>
+    <a href="/" data-i18n="nav.scanner">Scanner</a>
+    <a href="/cra-dashboard" style="color: var(--cyan); font-weight: 600;" data-i18n="nav.cra">CRA Dashboard</a>
+    <a href="/academy" style="color: var(--purple); font-weight: 600;" data-i18n="nav.academy">Q-Academy</a>
+    <a href="#stack" data-i18n="nav.platform">Platform</a>
+    <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
     <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" class="nav-github">GitHub</a>
 </div>
         </nav>
 
         <!-- HERO -->
         <section class="hero" id="scanner">
-            <div class="hero-badge">Q-SCANNER v2.0 — Free PQC Audit</div>
-            <h1>Is your server ready for<br><span class="accent">quantum threats?</span></h1>
-            <p>Scan any domain to analyze TLS configuration, cipher suites, certificates,
-               and post-quantum cryptography readiness. Free, open-source, instant results.</p>
+            <div class="hero-badge" data-i18n="hero.badge">Q-SCANNER v2.0 — Free PQC Audit</div>
+            <h1><span data-i18n="hero.title1">Is your server ready for</span><br><span class="accent" data-i18n="hero.title2">quantum threats?</span></h1>
+            <p data-i18n="hero.desc">Scan any domain to analyze TLS configuration, cipher suites, certificates, and post-quantum cryptography readiness. Free, open-source, instant results.</p>
             <div class="scan-box">
                 <div class="scan-input-wrap">
                     <span class="scan-prefix">https://</span>
                     <input type="text" class="scan-input" id="domainInput" placeholder="example.com" autocomplete="off" spellcheck="false">
-                    <button class="scan-btn" id="scanBtn" onclick="startScan()">Scan</button>
+                    <button class="scan-btn" id="scanBtn" onclick="startScan()" data-i18n="hero.scan_btn">Scan</button>
                 </div>
                 <div class="scan-hint">Try: google.com · github.com · cloudflare.com</div>
             </div>
@@ -360,9 +359,9 @@
 
         <!-- FEATURES -->
         <section class="features" id="features">
-            <div class="feature"><div class="feature-icon">⚛</div><h3>Quantum Risk Analysis</h3><p>Evaluates Shor's &amp; Grover's algorithm impact on your key exchange, encryption and certificates.</p></div>
-            <div class="feature"><div class="feature-icon">🔐</div><h3>TLS Deep Scan</h3><p>Probes all TLS versions, cipher suites, certificate chain, and HTTP security headers.</p></div>
-            <div class="feature"><div class="feature-icon">🛡</div><h3>PQC Readiness</h3><p>Detects ML-KEM (Kyber), ML-DSA (Dilithium) and other NIST post-quantum standards.</p></div>
+            <div class="feature"><div class="feature-icon">⚛</div><h3 data-i18n="feat.quantum.title">Quantum Risk Analysis</h3><p>Evaluates Shor's &amp; Grover's algorithm impact on your key exchange, encryption and certificates.</p></div>
+            <div class="feature"><div class="feature-icon">🔐</div><h3 data-i18n="feat.tls.title">TLS Deep Scan</h3><p>Probes all TLS versions, cipher suites, certificate chain, and HTTP security headers.</p></div>
+            <div class="feature"><div class="feature-icon">🛡</div><h3 data-i18n="feat.pqc.title">PQC Readiness</h3><p>Detects ML-KEM (Kyber), ML-DSA (Dilithium) and other NIST post-quantum standards.</p></div>
         </section>
 
         <!-- RESULTS -->
@@ -371,55 +370,55 @@
         <!-- ENTERPRISE STACK -->
         <section class="stack-section" id="stack">
             <div class="stack-header">
-                <h2>The <span class="accent">Q-CORE</span> Platform</h2>
+                <h2><span data-i18n="stack.title1">The</span> <span class="accent">Q-CORE</span> <span data-i18n="stack.title2">Platform</span></h2>
                 <p>A complete post-quantum security stack. From scanning to key management — everything you need to protect your infrastructure.</p>
             </div>
             <div class="stack-grid">
                 <div class="stack-card">
                     <div class="stack-card-header"><span class="stack-card-name">Q-SCANNER</span></div>
-                    <h3>Vulnerability Scanning</h3>
+                    <h3 data-i18n="mod.scanner.title">Vulnerability Scanning</h3>
                     <p>TLS/PQC vulnerability detection with quantum risk scoring. 9 scan areas, 117 tests, detailed reports with actionable recommendations.</p>
                     <span class="stack-tag tag-free">Free</span>
                 </div>
                 <div class="stack-card">
                     <div class="stack-card-header"><span class="stack-card-name">Q-SHIELD</span></div>
-                    <h3>Post-Quantum Encryption</h3>
+                    <h3 data-i18n="mod.shield.title">Post-Quantum Encryption</h3>
                     <p>ML-KEM (Kyber-768) key encapsulation for quantum-safe key exchange. NIST FIPS 203 compliant.</p>
                     <span class="stack-tag tag-pro">Professional</span>
                 </div>
                 <div class="stack-card">
                     <div class="stack-card-header"><span class="stack-card-name">Q-VAULT</span></div>
-                    <h3>Encrypted Storage</h3>
+                    <h3 data-i18n="mod.vault.title">Encrypted Storage</h3>
                     <p>AES-256-GCM authenticated file encryption with secure key derivation (HKDF). Tamper-evident storage.</p>
                     <span class="stack-tag tag-pro">Professional</span>
                 </div>
                 <div class="stack-card">
                     <div class="stack-card-header"><span class="stack-card-name">Q-GATE</span></div>
-                    <h3>Zero Trust Authentication</h3>
+                    <h3 data-i18n="mod.gate.title">Zero Trust Authentication</h3>
                     <p>FIDO2/WebAuthn hardware token authentication with PBKDF2 password fallback. Phishing-resistant, replay-proof MFA.</p>
                     <span class="stack-tag tag-pro">Professional</span>
                 </div>
                 <div class="stack-card">
                     <div class="stack-card-header"><span class="stack-card-name">Q-AUDIT</span></div>
-                    <h3>Compliance Logging</h3>
+                    <h3 data-i18n="mod.audit.title">Compliance Logging</h3>
                     <p>Hash-chained, tamper-evident audit trail for all cryptographic operations. FIPS-ready compliance reporting.</p>
                     <span class="stack-tag tag-pro">Professional</span>
                 </div>
                 <div class="stack-card">
                     <div class="stack-card-header"><span class="stack-card-name">Q-HSM</span></div>
-                    <h3>Hardware Security Module</h3>
+                    <h3 data-i18n="mod.hsm.title">Hardware Security Module</h3>
                     <p>Unified interface to TPM 2.0, PKCS#11 tokens, and OS keyring. Hardware-bound key storage and signing operations.</p>
                     <span class="stack-tag tag-ent">Enterprise</span>
                 </div>
                 <div class="stack-card">
                     <div class="stack-card-header"><span class="stack-card-name">Q-CYCLE</span></div>
-                    <h3>Key Lifecycle Manager</h3>
+                    <h3 data-i18n="mod.cycle.title">Key Lifecycle Manager</h3>
                     <p>Automated key rotation with in-memory re-encryption. Plaintext never touches disk. Atomic rollback, compliance audit trail.</p>
                     <span class="stack-tag tag-ent">Enterprise</span>
                 </div>
                 <div class="stack-card">
                     <div class="stack-card-header"><span class="stack-card-name">Q-LICENSE</span></div>
-                    <h3>License Management</h3>
+                    <h3 data-i18n="mod.license.title">License Management</h3>
                     <p>Ed25519-signed enterprise licensing with feature toggling, expiration, anti-tampering HMAC proofs, and CLI tooling.</p>
                     <span class="stack-tag tag-ent">Enterprise</span>
                 </div>
@@ -429,14 +428,14 @@
         <!-- PRICING -->
         <section class="pricing-section" id="pricing">
             <div class="pricing-header">
-                <h2>Simple <span class="accent">Pricing</span></h2>
-                <p>Start free. Scale when you need enterprise-grade protection.</p>
+                <h2><span data-i18n="price.title">Simple <span class="accent">Pricing</span></span></h2>
+                <p data-i18n="price.desc">Start free. Scale when you need enterprise-grade protection.</p>
             </div>
             <div class="pricing-grid">
                 <div class="pricing-card">
-                    <div class="pricing-tier tier-free">Community</div>
-                    <div class="pricing-name">Free</div>
-                    <div class="pricing-price">$0 / forever</div>
+                    <div class="pricing-tier tier-free" data-i18n="price.community">Community</div>
+                    <div class="pricing-name" data-i18n="price.free">Free</div>
+                    <div class="pricing-price" data-i18n="price.free.price">$0 / forever</div>
                     <ul class="pricing-features">
                         <li>Q-SCANNER web interface</li>
                         <li>Unlimited domain scans</li>
@@ -448,12 +447,12 @@
                         <li class="disabled">Compliance audit logs</li>
                         <li class="disabled">Support</li>
                     </ul>
-                    <a href="#scanner" class="pricing-btn pricing-btn-free">Start Scanning</a>
+                    <a href="#scanner" class="pricing-btn pricing-btn-free" data-i18n="price.start">Start Scanning</a>
                 </div>
                 <div class="pricing-card featured">
-                    <div class="popular-badge">Most Popular</div>
-                    <div class="pricing-tier tier-pro">Professional</div>
-                    <div class="pricing-name">Pro</div>
+                    <div class="popular-badge" data-i18n="price.popular">Most Popular</div>
+                    <div class="pricing-tier tier-pro" data-i18n="price.pro">Professional</div>
+                    <div class="pricing-name" data-i18n="price.pro.name">Pro</div>
                     <div class="pricing-price">Contact us</div>
                     <ul class="pricing-features">
                         <li>Everything in Free</li>
@@ -466,10 +465,10 @@
                         <li>Email support</li>
                         <li>Security consultation</li>
                     </ul>
-                    <a href="mailto:info@qcore.systems?subject=Q-CORE Professional License" class="pricing-btn pricing-btn-pro">Get in Touch</a>
+                    <a href="mailto:info@qcore.systems?subject=Q-CORE Professional License" class="pricing-btn pricing-btn-pro" data-i18n="price.touch">Get in Touch</a>
                 </div>
                 <div class="pricing-card">
-                    <div class="pricing-tier tier-ent">Enterprise</div>
+                    <div class="pricing-tier tier-ent" data-i18n="price.ent">Enterprise</div>
                     <div class="pricing-name">Enterprise</div>
                     <div class="pricing-price">Contact us</div>
                     <ul class="pricing-features">
@@ -483,7 +482,7 @@
                         <li>PQC migration roadmap</li>
                         <li>Dedicated engineer</li>
                     </ul>
-                    <a href="mailto:info@qcore.systems?subject=Q-CORE Enterprise License" class="pricing-btn pricing-btn-ent">Contact Sales</a>
+                    <a href="mailto:info@qcore.systems?subject=Q-CORE Enterprise License" class="pricing-btn pricing-btn-ent" data-i18n="price.sales">Contact Sales</a>
                 </div>
             </div>
         </section>
@@ -492,14 +491,14 @@
         <section class="about-section" id="about">
             <div class="about-card">
                 <div class="about-content">
-                    <h2>About <span class="accent">Q-CORE Systems</span></h2>
+                    <h2><span data-i18n="about.title">About <span class="accent">Q-CORE Systems</span></span></h2>
                     <p>Q-CORE Systems is a cybersecurity company focused on post-quantum cryptography. We build tools that help organizations understand and prepare for the quantum computing era.</p>
                     <p>Our mission: make post-quantum security accessible — before it's too late.</p>
                     <div class="about-stats">
-                        <div class="about-stat"><div class="about-stat-num">11</div><div class="about-stat-label">Modules</div></div>
-                        <div class="about-stat"><div class="about-stat-num">117</div><div class="about-stat-label">Tests</div></div>
-                        <div class="about-stat"><div class="about-stat-num">9</div><div class="about-stat-label">Scan Areas</div></div>
-                        <div class="about-stat"><div class="about-stat-num">FIPS</div><div class="about-stat-label">Compliant</div></div>
+                        <div class="about-stat"><div class="about-stat-num">11</div><div class="about-stat-label" data-i18n="about.modules">Modules</div></div>
+                        <div class="about-stat"><div class="about-stat-num">117</div><div class="about-stat-label" data-i18n="about.tests">Tests</div></div>
+                        <div class="about-stat"><div class="about-stat-num">9</div><div class="about-stat-label" data-i18n="about.areas">Scan Areas</div></div>
+                        <div class="about-stat"><div class="about-stat-num">FIPS</div><div class="about-stat-label" data-i18n="about.compliant">Compliant</div></div>
                     </div>
                 </div>
                 <div class="about-logo">
@@ -516,7 +515,7 @@
         <!-- CTA -->
         <section class="cta-section" id="contact">
             <div class="cta-card">
-                <h2>Ready to go quantum-safe?</h2>
+                <h2 data-i18n="cta.title">Ready to go quantum-safe?</h2>
                 <p>Whether you need a free scan or a full enterprise migration — we're here to help. Let's talk.</p>
                 <div class="cta-buttons">
                     <a href="mailto:info@qcore.systems" class="btn-primary">✉ info@qcore.systems</a>
