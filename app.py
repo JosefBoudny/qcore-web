@@ -1,5 +1,5 @@
 """
-Q-CORE SYSTEMS: Web Q-SCANNER + CRA Dashboard
+Q-CORE SYSTEMS: Web Q-SCANNER + CRA Dashboard (Multilingual)
 Flask application for qcore.systems
 """
 
@@ -13,7 +13,7 @@ from dataclasses import asdict
 from flask import Flask, render_template, request, jsonify, send_file, send_from_directory
 
 from q_scanner import QScanner, ScanResult
-from q_cra_engine import map_scan_to_cra, CRAReportPDF
+from q_cra_engine import map_scan_to_cra, CRAReportPDF, detect_language
 
 app = Flask(__name__)
 
@@ -34,7 +34,6 @@ RATE_LIMIT_WINDOW = 60  # seconds
 
 
 def _check_rate_limit(ip: str) -> bool:
-    """Return True if the request is allowed."""
     now = time.time()
     with _rate_lock:
         timestamps = _rate_limit.get(ip, [])
@@ -48,13 +47,11 @@ def _check_rate_limit(ip: str) -> bool:
 
 
 def _is_admin(req) -> bool:
-    """Check if request has admin key."""
     key = req.args.get("key", "") or req.headers.get("X-Admin-Key", "")
     return key == ADMIN_KEY
 
 
 def _clean_domain(raw: str) -> str:
-    """Normalize user input to a bare hostname."""
     domain = raw.strip().lower()
     for prefix in ("https://", "http://"):
         if domain.startswith(prefix):
@@ -66,7 +63,6 @@ def _clean_domain(raw: str) -> str:
 
 
 def _result_to_dict(result: ScanResult) -> dict:
-    """Convert ScanResult dataclass to a JSON-serializable dict."""
     data = {
         "hostname": result.hostname,
         "ip_address": result.ip_address,
@@ -113,7 +109,6 @@ def academy():
 
 @app.route("/api/scan", methods=["POST"])
 def api_scan():
-    """Run a scan and return JSON results."""
     ip = request.remote_addr or "unknown"
     if not _check_rate_limit(ip):
         return jsonify({"error": "Rate limit exceeded. Please wait a minute and try again."}), 429
@@ -129,7 +124,6 @@ def api_scan():
     if not domain or len(domain) > 253:
         return jsonify({"error": "Invalid domain name."}), 400
 
-    # Basic validation
     if not all(c.isalnum() or c in ".-" for c in domain):
         return jsonify({"error": "Invalid domain name — only letters, numbers, dots and hyphens are allowed."}), 400
 
@@ -139,11 +133,8 @@ def api_scan():
     try:
         scanner = QScanner()
         result = scanner.scan(
-            hostname=domain,
-            port=443,
-            timeout=SCAN_TIMEOUT,
-            check_protocols=True,
-            check_headers=True,
+            hostname=domain, port=443, timeout=SCAN_TIMEOUT,
+            check_protocols=True, check_headers=True,
         )
         return jsonify(_result_to_dict(result))
     except Exception as e:
@@ -152,8 +143,7 @@ def api_scan():
 
 @app.route("/api/cra-report", methods=["POST"])
 def api_cra_report():
-    """Generate CRA PDF from scan results. Admin only."""
-    # Check admin key from header
+    """Generate CRA PDF. Admin only. Supports lang parameter."""
     admin_key = request.headers.get("X-Admin-Key", "")
     if admin_key != ADMIN_KEY:
         return jsonify({"error": "CRA report generation requires Pro subscription. Contact info@qcore.systems"}), 403
@@ -162,19 +152,19 @@ def api_cra_report():
     if not body or "hostname" not in body:
         return jsonify({"error": "No scan data provided."}), 400
 
-    try:
-        # Map to CRA
-        cra_results = map_scan_to_cra(body)
+    # Language: from request header, or auto-detect from domain TLD
+    lang = request.headers.get("X-Report-Lang", "").lower()
+    if lang not in ("en", "cs", "de"):
+        lang = detect_language(body.get("hostname", ""))
 
-        # Generate PDF
-        pdf_gen = CRAReportPDF()
+    try:
+        cra_results = map_scan_to_cra(body, lang=lang)
+        pdf_gen = CRAReportPDF(lang=lang)
         tmp = tempfile.NamedTemporaryFile(suffix=".pdf", delete=False, prefix="cra_report_")
         pdf_gen.generate(body, cra_results, tmp.name)
 
         return send_file(
-            tmp.name,
-            mimetype="application/pdf",
-            as_attachment=True,
+            tmp.name, mimetype="application/pdf", as_attachment=True,
             download_name=f"CRA_Report_{body.get('hostname', 'unknown')}_{datetime.now().strftime('%Y%m%d')}.pdf"
         )
     except Exception as e:
@@ -183,14 +173,18 @@ def api_cra_report():
 
 @app.route("/api/cra-map", methods=["POST"])
 def api_cra_map():
-    """Return CRA mapping JSON from scan results. Available to all."""
+    """Return CRA mapping JSON. Available to all. Supports lang parameter."""
     body = request.get_json(silent=True) or {}
     if not body:
         return jsonify({"error": "No scan data provided."}), 400
 
+    lang = request.headers.get("X-Report-Lang", "").lower()
+    if lang not in ("en", "cs", "de"):
+        lang = detect_language(body.get("hostname", ""))
+
     try:
-        cra_results = map_scan_to_cra(body)
-        return jsonify({"cra_results": cra_results})
+        cra_results = map_scan_to_cra(body, lang=lang)
+        return jsonify({"cra_results": cra_results, "language": lang})
     except Exception as e:
         return jsonify({"error": f"CRA mapping failed: {str(e)}"}), 500
 
@@ -199,10 +193,6 @@ def api_cra_map():
 def health():
     return jsonify({"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()})
 
-
-# ---------------------------------------------------------------------------
-# Run
-# ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

@@ -137,6 +137,15 @@
                 <button class="scan-btn" id="scanBtn" onclick="startCRAScan()">Scan &amp; Map CRA</button>
             </div>
             <div class="scan-hint">Scan domain and map findings to EU CRA articles</div>
+            <div style="text-align:center;margin-top:.75rem;display:flex;align-items:center;justify-content:center;gap:.5rem">
+                <label style="font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">Report language:</label>
+                <select id="langSelect" style="background:var(--bg-panel);color:var(--text-bright);border:1px solid var(--border);border-radius:6px;padding:.35rem .6rem;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;outline:none">
+                    <option value="auto">Auto-detect (TLD)</option>
+                    <option value="en">English</option>
+                    <option value="cs">Cestina</option>
+                    <option value="de">Deutsch</option>
+                </select>
+            </div>
         </div>
         <div class="progress" id="progress"><div class="progress-bar"><div class="spinner"></div><div class="progress-text" id="progressText">Scanning...</div></div></div>
         <div class="error" id="error"></div>
@@ -198,6 +207,18 @@ const IS_ADMIN = ADMIN_KEY.length > 0;
 
 let lastScanData = null;
 
+// TLD -> language auto-detection
+const TLD_LANG = {'.cz':'cs','.sk':'cs','.de':'de','.at':'de','.ch':'de'};
+function detectLang(domain) {
+    const sel = document.getElementById('langSelect').value;
+    if (sel !== 'auto') return sel;
+    domain = domain.toLowerCase();
+    for (const [tld, lang] of Object.entries(TLD_LANG)) {
+        if (domain.endsWith(tld)) return lang;
+    }
+    return 'en';
+}
+
 if (IS_ADMIN) {
     document.getElementById('modeBadge').textContent = 'Q-CRA DASHBOARD v2.1 — ADMIN / FULL ACCESS';
     document.getElementById('modeBadge').classList.add('admin');
@@ -236,11 +257,12 @@ async function startCRAScan() {
 
         lastScanData = scanData;
 
-        // Step 2: Map to CRA
+        // Step 2: Map to CRA with language
+        const lang = detectLang(domain);
         document.getElementById('progressText').textContent = 'Generating CRA compliance map...';
         const craResp = await fetch('/api/cra-map', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'X-Report-Lang': lang},
             body: JSON.stringify(scanData)
         });
         const craData = await craResp.json();
@@ -303,12 +325,13 @@ function renderCRAResults(scan, cra) {
     tbody.innerHTML = '';
     for (const r of cra) {
         const bc = r.status === 'PASS' ? 'badge-pass' : r.status === 'WARNING' ? 'badge-warn' : 'badge-fail';
+        const statusLabel = r.status_display || r.status;
         tbody.innerHTML += `<tr>
             <td style="color:var(--text-bright);font-weight:500">${esc(r.article)}</td>
             <td>${esc(r.title)}</td>
             <td>${esc(r.category)}</td>
             <td style="font-size:.7rem;color:var(--text-dim)">${esc(r.nis2||'')}</td>
-            <td><span class="badge ${bc}">${r.status}</span></td>
+            <td><span class="badge ${bc}">${statusLabel}</span></td>
         </tr>`;
     }
 
@@ -328,11 +351,13 @@ async function downloadPDF() {
     btn.textContent = 'Generating PDF...';
 
     try {
+        const lang = detectLang(lastScanData.hostname);
         const resp = await fetch('/api/cra-report', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-Admin-Key': ADMIN_KEY
+                'X-Admin-Key': ADMIN_KEY,
+                'X-Report-Lang': lang
             },
             body: JSON.stringify(lastScanData)
         });
