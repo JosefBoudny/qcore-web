@@ -1,5 +1,5 @@
 """
-Q-CORE SYSTEMS: Web Q-SCANNER
+Q-CORE SYSTEMS: Web Q-SCANNER + CRA Dashboard
 Flask application for qcore.systems
 """
 
@@ -7,11 +7,13 @@ import os
 import json
 import time
 import threading
+import tempfile
 from datetime import datetime, timezone
 from dataclasses import asdict
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file, send_from_directory
 
 from q_scanner import QScanner, ScanResult
+from q_cra_engine import map_scan_to_cra, CRAReportPDF
 
 app = Flask(__name__)
 
@@ -19,6 +21,7 @@ app = Flask(__name__)
 # Configuration
 # ---------------------------------------------------------------------------
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "qcore-dev-key-change-in-prod")
+ADMIN_KEY = os.environ.get("ADMIN_KEY", "ZakladatelJB.186cm_100kg.")
 MAX_CONCURRENT_SCANS = int(os.environ.get("MAX_CONCURRENT_SCANS", "3"))
 SCAN_TIMEOUT = int(os.environ.get("SCAN_TIMEOUT", "15"))
 
@@ -42,6 +45,12 @@ def _check_rate_limit(ip: str) -> bool:
         timestamps.append(now)
         _rate_limit[ip] = timestamps
         return True
+
+
+def _is_admin(req) -> bool:
+    """Check if request has admin key."""
+    key = req.args.get("key", "") or req.headers.get("X-Admin-Key", "")
+    return key == ADMIN_KEY
 
 
 def _clean_domain(raw: str) -> str:
@@ -93,7 +102,8 @@ def index():
 
 @app.route("/cra-dashboard")
 def cra_dashboard():
-    return render_template("cra_dashboard.html")
+    admin = _is_admin(request)
+    return render_template("cra_dashboard.html", is_admin=admin)
 
 
 @app.route("/academy")
@@ -138,6 +148,51 @@ def api_scan():
         return jsonify(_result_to_dict(result))
     except Exception as e:
         return jsonify({"error": f"Scan failed: {str(e)}"}), 500
+
+
+@app.route("/api/cra-report", methods=["POST"])
+def api_cra_report():
+    """Generate CRA PDF from scan results. Admin only."""
+    # Check admin key from header
+    admin_key = request.headers.get("X-Admin-Key", "")
+    if admin_key != ADMIN_KEY:
+        return jsonify({"error": "CRA report generation requires Pro subscription. Contact info@qcore.systems"}), 403
+
+    body = request.get_json(silent=True) or {}
+    if not body or "hostname" not in body:
+        return jsonify({"error": "No scan data provided."}), 400
+
+    try:
+        # Map to CRA
+        cra_results = map_scan_to_cra(body)
+
+        # Generate PDF
+        pdf_gen = CRAReportPDF()
+        tmp = tempfile.NamedTemporaryFile(suffix=".pdf", delete=False, prefix="cra_report_")
+        pdf_gen.generate(body, cra_results, tmp.name)
+
+        return send_file(
+            tmp.name,
+            mimetype="application/pdf",
+            as_attachment=True,
+            download_name=f"CRA_Report_{body.get('hostname', 'unknown')}_{datetime.now().strftime('%Y%m%d')}.pdf"
+        )
+    except Exception as e:
+        return jsonify({"error": f"Report generation failed: {str(e)}"}), 500
+
+
+@app.route("/api/cra-map", methods=["POST"])
+def api_cra_map():
+    """Return CRA mapping JSON from scan results. Available to all."""
+    body = request.get_json(silent=True) or {}
+    if not body:
+        return jsonify({"error": "No scan data provided."}), 400
+
+    try:
+        cra_results = map_scan_to_cra(body)
+        return jsonify({"cra_results": cra_results})
+    except Exception as e:
+        return jsonify({"error": f"CRA mapping failed: {str(e)}"}), 500
 
 
 @app.route("/api/health")
