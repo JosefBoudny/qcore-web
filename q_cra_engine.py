@@ -23,6 +23,36 @@ from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
     PageBreak, KeepTogether
 )
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+
+# Register Unicode fonts (DejaVu Sans supports CS/DE/EN characters)
+_FONT_PATHS = [
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    "C:/Windows/Fonts/arial.ttf",  # Windows fallback
+]
+_UNICODE_FONT = "Helvetica"  # fallback
+_UNICODE_FONT_BOLD = "Helvetica-Bold"
+
+try:
+    import os as _os
+    # Try DejaVu (Linux/Railway)
+    dv = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+    dvb = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+    if _os.path.exists(dv):
+        pdfmetrics.registerFont(TTFont("DejaVu", dv))
+        pdfmetrics.registerFont(TTFont("DejaVu-Bold", dvb))
+        _UNICODE_FONT = "DejaVu"
+        _UNICODE_FONT_BOLD = "DejaVu-Bold"
+    # Try Arial (Windows)
+    elif _os.path.exists("C:/Windows/Fonts/arial.ttf"):
+        pdfmetrics.registerFont(TTFont("Arial", "C:/Windows/Fonts/arial.ttf"))
+        pdfmetrics.registerFont(TTFont("Arial-Bold", "C:/Windows/Fonts/arialbd.ttf"))
+        _UNICODE_FONT = "Arial"
+        _UNICODE_FONT_BOLD = "Arial-Bold"
+except Exception:
+    pass  # Fall back to Helvetica (no diacritics)
 
 VERSION = "2.1.0"
 COMPANY = "Q-CORE Systems"
@@ -513,24 +543,24 @@ class CRAReportPDF:
 
     def _add_styles(self):
         self.styles.add(ParagraphStyle("QTitle", parent=self.styles["Title"],
-            fontSize=24, leading=30, textColor=C_PRIMARY, spaceAfter=4*mm))
+            fontName=_UNICODE_FONT_BOLD, fontSize=24, leading=30, textColor=C_PRIMARY, spaceAfter=4*mm))
         self.styles.add(ParagraphStyle("QH1", parent=self.styles["Heading1"],
-            fontSize=16, leading=20, textColor=C_PRIMARY, spaceBefore=8*mm, spaceAfter=3*mm))
+            fontName=_UNICODE_FONT_BOLD, fontSize=16, leading=20, textColor=C_PRIMARY, spaceBefore=8*mm, spaceAfter=3*mm))
         self.styles.add(ParagraphStyle("QH2", parent=self.styles["Heading2"],
-            fontSize=12, leading=16, textColor=C_PRIMARY, spaceBefore=5*mm, spaceAfter=2*mm))
+            fontName=_UNICODE_FONT_BOLD, fontSize=12, leading=16, textColor=C_PRIMARY, spaceBefore=5*mm, spaceAfter=2*mm))
         self.styles.add(ParagraphStyle("QBody", parent=self.styles["Normal"],
-            fontSize=9, leading=13, textColor=C_TEXT, alignment=TA_JUSTIFY, spaceAfter=2*mm))
+            fontName=_UNICODE_FONT, fontSize=9, leading=13, textColor=C_TEXT, alignment=TA_JUSTIFY, spaceAfter=2*mm))
         self.styles.add(ParagraphStyle("QSmall", parent=self.styles["Normal"],
-            fontSize=7, leading=9, textColor=C_DIM))
+            fontName=_UNICODE_FONT, fontSize=7, leading=9, textColor=C_DIM))
 
     def _header_footer(self, c, doc):
         c.saveState()
         w, h = A4
         c.setStrokeColor(C_ACCENT); c.setLineWidth(2)
         c.line(20*mm, h-18*mm, w-20*mm, h-18*mm)
-        c.setFont("Helvetica-Bold", 7); c.setFillColor(C_PRIMARY)
+        c.setFont(_UNICODE_FONT_BOLD, 7); c.setFillColor(C_PRIMARY)
         c.drawString(20*mm, h-15*mm, f"{COMPANY} | Q-CRA Dashboard v{VERSION}")
-        c.setFont("Helvetica", 7); c.setFillColor(C_DIM)
+        c.setFont(_UNICODE_FONT, 7); c.setFillColor(C_DIM)
         c.drawRightString(w-20*mm, h-15*mm, t("header_report", self.lang))
         c.setStrokeColor(C_NEUTRAL); c.setLineWidth(0.5)
         c.line(20*mm, 15*mm, w-20*mm, 15*mm)
@@ -579,7 +609,7 @@ class CRAReportPDF:
         ]
         tb = Table(info, colWidths=[40*mm, 110*mm])
         tb.setStyle(TableStyle([
-            ("FONTNAME", (0,0), (0,-1), "Helvetica-Bold"),
+            ("FONTNAME", (0,0), (0,-1), _UNICODE_FONT_BOLD),
             ("FONTSIZE", (0,0), (-1,-1), 9),
             ("TEXTCOLOR", (0,0), (0,-1), C_PRIMARY),
             ("BOTTOMPADDING", (0,0), (-1,-1), 3),
@@ -600,7 +630,7 @@ class CRAReportPDF:
         et = Table(td, colWidths=[25*mm, 55*mm, 40*mm, 25*mm])
         scmds = [
             ("BACKGROUND", (0,0), (-1,0), C_PRIMARY), ("TEXTCOLOR", (0,0), (-1,0), white),
-            ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"), ("FONTSIZE", (0,0), (-1,-1), 8),
+            ("FONTNAME", (0,0), (-1,0), _UNICODE_FONT_BOLD), ("FONTSIZE", (0,0), (-1,-1), 8),
             ("ALIGN", (3,0), (3,-1), "CENTER"), ("GRID", (0,0), (-1,-1), 0.4, C_NEUTRAL),
             ("ROWBACKGROUNDS", (0,1), (-1,-1), [white, C_BG]),
             ("BOTTOMPADDING", (0,0), (-1,-1), 4), ("TOPPADDING", (0,0), (-1,-1), 4),
@@ -608,7 +638,7 @@ class CRAReportPDF:
         for i, r in enumerate(cra_results, 1):
             cl = self._sc(r["status"])
             scmds.append(("TEXTCOLOR", (3,i), (3,i), cl))
-            scmds.append(("FONTNAME", (3,i), (3,i), "Helvetica-Bold"))
+            scmds.append(("FONTNAME", (3,i), (3,i), _UNICODE_FONT_BOLD))
         et.setStyle(TableStyle(scmds))
         el.append(et)
         el.append(PageBreak())
@@ -622,7 +652,7 @@ class CRAReportPDF:
                 f'<font color="{cl.hexval()}">[{r.get("status_display", r["status"])}]</font> '
                 f'{r["article"]} — {r["title"]}',
                 ParagraphStyle("FT", parent=self.styles["Normal"],
-                    fontSize=10, fontName="Helvetica-Bold", textColor=C_PRIMARY, spaceAfter=1*mm)))
+                    fontSize=10, fontName=_UNICODE_FONT_BOLD, textColor=C_PRIMARY, spaceAfter=1*mm)))
             bl.append(Paragraph(f'<b>{t("check", lang)}:</b> {r["check"]}', self.styles["QBody"]))
             if r.get("detail"):
                 bl.append(Paragraph(f'<i>{r["detail"]}</i>', self.styles["QBody"]))
