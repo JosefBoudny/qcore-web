@@ -323,6 +323,15 @@ const TEXT_TRANSLATIONS = {
   
   // CTA
   "Ready to go quantum-safe?": { cs: "P\u0159ipraveni na kvantovou bezpe\u010dnost?", de: "Bereit f\u00fcr Quantensicherheit?" },
+
+  "CRA Compliance Dashboard": { cs: "CRA Dashboard shody", de: "CRA-Konformit\u00e4ts-Dashboard" },
+  "Digital Signatures (ML-DSA)": { cs: "Digit\u00e1ln\u00ed podpisy (ML-DSA)", de: "Digitale Signaturen (ML-DSA)" },
+  "PQC Education Platform": { cs: "Vzd\u011bl\u00e1vac\u00ed platforma PQC", de: "PQC-Bildungsplattform" },
+  "Academy Bridge": { cs: "Akademick\u00fd most", de: "Akademie-Br\u00fccke" },
+  "Q-CRA Dashboard (CRA reports)": { cs: "Q-CRA Dashboard (CRA reporty)", de: "Q-CRA Dashboard (CRA-Berichte)" },
+  "Q-SIGN (digital signatures)": { cs: "Q-SIGN (digit\u00e1ln\u00ed podpisy)", de: "Q-SIGN (digitale Signaturen)" },
+  "Q-ACADEMY Bridge": { cs: "Q-ACADEMY Bridge", de: "Q-ACADEMY Bridge" },
+  "Free / Pro": { cs: "Zdarma / Pro", de: "Kostenlos / Pro" },
   "View on GitHub \u2192": { cs: "Zobrazit na GitHub \u2192", de: "Auf GitHub ansehen \u2192" },
 };
 

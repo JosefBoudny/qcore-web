@@ -1,5 +1,5 @@
 """
-Patch index.html: adds data-i18n attributes for full translation support.
+Patch index.html: v2.1 update + new modules + fix translations
 Run from qcore-web folder: python patch_index.py
 """
 import os, sys
@@ -12,118 +12,97 @@ if not os.path.exists(path):
 with open(path, "r", encoding="utf-8") as f:
     html = f.read()
 
-# Remove old patch if present
-if "i18n.js" in html and "flag-switcher" in html:
-    print("Already patched. Re-patching...")
+changes = 0
 
-# Ensure flag CSS is present
-if ".flag-switcher" not in html:
-    flag_css = """
-        .flag-switcher{display:flex;gap:2px;align-items:center;margin-right:10px}
-        .flag-btn{background:none;border:1px solid rgba(0,229,255,0.2);border-radius:4px;cursor:pointer;font-size:0.7rem;font-weight:600;padding:4px 8px;color:#5a6178;transition:all 0.2s;line-height:1}
-        .flag-btn:hover{color:#00e5ff;border-color:#00e5ff44}
-        .flag-btn.active{color:#00e5ff;border-color:#00e5ff;background:rgba(0,229,255,0.1)}
-"""
-    html = html.replace("</style>", flag_css + "    </style>")
-    print("  + Flag CSS added")
+# 1. Version v2.0 -> v2.1
+if "v2.0" in html:
+    html = html.replace("v2.0", "v2.1")
+    changes += 1
+    print("  + Version updated to v2.1")
 
-# Add data-i18n to hero section
-replacements = [
-    # Hero badge
-    ('>Q-SCANNER v2.0', ' data-i18n="hero.badge">Q-SCANNER v2.0'),
-    # Hero title - wrap parts
-    ('<h1>Is your server ready for<br><span class="accent">quantum threats?</span></h1>',
-     '<h1><span data-i18n="hero.title1">Is your server ready for</span><br><span class="accent" data-i18n="hero.title2">quantum threats?</span></h1>'),
-    # Hero description
-    ('<p>Scan any domain to analyze TLS configuration, cipher suites, certificates,\n               and post-quantum cryptography readiness. Free, open-source, instant results.</p>',
-     '<p data-i18n="hero.desc">Scan any domain to analyze TLS configuration, cipher suites, certificates, and post-quantum cryptography readiness. Free, open-source, instant results.</p>'),
-    # Scan button
-    ('>Scan</button>', ' data-i18n="hero.scan_btn">Scan</button>'),
-    # Hint
-    ('Try: google.com', 'Try: google.com'),  # handled by text matcher
-    
-    # Features
-    ('>Quantum Risk Analysis</h3>', ' data-i18n="feat.quantum.title">Quantum Risk Analysis</h3>'),
-    ('>TLS Deep Scan</h3>', ' data-i18n="feat.tls.title">TLS Deep Scan</h3>'),
-    ('>PQC Readiness</h3>', ' data-i18n="feat.pqc.title">PQC Readiness</h3>'),
-    
-    # Platform section
-    ('The <span class="accent">Q-CORE</span> Platform',
-     '<span data-i18n="stack.title1">The</span> <span class="accent">Q-CORE</span> <span data-i18n="stack.title2">Platform</span>'),
-    
-    # Module titles
-    ('>Vulnerability Scanning</h3>', ' data-i18n="mod.scanner.title">Vulnerability Scanning</h3>'),
-    ('>Post-Quantum Encryption</h3>', ' data-i18n="mod.shield.title">Post-Quantum Encryption</h3>'),
-    ('>Encrypted Storage</h3>', ' data-i18n="mod.vault.title">Encrypted Storage</h3>'),
-    ('>Zero Trust Authentication</h3>', ' data-i18n="mod.gate.title">Zero Trust Authentication</h3>'),
-    ('>Compliance Logging</h3>', ' data-i18n="mod.audit.title">Compliance Logging</h3>'),
-    ('>Hardware Security Module</h3>', ' data-i18n="mod.hsm.title">Hardware Security Module</h3>'),
-    ('>Key Lifecycle Manager</h3>', ' data-i18n="mod.cycle.title">Key Lifecycle Manager</h3>'),
-    ('>License Management</h3>', ' data-i18n="mod.license.title">License Management</h3>'),
-    
-    # Pricing
-    ('Simple <span class="accent">Pricing</span>',
-     '<span data-i18n="price.title">Simple <span class="accent">Pricing</span></span>'),
-    ('>Start free. Scale when you need enterprise-grade protection.</p>',
-     ' data-i18n="price.desc">Start free. Scale when you need enterprise-grade protection.</p>'),
-    
-    # Pricing tiers
-    ('class="pricing-tier tier-free">Community', 'class="pricing-tier tier-free" data-i18n="price.community">Community'),
-    ('class="pricing-name">Free', 'class="pricing-name" data-i18n="price.free">Free'),
-    ('class="pricing-price">$0 / forever', 'class="pricing-price" data-i18n="price.free.price">$0 / forever'),
-    ('class="pricing-tier tier-pro">Professional', 'class="pricing-tier tier-pro" data-i18n="price.pro">Professional'),
-    ('class="pricing-name">Pro', 'class="pricing-name" data-i18n="price.pro.name">Pro'),
-    ('class="popular-badge">Most Popular', 'class="popular-badge" data-i18n="price.popular">Most Popular'),
-    ('class="pricing-tier tier-ent">Enterprise', 'class="pricing-tier tier-ent" data-i18n="price.ent">Enterprise'),
-    
-    # Pricing buttons
-    ('>Start Scanning</a>', ' data-i18n="price.start">Start Scanning</a>'),
-    ('>Get in Touch</a>', ' data-i18n="price.touch">Get in Touch</a>'),
-    ('>Contact Sales</a>', ' data-i18n="price.sales">Contact Sales</a>'),
-    
-    # About
-    ('About <span class="accent">Q-CORE Systems</span>',
-     '<span data-i18n="about.title">About <span class="accent">Q-CORE Systems</span></span>'),
-    
-    # About stats
-    ('class="about-stat-label">Modules', 'class="about-stat-label" data-i18n="about.modules">Modules'),
-    ('class="about-stat-label">Tests', 'class="about-stat-label" data-i18n="about.tests">Tests'),
-    ('class="about-stat-label">Scan Areas', 'class="about-stat-label" data-i18n="about.areas">Scan Areas'),
-    ('class="about-stat-label">Compliant', 'class="about-stat-label" data-i18n="about.compliant">Compliant'),
-    
-    # CTA
-    ('>Ready to go quantum-safe?</h2>', ' data-i18n="cta.title">Ready to go quantum-safe?</h2>'),
-    
-    # Nav links
-    ('>Scanner</a>', ' data-i18n="nav.scanner">Scanner</a>'),
-    ('>CRA Dashboard</a>', ' data-i18n="nav.cra">CRA Dashboard</a>'),
-    ('>Q-Academy</a>', ' data-i18n="nav.academy">Q-Academy</a>'),
-    ('>Platform</a>', ' data-i18n="nav.platform">Platform</a>'),
-    ('>Pricing</a>', ' data-i18n="nav.pricing">Pricing</a>'),
-]
+# 2. Module count 11 -> 13
+html = html.replace(
+    '<div class="about-stat-num">11</div>',
+    '<div class="about-stat-num">13</div>'
+)
+changes += 1
+print("  + Module count updated to 13")
 
-count = 0
-for old, new in replacements:
-    if old in html and old != new:
-        html = html.replace(old, new, 1)
-        count += 1
+# 3. Add 4 new modules to stack-grid (before closing </div> of stack-grid)
+new_modules = '''
+                <div class="stack-card">
+                    <div class="stack-card-header"><span class="stack-card-name">Q-CRA</span></div>
+                    <h3>CRA Compliance Dashboard</h3>
+                    <p>Automated EU Cyber Resilience Act compliance reports. Maps scan results to CRA &amp; NIS2 articles. Multilingual PDF generation (EN/CS/DE).</p>
+                    <span class="stack-tag tag-pro">Professional</span>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-card-header"><span class="stack-card-name">Q-SIGN</span></div>
+                    <h3>Digital Signatures (ML-DSA)</h3>
+                    <p>ECDSA P-384 digital signatures with ML-DSA (FIPS 204) migration path. Tamper-evident report signing and verification.</p>
+                    <span class="stack-tag tag-pro">Professional</span>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-card-header"><span class="stack-card-name">Q-ACADEMY</span></div>
+                    <h3>PQC Education Platform</h3>
+                    <p>6 interactive modules: Y2Q threats, CRA legislation, NIST FIPS 203/204, PQC implementation. Quizzes, certification, Scan-Learn-Fix loop.</p>
+                    <span class="stack-tag tag-free">Free / Pro</span>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-card-header"><span class="stack-card-name">Q-BRIDGE</span></div>
+                    <h3>Academy Bridge</h3>
+                    <p>Maps scanner findings to Q-Academy lessons. Creates personalized learning paths based on actual security gaps. Scan &rarr; Learn &rarr; Fix cycle.</p>
+                    <span class="stack-tag tag-pro">Professional</span>
+                </div>
+'''
 
-# Fix the multi-line description (may have newline)
-if 'data-i18n="hero.desc"' not in html:
+# Find the last stack-card and add after it
+last_license = html.find("Q-LICENSE")
+if last_license > 0:
+    # Find the closing </div> of Q-LICENSE stack-card
+    close_pos = html.find("</div>", last_license)  # stack-card-header close
+    close_pos = html.find("</div>", close_pos + 1)  # after h3
+    close_pos = html.find("</div>", close_pos + 1)  # after p  
+    # Actually find the next </div>\n after the stack-tag
+    tag_pos = html.find("tag-ent", last_license)
+    if tag_pos > 0:
+        end_card = html.find("</div>", tag_pos)
+        if end_card > 0:
+            insert_pos = end_card + len("</div>")
+            html = html[:insert_pos] + new_modules + html[insert_pos:]
+            changes += 1
+            print("  + 4 new modules added (Q-CRA, Q-SIGN, Q-ACADEMY, Q-BRIDGE)")
+
+# 4. Add Q-CRA and Q-ACADEMY to Pro pricing
+pro_features_marker = "Security consultation"
+if pro_features_marker in html:
     html = html.replace(
-        '<p>Scan any domain to analyze TLS configuration, cipher suites, certificates,',
-        '<p data-i18n="hero.desc">Scan any domain to analyze TLS configuration, cipher suites, certificates,'
+        "<li>Security consultation</li>",
+        "<li>Security consultation</li>\n                        <li>Q-CRA Dashboard (CRA reports)</li>\n                        <li>Q-SIGN (digital signatures)</li>"
     )
-    count += 1
+    changes += 1
+    print("  + Pro pricing updated with Q-CRA, Q-SIGN")
 
-# Add i18n.js script before </body> if not present
-if 'i18n.js' not in html:
-    html = html.replace('</body>', '    <script src="/static/i18n.js"></script>\n</body>')
-    count += 1
+# 5. Add Q-BRIDGE to Enterprise pricing  
+ent_features_marker = "Dedicated engineer"
+if ent_features_marker in html:
+    html = html.replace(
+        "<li>Dedicated engineer</li>",
+        "<li>Dedicated engineer</li>\n                        <li>Q-ACADEMY Bridge</li>"
+    )
+    changes += 1
+    print("  + Enterprise pricing updated with Q-BRIDGE")
 
-print(f"  + {count} replacements made")
+# 6. Update scan button text after scan completes (in JS)
+# Change scanBtn.textContent='Scan' to use i18n
+if "scanBtn.textContent='Scanning...'" in html:
+    html = html.replace(
+        "scanBtn.textContent='Scanning...'",
+        "scanBtn.textContent=(localStorage.getItem('qcore_lang')=='cs'?'Skenuji...':localStorage.getItem('qcore_lang')=='de'?'Scanne....':'Scanning...')"
+    )
+    changes += 1
 
 with open(path, "w", encoding="utf-8") as f:
     f.write(html)
 
-print("SUCCESS: index.html fully patched!")
+print(f"\nSUCCESS: {changes} changes applied to index.html")
