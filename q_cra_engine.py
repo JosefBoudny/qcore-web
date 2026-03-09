@@ -31,15 +31,36 @@ from reportlab.pdfbase.pdfmetrics import registerFontFamily
 _UNICODE_FONT = "Helvetica"
 _UNICODE_FONT_BOLD = "Helvetica-Bold"
 
+# Find bundled fonts (shipped with project) or system fonts
+_FONT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts")
+_FONT_PATHS = [
+    _FONT_DIR,                                          # Bundled in project
+    "/usr/share/fonts/truetype/dejavu/",                # Linux system
+]
+
+def _find_font(filename):
+    for d in _FONT_PATHS:
+        p = os.path.join(d, filename)
+        if os.path.exists(p):
+            return p
+    return None
+
 try:
-    _dv_base = "/usr/share/fonts/truetype/dejavu/"
-    if os.path.exists(_dv_base + "DejaVuSans.ttf"):
-        pdfmetrics.registerFont(TTFont("DejaVu", _dv_base + "DejaVuSans.ttf"))
-        pdfmetrics.registerFont(TTFont("DejaVu-Bold", _dv_base + "DejaVuSans-Bold.ttf"))
-        pdfmetrics.registerFont(TTFont("DejaVu-Italic", _dv_base + "DejaVuSans-Oblique.ttf"))
-        pdfmetrics.registerFont(TTFont("DejaVu-BoldItalic", _dv_base + "DejaVuSans-BoldOblique.ttf"))
+    _f_regular = _find_font("DejaVuSans.ttf")
+    _f_bold = _find_font("DejaVuSans-Bold.ttf")
+    _f_italic = _find_font("DejaVuSans-Oblique.ttf")
+    _f_boldit = _find_font("DejaVuSans-BoldOblique.ttf")
+
+    if _f_regular and _f_bold:
+        pdfmetrics.registerFont(TTFont("DejaVu", _f_regular))
+        pdfmetrics.registerFont(TTFont("DejaVu-Bold", _f_bold))
+        if _f_italic:
+            pdfmetrics.registerFont(TTFont("DejaVu-Italic", _f_italic))
+        if _f_boldit:
+            pdfmetrics.registerFont(TTFont("DejaVu-BoldItalic", _f_boldit))
         registerFontFamily("DejaVu", normal="DejaVu", bold="DejaVu-Bold",
-                          italic="DejaVu-Italic", boldItalic="DejaVu-BoldItalic")
+                          italic="DejaVu-Italic" if _f_italic else "DejaVu",
+                          boldItalic="DejaVu-BoldItalic" if _f_boldit else "DejaVu-Bold")
         _UNICODE_FONT = "DejaVu"
         _UNICODE_FONT_BOLD = "DejaVu-Bold"
     elif os.path.exists("C:/Windows/Fonts/arial.ttf"):
