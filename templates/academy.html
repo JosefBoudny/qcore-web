@@ -173,6 +173,11 @@
             .stats-row { grid-template-columns: repeat(2, 1fr); }
             .mod-grid { grid-template-columns: 1fr; }
         }
+    
+        .flag-switcher{display:flex;gap:4px;align-items:center;margin-right:8px}
+        .flag-btn{background:none;border:1px solid transparent;border-radius:4px;cursor:pointer;font-size:1.1rem;padding:2px 4px;opacity:.5;transition:opacity .2s,border-color .2s;line-height:1}
+        .flag-btn:hover{opacity:.8}
+        .flag-btn.active{opacity:1;border-color:var(--cyan)}
     </style>
 </head>
 <body>
@@ -192,11 +197,11 @@
             <div class="nav-brand">Q-CORE <span>SYSTEMS</span></div>
         </a>
         <div class="nav-links">
-            <a href="/">Scanner</a>
-            <a href="/cra-dashboard">CRA Dashboard</a>
-            <a href="/academy" class="active">Academy</a>
-            <a href="/#pricing">Pricing</a>
-            <a href="/#contact">Contact</a>
+            <a href="/" data-i18n="nav.scanner">Scanner</a>
+            <a href="/cra-dashboard" data-i18n="nav.cra">CRA Dashboard</a>
+            <a href="/academy" class="active" data-i18n="nav.academy">Academy</a>
+            <a href="/#pricing" data-i18n="nav.pricing">Pricing</a>
+            <a href="/#contact" data-i18n="nav.contact">Contact</a>
             <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="nav-github">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
                 GitHub
@@ -206,29 +211,29 @@
 
     <!-- HERO -->
     <section class="hero">
-        <div class="hero-badge">Q-Academy — Interactive PQC Education</div>
-        <h1><span class="purple">Q-Academy</span><br>Learn <span class="accent">Post-Quantum</span><br>Cryptography</h1>
-        <p>6 interactive modules covering Y2Q threats, EU CRA compliance, NIST FIPS standards, and hands-on PQC implementation. Quizzes, progress tracking, and certification.</p>
+        <div class="hero-badge" data-i18n="acad.badge">Q-Academy — Interactive PQC Education</div>
+        <h1><span class="purple">Q-Academy</span><br><span data-i18n="acad.title1">Q-Academy</span><br><span data-i18n="acad.title2">Learn Post-Quantum</span><br><span class="accent" data-i18n="acad.title3">Cryptography</span></h1>
+        <p data-i18n="acad.desc">6 interactive modules covering Y2Q threats, EU CRA compliance, NIST FIPS standards, and hands-on PQC implementation. Quizzes, progress tracking, and certification.</p>
         <div class="hero-buttons">
-            <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" class="btn-primary">Get Started — Free</a>
-            <a href="#modules" class="btn-secondary">View Curriculum</a>
+            <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" class="btn-primary" data-i18n="acad.start">Get Started — Free</a>
+            <a href="#modules" class="btn-secondary" data-i18n="acad.curriculum">View Curriculum</a>
         </div>
     </section>
 
     <!-- STATS -->
     <div class="content-section">
         <div class="stats-row">
-            <div class="stat-box"><div class="stat-num">6</div><div class="stat-lbl">Modules</div></div>
-            <div class="stat-box"><div class="stat-num">16</div><div class="stat-lbl">Lessons</div></div>
-            <div class="stat-box"><div class="stat-num">30+</div><div class="stat-lbl">Quiz Questions</div></div>
-            <div class="stat-box"><div class="stat-num" style="font-size:1rem; padding-top:0.4rem">ECDSA</div><div class="stat-lbl">Signed Certs</div></div>
+            <div class="stat-box"><div class="stat-num">6</div><div class="stat-lbl" data-i18n="acad.modules">Modules</div></div>
+            <div class="stat-box"><div class="stat-num">16</div><div class="stat-lbl" data-i18n="acad.lessons">Lessons</div></div>
+            <div class="stat-box"><div class="stat-num">30+</div><div class="stat-lbl" data-i18n="acad.questions">Quiz Questions</div></div>
+            <div class="stat-box"><div class="stat-num" style="font-size:1rem; padding-top:0.4rem">ECDSA</div><div class="stat-lbl" data-i18n="acad.certs">Signed Certs</div></div>
         </div>
     </div>
 
     <!-- MODULES -->
     <div class="content-section" id="modules">
-        <h2 class="section-heading"><span class="accent">Curriculum</span></h2>
-        <p class="section-sub">From quantum threats to production PQC deployment — structured learning path</p>
+        <h2 class="section-heading" data-i18n="acad.curriculum_title"><span class="accent">Curriculum</span></h2>
+        <p class="section-sub" data-i18n="acad.curriculum_desc">From quantum threats to production PQC deployment — structured learning path</p>
 
         <div class="mod-grid">
             <div class="mod-card" data-num="01"><span class="mod-tier free">Free</span><h3>Y2Q Threats</h3><p>Quantum computing threats to classical cryptography. Shor's algorithm, HNDL attacks, Mosca inequality.</p><div class="mod-meta"><span>3 lessons</span><span>5 quiz questions</span></div></div>
@@ -242,8 +247,8 @@
 
     <!-- QUIZ DEMO -->
     <div class="content-section">
-        <h2 class="section-heading">Try a <span class="accent">Quiz</span></h2>
-        <p class="section-sub">Sample question from Module 1: Y2Q Threats</p>
+        <h2 class="section-heading" data-i18n="acad.try_quiz">Try a <span class="accent">Quiz</span></h2>
+        <p class="section-sub" data-i18n="acad.quiz_desc">Sample question from Module 1: Y2Q Threats</p>
 
         <div class="quiz-box">
             <h3>Module 1 — Y2Q Threats</h3>
@@ -260,8 +265,8 @@
 
     <!-- FULL CURRICULUM -->
     <div class="content-section">
-        <h2 class="section-heading">Full <span class="accent">Curriculum</span></h2>
-        <p class="section-sub">Detailed lesson breakdown for each module</p>
+        <h2 class="section-heading" data-i18n="acad.full_curriculum">Full <span class="accent">Curriculum</span></h2>
+        <p class="section-sub" data-i18n="acad.full_desc">Detailed lesson breakdown for each module</p>
 
         <div class="cur-mod"><div class="cur-head"><h4><span class="cur-num">1</span>Y2Q Threats — Quantum Computing &amp; Cryptographic Risk</h4><span class="cur-meta">3 lessons &middot; Free</span></div><div class="cur-body"><ul><li>What is Y2Q and current CRQC timeline estimates</li><li>Shor's algorithm — impact on RSA, ECDSA, ECDH, DH, DSA</li><li>Harvest Now, Decrypt Later (HNDL) and Mosca inequality</li><li>What survives quantum: AES-256, ML-KEM, ML-DSA, SLH-DSA</li></ul></div></div>
 
@@ -278,8 +283,8 @@
 
     <!-- CLI -->
     <div class="content-section">
-        <h2 class="section-heading">Get <span class="accent">Started</span></h2>
-        <p class="section-sub">Install and launch in 30 seconds</p>
+        <h2 class="section-heading" data-i18n="acad.get_started">Get <span class="accent">Started</span></h2>
+        <p class="section-sub" data-i18n="acad.install_desc">Install and launch in 30 seconds</p>
 
         <div class="cli-box"><pre><span class="p">$</span> <span class="c">pip install cryptography</span>
 
@@ -305,10 +310,10 @@
     <!-- CTA -->
     <section class="cta-section">
         <div class="cta-card">
-            <h2>Start learning PQC today</h2>
-            <p>Modules 1-2 are free. Upgrade to Pro for the full curriculum and certification.</p>
+            <h2 data-i18n="acad.cta_title">Start learning PQC today</h2>
+            <p data-i18n="acad.cta_desc">Modules 1-2 are free. Upgrade to Pro for the full curriculum and certification.</p>
             <div class="cta-buttons">
-                <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" class="btn-primary">Download Q-Workshop</a>
+                <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" class="btn-primary" data-i18n="acad.download">Download Q-Workshop</a>
                 <a href="/cdn-cgi/l/email-protection#3c55525a537c4d5f534e59124f454f4859514f" class="btn-secondary"><span class="__cf_email__" data-cfemail="41282f272e0130222e33246f32383235242c32">[email&#160;protected]</span></a>
             </div>
         </div>

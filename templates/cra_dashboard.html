@@ -103,6 +103,11 @@
         .footer a{color:var(--text-dim);text-decoration:none}
         .footer a:hover{color:var(--cyan)}
         @media(max-width:768px){.nav-links{display:none}.hero{padding:3rem 1.25rem 2rem}.content,.cta-section{padding:0 1.25rem 3rem}.cra-summary{grid-template-columns:repeat(2,1fr)}.cra-table{font-size:.7rem}.cra-table th,.cra-table td{padding:.5rem .6rem}}
+    
+        .flag-switcher{display:flex;gap:4px;align-items:center;margin-right:8px}
+        .flag-btn{background:none;border:1px solid transparent;border-radius:4px;cursor:pointer;font-size:1.1rem;padding:2px 4px;opacity:.5;transition:opacity .2s,border-color .2s;line-height:1}
+        .flag-btn:hover{opacity:.8}
+        .flag-btn.active{opacity:1;border-color:var(--cyan)}
     </style>
 </head>
 <body>
@@ -127,18 +132,18 @@
 
     <section class="hero">
         <div class="hero-badge" id="modeBadge">Q-CRA DASHBOARD v2.1 — DEMO MODE</div>
-        <h1>EU <span class="accent">Cyber Resilience Act</span><br>Compliance Scanner</h1>
-        <p>Scan any domain. Automatically map results to CRA &amp; NIS2 articles. Generate signed PDF compliance reports.</p>
+        <h1><span data-i18n="cra.title1">EU <span class="accent">Cyber Resilience Act</span></span><br><span data-i18n="cra.title2">Compliance Scanner</span></h1>
+        <p data-i18n="cra.desc">Scan any domain. Automatically map results to CRA &amp; NIS2 articles. Generate signed PDF compliance reports.</p>
 
         <div class="scan-box">
             <div class="scan-wrap">
                 <span class="scan-prefix">https://</span>
                 <input type="text" class="scan-input" id="domainInput" placeholder="example.com" autocomplete="off" spellcheck="false">
-                <button class="scan-btn" id="scanBtn" onclick="startCRAScan()">Scan &amp; Map CRA</button>
+                <button class="scan-btn" id="scanBtn" onclick="startCRAScan()" data-i18n="cra.scan_btn">Scan &amp; Map CRA</button>
             </div>
-            <div class="scan-hint">Scan domain and map findings to EU CRA articles</div>
+            <div class="scan-hint" data-i18n="cra.scan_hint">Scan domain and map findings to EU CRA articles</div>
             <div style="text-align:center;margin-top:.75rem;display:flex;align-items:center;justify-content:center;gap:.5rem">
-                <label style="font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">Report language:</label>
+                <label style="font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">Report language:</label></label>
                 <select id="langSelect" style="background:var(--bg-panel);color:var(--text-bright);border:1px solid var(--border);border-radius:6px;padding:.35rem .6rem;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;outline:none">
                     <option value="auto">Auto-detect (TLD)</option>
                     <option value="en">English</option>
@@ -173,33 +178,33 @@
         </div>
 
         <!-- FEATURES (always visible) -->
-        <h2 class="sh" style="margin-top:3rem">What Q-CRA Dashboard <span class="accent">Does</span></h2>
-        <div class="ss">Automated compliance assessment from scan to signed PDF</div>
+        <h2 class="sh" style="margin-top:3rem" data-i18n="cra.what_title">What Q-CRA Dashboard <span class="accent">Does</span></h2>
+        <div class="ss" data-i18n="cra.what_desc">Automated compliance assessment from scan to signed PDF</div>
         <div class="feat-grid">
-            <div class="feat-card"><div class="feat-icon">📋</div><h3>10+ CRA Articles</h3><p>Art.10, Art.10(3-6), Annex I.1, Annex I.2 — mapped with specific scanner checks and NIS2 cross-references.</p></div>
-            <div class="feat-card"><div class="feat-icon">⚛️</div><h3>PQC Readiness</h3><p>Detects ML-KEM (Kyber), ML-DSA (Dilithium) and flags harvest-now-decrypt-later quantum risk.</p></div>
-            <div class="feat-card"><div class="feat-icon">🤖</div><h3>AI Resilience</h3><p>Detects exposed AI endpoints susceptible to prompt injection, model inversion, and data extraction attacks.</p></div>
-            <div class="feat-card"><div class="feat-icon">📊</div><h3>NIS2 Cross-Reference</h3><p>Every CRA finding is cross-referenced with corresponding NIS2 Directive articles for dual compliance.</p></div>
-            <div class="feat-card"><div class="feat-icon">📄</div><h3>Signed PDF Reports</h3><p>Professional compliance reports with ECDSA P-384 digital signatures for tamper evidence.</p></div>
-            <div class="feat-card"><div class="feat-icon">🔄</div><h3>Scan-Learn-Fix Loop</h3><p>Each finding links to Q-Academy lessons via Q-Academy Bridge for guided remediation.</p></div>
+            <div class="feat-card"><div class="feat-icon">📋</div><h3 data-i18n="cra.f1.title">10+ CRA Articles</h3><p>Art.10, Art.10(3-6), Annex I.1, Annex I.2 — mapped with specific scanner checks and NIS2 cross-references.</p></div>
+            <div class="feat-card"><div class="feat-icon">⚛️</div><h3 data-i18n="cra.f2.title">PQC Readiness</h3><p>Detects ML-KEM (Kyber), ML-DSA (Dilithium) and flags harvest-now-decrypt-later quantum risk.</p></div>
+            <div class="feat-card"><div class="feat-icon">🤖</div><h3 data-i18n="cra.f3.title">AI Resilience</h3><p>Detects exposed AI endpoints susceptible to prompt injection, model inversion, and data extraction attacks.</p></div>
+            <div class="feat-card"><div class="feat-icon">📊</div><h3 data-i18n="cra.f4.title">NIS2 Cross-Reference</h3><p>Every CRA finding is cross-referenced with corresponding NIS2 Directive articles for dual compliance.</p></div>
+            <div class="feat-card"><div class="feat-icon">📄</div><h3 data-i18n="cra.f5.title">Signed PDF Reports</h3><p>Professional compliance reports with ECDSA P-384 digital signatures for tamper evidence.</p></div>
+            <div class="feat-card"><div class="feat-icon">🔄</div><h3 data-i18n="cra.f6.title">Scan-Learn-Fix Loop</h3><p>Each finding links to Q-Academy lessons via Q-Academy Bridge for guided remediation.</p></div>
         </div>
     </div>
 
     <section class="cta-section">
         <div class="cta-card">
-            <h2>Ready for CRA compliance?</h2>
-            <p>Scan your domain above or contact us for enterprise integration.</p>
+            <h2 data-i18n="cra.ready_title">Ready for CRA compliance?</h2>
+            <p data-i18n="cra.ready_desc">Scan your domain above or contact us for enterprise integration.</p>
             <div class="cta-buttons">
-                <a href="/static/cra_report_demo.pdf" class="btn-primary" download>Download Demo PDF</a>
-                <a href="mailto:info@qcore.systems" class="btn-secondary">info@qcore.systems</a>
+                <a href="/static/cra_report_demo.pdf" class="btn-primary" download data-i18n="cra.demo_pdf">Download Demo PDF</a>
+                <a href="/cdn-cgi/l/email-protection#f1989f979eb180929e8394df82888285949c82" class="btn-secondary"><span class="__cf_email__" data-cfemail="9af3f4fcf5daebf9f5e8ffb4e9e3e9eefff7e9">[email&#160;protected]</span></a>
             </div>
         </div>
     </section>
 
-    <footer class="footer">&copy; 2024&ndash;2026 Q-CORE SYSTEMS &middot; <a href="/">Scanner</a> &middot; <a href="/academy">Academy</a> &middot; <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank">GitHub</a> &middot; <a href="mailto:info@qcore.systems">Contact</a></footer>
+    <footer class="footer">&copy; 2024&ndash;2026 Q-CORE SYSTEMS &middot; <a href="/">Scanner</a> &middot; <a href="/academy">Academy</a> &middot; <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank">GitHub</a> &middot; <a href="/cdn-cgi/l/email-protection#31585f575e7140525e43541f42484245545c42">Contact</a></footer>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // Admin detection
 const params = new URLSearchParams(window.location.search);
 const ADMIN_KEY = params.get('key') || '';
@@ -379,13 +384,4 @@ async function downloadPDF() {
         alert('Error: ' + err.message);
     } finally {
         btn.disabled = false;
-        btn.textContent = 'Download CRA Report (PDF)';
-    }
-}
-
-function esc(s) { if(!s) return ''; const d=document.createElement('div'); d.textContent=String(s); return d.innerHTML; }
-
-document.getElementById('domainInput').addEventListener('keydown', e => { if(e.key==='Enter') startCRAScan(); });
-</script>
-</body>
-</html>
+        btn.textContent = 'Download CRA Repor
