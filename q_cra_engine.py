@@ -25,30 +25,35 @@ from reportlab.platypus import (
 )
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.pdfmetrics import registerFontFamily
 
 # Register Unicode fonts (DejaVu Sans supports CS/DE/EN characters)
-_FONT_PATHS = [
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-    "C:/Windows/Fonts/arial.ttf",  # Windows fallback
-]
 _UNICODE_FONT = "Helvetica"  # fallback
 _UNICODE_FONT_BOLD = "Helvetica-Bold"
 
 try:
     import os as _os
     # Try DejaVu (Linux/Railway)
-    dv = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-    dvb = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-    if _os.path.exists(dv):
-        pdfmetrics.registerFont(TTFont("DejaVu", dv))
-        pdfmetrics.registerFont(TTFont("DejaVu-Bold", dvb))
+    _dv_base = "/usr/share/fonts/truetype/dejavu/"
+    if _os.path.exists(_dv_base + "DejaVuSans.ttf"):
+        pdfmetrics.registerFont(TTFont("DejaVu", _dv_base + "DejaVuSans.ttf"))
+        pdfmetrics.registerFont(TTFont("DejaVu-Bold", _dv_base + "DejaVuSans-Bold.ttf"))
+        pdfmetrics.registerFont(TTFont("DejaVu-Italic", _dv_base + "DejaVuSans-Oblique.ttf"))
+        pdfmetrics.registerFont(TTFont("DejaVu-BoldItalic", _dv_base + "DejaVuSans-BoldOblique.ttf"))
+        registerFontFamily("DejaVu",
+            normal="DejaVu", bold="DejaVu-Bold",
+            italic="DejaVu-Italic", boldItalic="DejaVu-BoldItalic")
         _UNICODE_FONT = "DejaVu"
         _UNICODE_FONT_BOLD = "DejaVu-Bold"
     # Try Arial (Windows)
     elif _os.path.exists("C:/Windows/Fonts/arial.ttf"):
         pdfmetrics.registerFont(TTFont("Arial", "C:/Windows/Fonts/arial.ttf"))
         pdfmetrics.registerFont(TTFont("Arial-Bold", "C:/Windows/Fonts/arialbd.ttf"))
+        pdfmetrics.registerFont(TTFont("Arial-Italic", "C:/Windows/Fonts/ariali.ttf"))
+        pdfmetrics.registerFont(TTFont("Arial-BoldItalic", "C:/Windows/Fonts/arialbi.ttf"))
+        registerFontFamily("Arial",
+            normal="Arial", bold="Arial-Bold",
+            italic="Arial-Italic", boldItalic="Arial-BoldItalic")
         _UNICODE_FONT = "Arial"
         _UNICODE_FONT_BOLD = "Arial-Bold"
 except Exception:
@@ -593,28 +598,36 @@ class CRAReportPDF:
         score = round((passes / total) * 100) if total else 0
         pqc = scan_data.get("cipher", {}).get("is_pqc", False)
 
+        _s = self.styles["QBody"]
+        _sb = ParagraphStyle("CellBold", parent=_s, fontName=_UNICODE_FONT_BOLD)
+        _sc_style = ParagraphStyle("CellNorm", parent=_s, fontName=_UNICODE_FONT)
+
+        def P(text, bold=False):
+            """Wrap text in Paragraph with correct Unicode font."""
+            st = _sb if bold else _sc_style
+            return Paragraph(str(text), st)
+
         info = [
-            [f"{t('target', lang)}:", scan_data.get("hostname", "N/A")],
-            [f"{t('ip', lang)}:", scan_data.get("ip_address", "N/A")],
-            [f"{t('tls', lang)}:", scan_data.get("tls_version", "N/A")],
-            [f"{t('scan_time', lang)}:", scan_data.get("scan_timestamp", "N/A")],
-            [f"{t('report_time', lang)}:", datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")],
-            ["", ""],
-            [f"{t('overall_score', lang)}:", f"{score}%"],
-            [f"{t('checks', lang)}:", str(total)],
-            [t("pass", lang) + ":", str(passes)],
-            [t("warning", lang) + ":", str(warnings)],
-            [t("fail", lang) + ":", str(fails)],
-            [f"{t('pqc_ready', lang)}:", t("yes", lang) if pqc else t("no", lang)],
+            [P(f"{t('target', lang)}:", True), P(scan_data.get("hostname", "N/A"))],
+            [P(f"{t('ip', lang)}:", True), P(scan_data.get("ip_address", "N/A"))],
+            [P(f"{t('tls', lang)}:", True), P(scan_data.get("tls_version", "N/A"))],
+            [P(f"{t('scan_time', lang)}:", True), P(scan_data.get("scan_timestamp", "N/A"))],
+            [P(f"{t('report_time', lang)}:", True), P(datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"))],
+            [P(""), P("")],
+            [P(f"{t('overall_score', lang)}:", True), P(f"{score}%")],
+            [P(f"{t('checks', lang)}:", True), P(str(total))],
+            [P(f"{t('pass', lang)}:", True), P(str(passes))],
+            [P(f"{t('warning', lang)}:", True), P(str(warnings))],
+            [P(f"{t('fail', lang)}:", True), P(str(fails))],
+            [P(f"{t('pqc_ready', lang)}:", True), P(t("yes", lang) if pqc else t("no", lang))],
         ]
         tb = Table(info, colWidths=[40*mm, 110*mm])
         tb.setStyle(TableStyle([
-            ("FONTNAME", (0,0), (0,-1), _UNICODE_FONT_BOLD),
-            ("FONTSIZE", (0,0), (-1,-1), 9),
-            ("TEXTCOLOR", (0,0), (0,-1), C_PRIMARY),
             ("BOTTOMPADDING", (0,0), (-1,-1), 3),
+            ("TOPPADDING", (0,0), (-1,-1), 3),
             ("LINEBELOW", (0,5), (-1,5), 0.5, C_NEUTRAL),
             ("BACKGROUND", (0,6), (-1,6), C_BG),
+            ("VALIGN", (0,0), (-1,-1), "TOP"),
         ]))
         el.append(tb)
         el.append(Spacer(1, 8*mm))
@@ -623,22 +636,31 @@ class CRAReportPDF:
 
         # Executive Summary
         el.append(Paragraph(t("executive_summary", lang), self.styles["QH1"]))
-        hdr = [t("cra_article", lang), t("check", lang), t("category", lang), t("status", lang)]
+
+        _sh = ParagraphStyle("HdrCell", parent=_sc_style, textColor=white, fontName=_UNICODE_FONT_BOLD, fontSize=8)
+        _st = ParagraphStyle("TblCell", parent=_sc_style, fontSize=8)
+        _stb = ParagraphStyle("TblCellB", parent=_sb, fontSize=8)
+
+        hdr = [Paragraph(t("cra_article", lang), _sh), Paragraph(t("check", lang), _sh),
+               Paragraph(t("category", lang), _sh), Paragraph(t("status", lang), _sh)]
         td = [hdr]
         for r in cra_results:
-            td.append([r["article"], r["title"], r["category"], r.get("status_display", r["status"])])
+            status_color = self._sc(r["status"])
+            status_style = ParagraphStyle("SC", parent=_stb, textColor=status_color, alignment=1)
+            td.append([
+                Paragraph(r["article"], _st),
+                Paragraph(r["title"], _st),
+                Paragraph(r["category"], _st),
+                Paragraph(r.get("status_display", r["status"]), status_style),
+            ])
         et = Table(td, colWidths=[25*mm, 55*mm, 40*mm, 25*mm])
         scmds = [
-            ("BACKGROUND", (0,0), (-1,0), C_PRIMARY), ("TEXTCOLOR", (0,0), (-1,0), white),
-            ("FONTNAME", (0,0), (-1,0), _UNICODE_FONT_BOLD), ("FONTSIZE", (0,0), (-1,-1), 8),
-            ("ALIGN", (3,0), (3,-1), "CENTER"), ("GRID", (0,0), (-1,-1), 0.4, C_NEUTRAL),
+            ("BACKGROUND", (0,0), (-1,0), C_PRIMARY),
+            ("GRID", (0,0), (-1,-1), 0.4, C_NEUTRAL),
             ("ROWBACKGROUNDS", (0,1), (-1,-1), [white, C_BG]),
             ("BOTTOMPADDING", (0,0), (-1,-1), 4), ("TOPPADDING", (0,0), (-1,-1), 4),
+            ("VALIGN", (0,0), (-1,-1), "TOP"),
         ]
-        for i, r in enumerate(cra_results, 1):
-            cl = self._sc(r["status"])
-            scmds.append(("TEXTCOLOR", (3,i), (3,i), cl))
-            scmds.append(("FONTNAME", (3,i), (3,i), _UNICODE_FONT_BOLD))
         et.setStyle(TableStyle(scmds))
         el.append(et)
         el.append(PageBreak())
