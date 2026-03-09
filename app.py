@@ -213,6 +213,83 @@ def font_debug():
     return jsonify(info)
 
 
+
+@app.route("/api/font-test-pdf")
+def font_test_pdf():
+    """Generate a test PDF to verify Czech characters on Railway."""
+    import tempfile
+    from reportlab.pdfbase import pdfmetrics as _pm
+    from reportlab.pdfbase.ttfonts import TTFont as _TT
+    from reportlab.pdfbase.pdfmetrics import registerFontFamily as _rff
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import ParagraphStyle as _PS
+    from reportlab.platypus import SimpleDocTemplate as _SD, Paragraph as _P, Spacer as _Sp, Table as _T, TableStyle as _TS
+    from reportlab.lib.colors import HexColor
+    import os as _os
+
+    # Register bundled font fresh
+    fdir = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "fonts")
+    try:
+        _pm.registerFont(_TT("TestDV", _os.path.join(fdir, "DejaVuSans.ttf")))
+        _pm.registerFont(_TT("TestDV-B", _os.path.join(fdir, "DejaVuSans-Bold.ttf")))
+        _pm.registerFont(_TT("TestDV-I", _os.path.join(fdir, "DejaVuSans-Oblique.ttf")))
+        _pm.registerFont(_TT("TestDV-BI", _os.path.join(fdir, "DejaVuSans-BoldOblique.ttf")))
+        _rff("TestDV", normal="TestDV", bold="TestDV-B", italic="TestDV-I", boldItalic="TestDV-BI")
+        font_name = "TestDV"
+        font_bold = "TestDV-B"
+    except Exception as e:
+        return jsonify({"error": f"Font registration failed: {e}"}), 500
+
+    sn = _PS("N", fontName=font_name, fontSize=10, leading=14)
+    sb = _PS("B", fontName=font_bold, fontSize=10, leading=14)
+    sh = _PS("H", fontName=font_bold, fontSize=8, textColor=HexColor("#FFFFFF"))
+    sc = _PS("C", fontName=font_name, fontSize=8)
+
+    tmp = tempfile.NamedTemporaryFile(suffix=".pdf", delete=False)
+    doc = _SD(tmp.name, pagesize=A4)
+    el = []
+
+    el.append(_P("Test: Czech Characters in PDF on Railway", sb))
+    el.append(_Sp(1, 20))
+    el.append(_P("Plain Paragraph tests:", sb))
+    el.append(_P("Bezpečnost výměny klíčů", sn))
+    el.append(_P("Připravenost na post-kvantovou kryptografii", sn))
+    el.append(_P("Zpráva o shodě s CRA", sn))
+    el.append(_P("ZPRÁVA O SHODĚ S CRA", sb))
+    el.append(_P("Článek Doporučení Šifrování Náprava", sn))
+    el.append(_P("Čas skenu Přidat hlavičku Žádné", sn))
+    el.append(_P("Bezpečné výchozí nastavení", sn))
+    el.append(_P("Správa zranitelností", sn))
+    el.append(_Sp(1, 20))
+
+    el.append(_P("Bold tag test:", sb))
+    el.append(_P("<b>Bezpečnost</b> výměny <b>klíčů</b>", sn))
+    el.append(_P("<b>Připravenost</b> na post-kvantovou <i>kryptografii</i>", sn))
+    el.append(_Sp(1, 20))
+
+    el.append(_P("Table with Paragraph cells:", sb))
+    data = [
+        [_P("Článek CRA", sh), _P("Kontrola", sh), _P("Kategorie", sh)],
+        [_P("Art.10(1)", sc), _P("Bezpečnost výměny klíčů", sc), _P("Bezpečnost produktu", sc)],
+        [_P("Art.10(5)", sc), _P("Připravenost na PQC", sc), _P("Ochrana dat", sc)],
+        [_P("Art.10(4)", sc), _P("HTTP bezpečnostní hlavičky", sc), _P("Bezpečné výchozí nastavení", sc)],
+        [_P("Art.10(6)", sc), _P("HSTS — vnucení zabezpečeného transportu", sc), _P("Plocha útoku", sc)],
+        [_P("Art.10(6)", sc), _P("Podpora zastaralých protokolů", sc), _P("Plocha útoku", sc)],
+    ]
+    t = _T(data, colWidths=[60, 200, 140])
+    t.setStyle(_TS([
+        ("BACKGROUND", (0,0), (-1,0), HexColor("#0A1628")),
+        ("GRID", (0,0), (-1,-1), 0.4, HexColor("#B0BEC5")),
+        ("VALIGN", (0,0), (-1,-1), "TOP"),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 4),
+        ("TOPPADDING", (0,0), (-1,-1), 4),
+    ]))
+    el.append(t)
+
+    doc.build(el)
+    return send_file(tmp.name, mimetype="application/pdf", as_attachment=True,
+                     download_name="czech_font_test_railway.pdf")
+
 @app.route("/api/health")
 def health():
     return jsonify({"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()})
