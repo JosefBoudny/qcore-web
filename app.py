@@ -189,6 +189,30 @@ def api_cra_map():
         return jsonify({"error": f"CRA mapping failed: {str(e)}"}), 500
 
 
+
+@app.route("/api/font-debug")
+def font_debug():
+    """Debug endpoint to check font loading on Railway."""
+    import os as _os
+    from q_cra_engine import _UNICODE_FONT, _UNICODE_FONT_BOLD, t
+    
+    fonts_dir = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "fonts")
+    bundled = _os.listdir(fonts_dir) if _os.path.exists(fonts_dir) else []
+    
+    cs_test = t("key_exchange_security", "cs")
+    info = {
+        "font": _UNICODE_FONT,
+        "font_bold": _UNICODE_FONT_BOLD,
+        "fonts_dir_exists": _os.path.exists(fonts_dir),
+        "bundled_fonts": bundled,
+        "system_dejavu": _os.path.exists("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
+        "czech_test_str": cs_test,
+        "czech_hex": cs_test.encode("utf-8").hex(),
+        "has_real_chars": all(c in cs_test for c in "čěůíý"),
+    }
+    return jsonify(info)
+
+
 @app.route("/api/health")
 def health():
     return jsonify({"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()})
