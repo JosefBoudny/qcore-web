@@ -213,15 +213,25 @@ function createFlagSwitcher() {
   const container = document.createElement("div");
   container.className = "flag-switcher";
   container.innerHTML = `
-    <button class="flag-btn" data-lang="en" onclick="setLang('en')" title="English">&#x1F1EC;&#x1F1E7;</button>
-    <button class="flag-btn" data-lang="cs" onclick="setLang('cs')" title="\u010ce\u0161tina">&#x1F1E8;&#x1F1FF;</button>
-    <button class="flag-btn" data-lang="de" onclick="setLang('de')" title="Deutsch">&#x1F1E9;&#x1F1EA;</button>
+    <button class="flag-btn" data-lang="en" onclick="setLang('en')" title="English">EN</button>
+    <button class="flag-btn" data-lang="cs" onclick="setLang('cs')" title="\u010ce\u0161tina">CZ</button>
+    <button class="flag-btn" data-lang="de" onclick="setLang('de')" title="Deutsch">DE</button>
   `;
   return container;
 }
 
 // Auto-init on page load
 document.addEventListener("DOMContentLoaded", () => {
+  // Inject flag switcher CSS (works even without page-level CSS)
+  const flagStyle = document.createElement("style");
+  flagStyle.textContent = `
+    .flag-switcher{display:flex;gap:2px;align-items:center;margin-right:10px}
+    .flag-btn{background:none;border:1px solid rgba(0,229,255,0.2);border-radius:4px;cursor:pointer;font-size:0.7rem;font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:0.05em;padding:4px 8px;color:#5a6178;transition:all 0.2s;line-height:1}
+    .flag-btn:hover{color:#00e5ff;border-color:#00e5ff44}
+    .flag-btn.active{color:#00e5ff;border-color:#00e5ff;background:rgba(0,229,255,0.1)}
+  `;
+  document.head.appendChild(flagStyle);
+
   // Insert flags into navbar
   const nav = document.querySelector(".nav-links");
   if (nav) {
