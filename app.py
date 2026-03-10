@@ -87,6 +87,14 @@ def _result_to_dict(result: ScanResult) -> dict:
     return data
 
 
+@app.after_request
+def disable_cloudflare_mangling(response):
+    """Disable Cloudflare email obfuscation - it breaks our JavaScript."""
+    if response.content_type and 'text/html' in response.content_type:
+        response.headers['CF-Email-Obfuscation'] = 'off'
+    return response
+
+
 # ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
