@@ -273,9 +273,9 @@
                 <a href="#platform" data-i18n="nav.platform">Platform</a>
                 <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
                 <div class="flag-switcher">
-                    <button class="flag-btn active" onclick="setLang('en')" title="English">EN</button>
-                    <button class="flag-btn" onclick="setLang('cs')" title="Cesky">CZ</button>
-                    <button class="flag-btn" onclick="setLang('de')" title="Deutsch">DE</button>
+                    <button class="flag-btn active" data-lang="en" onclick="setLang('en')" title="English">EN</button>
+                    <button class="flag-btn" data-lang="cs" onclick="setLang('cs')" title="Cesky">CZ</button>
+                    <button class="flag-btn" data-lang="de" onclick="setLang('de')" title="Deutsch">DE</button>
                 </div>
                 <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="nav-github">GitHub</a>
             </div>
@@ -543,38 +543,19 @@
         <footer class="footer">© 2024–2026 Q-CORE SYSTEMS · Built by <a href="https://linkedin.com/in/josef-boudný-a274aa3aa/" target="_blank" rel="noopener">Josef Boudny</a> · <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener">Open Source</a></footer>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    const domainInput=document.getElementById('domainInput'),scanBtn=document.getElementById('scanBtn'),progressEl=document.getElementById('scanProgress'),progressLog=document.getElementById('progressLog'),errorEl=document.getElementById('scanError'),resultsEl=document.getElementById('results');domainInput.addEventListener('keydown',e=>{if(e.key==='Enter')startScan()});const SCAN_STEPS=['Resolving DNS...','Establishing TLS connection...','Analyzing cipher suite...','Inspecting certificate chain...','Probing supported TLS versions...','Checking HTTP security headers...','Evaluating quantum risks...','Generating report...'];async function startScan(){const domain=domainInput.value.trim();if(!domain){domainInput.focus();return}errorEl.classList.remove('active');resultsEl.classList.remove('active');resultsEl.innerHTML='';progressEl.classList.add('active');progressLog.innerHTML='';scanBtn.disabled=true;scanBtn.textContent=(currentLang==='cs'?'Skenuji...':currentLang==='de'?'Scanne....':'Scanning...');let stepIndex=0;const stepInterval=setInterval(()=>{if(stepIndex<SCAN_STEPS.length){const prev=progressLog.querySelector('.active-step');if(prev){prev.classList.remove('active-step');prev.classList.add('done');prev.textContent='✓ '+prev.textContent.replace('→ ','')}const div=document.createElement('div');div.className='active-step';div.textContent='→ '+SCAN_STEPS[stepIndex];progressLog.appendChild(div);stepIndex++}},800);try{const resp=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain})});clearInterval(stepInterval);const data=await resp.json();if(!resp.ok)throw new Error(data.error||'Scan failed');const prev=progressLog.querySelector('.active-step');if(prev){prev.classList.remove('active-step');prev.classList.add('done');prev.textContent='✓ '+prev.textContent.replace('→ ','')}await new Promise(r=>setTimeout(r,400));progressEl.classList.remove('active');renderResults(data)}catch(err){clearInterval(stepInterval);progressEl.classList.remove('active');errorEl.textContent='✕ '+(err.message||'Connection failed.');errorEl.classList.add('active')}finally{scanBtn.disabled=false;scanBtn.textContent='Scan'}}function scoreColor(s){if(s<=20)return'var(--green)';if(s<=40)return'var(--yellow)';if(s<=65)return'var(--orange)';return'var(--red)'}function riskClass(l){return'risk-'+(l||'MEDIUM').toUpperCase()}function statusLabel(s){return{'SAFE':'Quantum Safe','LOW_RISK':'Low Risk','MEDIUM_RISK':'Medium Risk','VULNERABLE':'Vulnerable','CRITICAL':'Critical','ERROR':'Error'}[s]||s}function renderResults(d){const c=2*Math.PI*54,o=c-(d.overall_risk_score/100)*c,cl=scoreColor(d.overall_risk_score);let h=`<div class="results-header"><div class="results-target">${esc(d.hostname)} <span>· ${esc(d.ip_address)}:${d.port}</span></div><div class="status-badge status-${d.overall_pqc_status}">${statusLabel(d.overall_pqc_status)}</div></div><div class="score-section"><div class="score-ring-wrap"><svg width="130" height="130" viewBox="0 0 130 130"><circle class="score-ring-bg" cx="65" cy="65" r="54"/><circle class="score-ring-fill" cx="65" cy="65" r="54" stroke="${cl}" stroke-dasharray="${c}" stroke-dashoffset="${o}"/></svg><div class="score-value"><div class="score-number" style="color:${cl}">${d.overall_risk_score}</div><div class="score-label">Risk Score</div></div></div><div class="score-details"><div class="score-detail-row"><span class="score-detail-key">TLS Version</span><span class="score-detail-val">${esc(d.tls_version)}</span></div><div class="score-detail-row"><span class="score-detail-key">Cipher Suite</span><span class="score-detail-val">${esc(d.cipher.name)}</span></div><div class="score-detail-row"><span class="score-detail-key">Key Exchange</span><span class="score-detail-val">${esc(d.cipher.key_exchange)}</span></div><div class="score-detail-row"><span class="score-detail-key">Encryption</span><span class="score-detail-val">${esc(d.cipher.encryption)} (${d.cipher.encryption_bits}-bit)</span></div><div class="score-detail-row"><span class="score-detail-key">PQC Key Exchange</span><span class="score-detail-val" style="color:${d.cipher.is_pqc?'var(--green)':'var(--red)'}">${d.cipher.is_pqc?'✓ YES':'✕ NO'}</span></div></div></div>`;const ce=d.certificate;h+=`<div class="cards-grid"><div class="card"><div class="card-label">Certificate Subject</div><div class="card-value">${esc(ce.subject)}</div><div class="card-sub">Issuer: ${esc(ce.issuer)}</div></div><div class="card"><div class="card-label">Key Type</div><div class="card-value">${esc(ce.key_type)} (${ce.key_size}-bit)</div><div class="card-sub">Sig: ${esc(ce.signature_algorithm)}</div></div><div class="card"><div class="card-label">Expiry</div><div class="card-value" style="color:${ce.is_expired?'var(--red)':ce.days_until_expiry<30?'var(--orange)':'var(--text-bright)'}">${ce.is_expired?'EXPIRED':ce.days_until_expiry+' days'}</div><div class="card-sub">${esc(ce.not_after)}</div></div></div>`;if(d.quantum_risks&&d.quantum_risks.length>0){h+=`<div class="section-title">Quantum Risk Assessment</div><table class="risk-table"><thead><tr><th>Component</th><th>Level</th><th>Threat</th><th>Details</th></tr></thead><tbody>`;for(const r of d.quantum_risks)h+=`<tr><td style="color:var(--text-bright);font-weight:500">${esc(r.component)}</td><td><span class="risk-level ${riskClass(r.level)}">${esc(r.level)}</span></td><td>${esc(r.threat)}</td><td><div>${esc(r.detail)}</div><div class="risk-detail">→ ${esc(r.recommendation)}</div></td></tr>`;h+='</tbody></table>'}if(d.supported_protocols&&d.supported_protocols.length>0){h+=`<div class="section-title">Supported TLS Versions</div><div class="proto-grid">`;for(const p of d.supported_protocols){const cs=p.supported?(p.status==='CRITICAL'?'proto-critical':'proto-enabled'):'proto-disabled',lb=p.supported?(p.status==='CRITICAL'?'⚠ ENABLED':'✓ Enabled'):'— Disabled';h+=`<div class="proto-item"><div class="proto-name">${esc(p.protocol)}</div><div class="proto-status ${cs}">${lb}</div></div>`}h+='</div>'}if(d.http_headers){const hd=d.http_headers,hc=hd.score>=80?'var(--green)':hd.score>=50?'var(--orange)':'var(--red)';h+=`<div class="section-title">HTTP Security Headers</div><div class="headers-bar"><div><div class="headers-score" style="color:${hc}">${hd.score}/100</div><div class="headers-label">Header Score</div></div>`;if(hd.missing_headers&&hd.missing_headers.length>0)h+=`<div class="headers-missing">Missing: ${hd.missing_headers.map(esc).join(', ')}</div>`;h+='</div>'}if(d.recommendations&&d.recommendations.length>0){h+=`<div class="section-title">Recommendations</div><ul class="recs-list">`;d.recommendations.forEach((r,i)=>{h+=`<li><span class="rec-num">${i+1}.</span> ${esc(r)}</li>`});h+='</ul>'}if(d.chain_issues&&d.chain_issues.length>0){h+=`<div class="section-title">⚠ Warnings</div><ul class="recs-list">`;d.chain_issues.forEach(i=>{h+=`<li><span class="rec-num" style="color:var(--orange)">!</span> ${esc(i)}</li>`});h+='</ul>'}if(d.errors&&d.errors.length>0){h+=`<div class="section-title" style="color:var(--red)">Errors</div><ul class="recs-list">`;d.errors.forEach(e=>{h+=`<li><span class="rec-num" style="color:var(--red)">✕</span> ${esc(e)}</li>`});h+='</ul>'}resultsEl.innerHTML=h;resultsEl.classList.add('active')}function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
-
-
-    /* MODULE SEARCH */
-    document.getElementById('moduleSearch').addEventListener('input', function() {
-        const q = this.value.toLowerCase().trim();
-        const cards = document.querySelectorAll('.mc');
-        const blocks = document.querySelectorAll('.cat-block');
-        let visible = 0;
-        cards.forEach(card => {
-            const text = card.textContent.toLowerCase();
-            const match = !q || text.includes(q);
-            card.style.display = match ? '' : 'none';
-            if (match) visible++;
-        });
-        blocks.forEach(block => {
-            const visCards = block.querySelectorAll('.mc:not([style*="display: none"])');
-            block.style.display = visCards.length > 0 ? '' : 'none';
-        });
-        document.getElementById('moduleCount').textContent = visible + ' / 52 modules';
-    });
-
-    /* i18n */
-    let currentLang = localStorage.getItem('qcore_lang') || 'en';
-    const i18n = {
+    <!--email_off-->
+    <script>
+    /* === I18N & LANGUAGE SWITCHER (isolated from Cloudflare interference) === */
+    var currentLang = localStorage.getItem('qcore_lang') || 'en';
+    var i18n = {
         en: {
             'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Platform','nav.pricing':'Pricing',
             'hero.badge':'Q-SCANNER v2.1 \u2014 Free PQC Vulnerability Audit','hero.title1':'Is your server ready for','hero.title2':'quantum threats?',
             'hero.desc':'Scan any domain to analyze TLS configuration, cipher suites, certificates, and post-quantum cryptography readiness. Free, open-source, instant results.',
             'hero.scan_btn':'Scan','hero.hint':'Try: google.com \u00b7 github.com \u00b7 cloudflare.com',
-            'feat.quantum':'Quantum Risk Analysis','feat.tls':'TLS Deep Scan','feat.pqc':'PQC Readiness',
+            'feat.quantum':'Quantum Risk Analysis','feat.quantum.d':'Evaluates Shor\'s & Grover\'s algorithm impact on your key exchange, encryption and certificates.',
+            'feat.tls':'TLS Deep Scan','feat.tls.d':'Probes all TLS versions, cipher suites, certificate chain, and HTTP security headers.',
+            'feat.pqc':'PQC Readiness','feat.pqc.d':'Detects ML-KEM (Kyber), ML-DSA (Dilithium) and other NIST post-quantum standards.',
             'ap.title':'\u2014 SOC Orchestrator','ap.desc':'Autonomous Security Operations Center. Q-AUTOPILOT connects all 52 modules into a self-operating security engine that monitors, triages, and responds \u2014 24/7.',
             'ap.c1t':'Threat Correlation Engine','ap.c2t':'Automated Incident Response','ap.c3t':'Risk Scoring & Prioritization',
             'ap.c4t':'Cross-Module Orchestration','ap.c5t':'Adaptive Threat Hunting','ap.c6t':'Compliance Automation',
@@ -599,7 +580,9 @@
             'hero.badge':'Q-SCANNER v2.1 \u2014 Bezplatn\u00fd PQC audit','hero.title1':'Je v\u00e1\u0161 server p\u0159ipraven na','hero.title2':'kvantov\u00e9 hrozby?',
             'hero.desc':'Skenujte libovolnou dom\u00e9nu \u2014 TLS, \u0161ifrovac\u00ed sady, certifik\u00e1ty a p\u0159ipravenost na post-kvantovou kryptografii. Zdarma, open-source.',
             'hero.scan_btn':'Skenovat','hero.hint':'Zkuste: google.com \u00b7 github.com \u00b7 cloudflare.com',
-            'feat.quantum':'Anal\u00fdza kvantov\u00fdch rizik','feat.tls':'Hloubkov\u00fd TLS sken','feat.pqc':'PQC p\u0159ipravenost',
+            'feat.quantum':'Anal\u00fdza kvantov\u00fdch rizik','feat.quantum.d':'Vyhodnocuje dopad Shorova a Groverova algoritmu na v\u00fdm\u011bnu kl\u00ed\u010d\u016f, \u0161ifrov\u00e1n\u00ed a certifik\u00e1ty.',
+            'feat.tls':'Hloubkov\u00fd TLS sken','feat.tls.d':'Testuje v\u0161echny verze TLS, \u0161ifrovac\u00ed sady, \u0159et\u011bzec certifik\u00e1t\u016f a HTTP bezpe\u010dnostn\u00ed hlavi\u010dky.',
+            'feat.pqc':'PQC p\u0159ipravenost','feat.pqc.d':'Detekuje ML-KEM (Kyber), ML-DSA (Dilithium) a dal\u0161\u00ed NIST post-kvantov\u00e9 standardy.',
             'ap.title':'\u2014 SOC orchestr\u00e1tor','ap.desc':'Autonomn\u00ed Security Operations Center. Q-AUTOPILOT propojuje v\u0161ech 52 modul\u016f do samo\u010dinn\u00e9ho bezpe\u010dnostn\u00edho enginu \u2014 24/7.',
             'ap.c1t':'Korela\u010dn\u00ed engine hrozeb','ap.c2t':'Automatick\u00e1 reakce na incidenty','ap.c3t':'Hodnocen\u00ed a prioritizace rizik',
             'ap.c4t':'Cross-modulov\u00e1 orchestrace','ap.c5t':'Adaptivn\u00ed threat hunting','ap.c6t':'Automatizace compliance',
@@ -622,12 +605,11 @@
         de: {
             'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Plattform','nav.pricing':'Preise',
             'hero.badge':'Q-SCANNER v2.1 \u2014 Kostenloser PQC-Audit','hero.title1':'Ist Ihr Server bereit f\u00fcr','hero.title2':'Quantenbedrohungen?',
-            'hero.desc':'Scannen Sie jede Domain \u2014 TLS-Konfiguration, Cipher Suites, Zertifikate und Post-Quanten-Kryptografie-Bereitschaft. Kostenlos, Open-Source, sofortige Ergebnisse.',
+            'hero.desc':'Scannen Sie jede Domain \u2014 TLS-Konfiguration, Cipher Suites, Zertifikate und Post-Quanten-Kryptografie-Bereitschaft. Kostenlos, Open-Source.',
             'hero.scan_btn':'Scannen','hero.hint':'Versuchen: google.com \u00b7 github.com \u00b7 cloudflare.com',
-            'feat.quantum':'Quantenrisiko-Analyse','feat.tls':'TLS-Tiefenscan','feat.pqc':'PQC-Bereitschaft',
-            'feat.quantum.d':'Bewertet den Einfluss von Shors und Grovers Algorithmus auf Schl\u00fcsseltausch, Verschl\u00fcsselung und Zertifikate.',
-            'feat.tls.d':'Pr\u00fcft alle TLS-Versionen, Cipher Suites, Zertifikatketten und HTTP-Sicherheitsheader.',
-            'feat.pqc.d':'Erkennt ML-KEM (Kyber), ML-DSA (Dilithium) und andere NIST Post-Quanten-Standards.',
+            'feat.quantum':'Quantenrisiko-Analyse','feat.quantum.d':'Bewertet den Einfluss von Shors und Grovers Algorithmus auf Schl\u00fcsseltausch und Zertifikate.',
+            'feat.tls':'TLS-Tiefenscan','feat.tls.d':'Pr\u00fcft alle TLS-Versionen, Cipher Suites, Zertifikatketten und HTTP-Sicherheitsheader.',
+            'feat.pqc':'PQC-Bereitschaft','feat.pqc.d':'Erkennt ML-KEM (Kyber), ML-DSA (Dilithium) und andere NIST Post-Quanten-Standards.',
             'ap.title':'\u2014 SOC-Orchestrator','ap.desc':'Autonomes Security Operations Center. Q-AUTOPILOT verbindet alle 52 Module zu einer selbstoperierenden Sicherheitsengine \u2014 24/7.',
             'ap.c1t':'Bedrohungs-Korrelationsengine','ap.c2t':'Automatische Vorfallreaktion','ap.c3t':'Risikobewertung & Priorisierung',
             'ap.c4t':'Cross-Modul-Orchestrierung','ap.c5t':'Adaptives Threat Hunting','ap.c6t':'Compliance-Automatisierung',
@@ -636,7 +618,7 @@
             'cat.crypto':'Kernkryptografie','cat.scanning':'Scanning & Compliance','cat.ai':'KI-Sicherheit',
             'cat.advcrypto':'Erweiterte Kryptografie','cat.network':'Netzwerkverteidigung','cat.forensics':'Forensik & IR',
             'cat.ops':'Sicherheitsoperationen','cat.gov':'Governance & Risiko','cat.edu':'Bildung & Planung',
-            'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'Verfolgen Sie Ihre EU CRA-Compliance in Echtzeit. Automatische Berichte, NIS2-Zuordnung, PDF-Export (EN/CS/DE).','cra.btn':'CRA Dashboard \u00f6ffnen \u2192',
+            'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'EU CRA-Compliance in Echtzeit. Automatische Berichte, NIS2-Zuordnung, PDF-Export (EN/CS/DE).','cra.btn':'CRA Dashboard \u00f6ffnen \u2192',
             'price.t1':'Einfache','price.t2':'Preisgestaltung','price.desc':'Starten Sie kostenlos. Skalieren Sie f\u00fcr Enterprise-Grade Post-Quanten-Schutz.',
             'price.community':'Community','price.free':'Kostenlos','price.free.price':'$0 / f\u00fcr immer',
             'price.start':'Scannen starten','price.popular':'Beliebteste','price.pro':'Professionell','price.pro.name':'Pro',
@@ -645,31 +627,66 @@
             'about.p1':'Q-CORE Systems ist ein Cybersicherheitsunternehmen mit Fokus auf Post-Quanten-Kryptografie.',
             'about.p2':'Unsere Mission: Post-Quanten-Sicherheit zug\u00e4nglich machen \u2014 bevor es zu sp\u00e4t ist.',
             'about.modules':'Module','about.categories':'Kategorien','about.tests':'Scantests','about.compliant':'Konform',
-            'cta.title':'Bereit f\u00fcr Quantensicherheit?','cta.desc':'Ob kostenloser Scan oder komplette Enterprise PQC-Migration \u2014 wir helfen Ihnen.'
+            'cta.title':'Bereit f\u00fcr Quantensicherheit?','cta.desc':'Ob kostenloser Scan oder Enterprise PQC-Migration \u2014 wir helfen Ihnen.'
         }
     };
-
     function setLang(lang) {
         currentLang = lang;
-        localStorage.setItem('qcore_lang', lang);
-        document.querySelectorAll('.flag-btn').forEach(b => b.classList.remove('active'));
-        const activeBtn = document.querySelector('.flag-btn[onclick="setLang(\'' + lang + '\')"]');
-        if (activeBtn) activeBtn.classList.add('active');
-        const t = i18n[lang];
+        try { localStorage.setItem('qcore_lang', lang); } catch(e) {}
+        document.querySelectorAll('.flag-btn').forEach(function(b) { b.classList.remove('active'); });
+        var btns = document.querySelectorAll('.flag-btn');
+        for (var i = 0; i < btns.length; i++) {
+            if (btns[i].getAttribute('data-lang') === lang) btns[i].classList.add('active');
+        }
+        var t = i18n[lang];
         if (!t) return;
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n');
             if (t[key] !== undefined) el.innerHTML = t[key];
         });
-        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-            const key = el.getAttribute('data-i18n-placeholder');
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n-placeholder');
             if (t[key]) el.placeholder = t[key];
         });
         document.documentElement.lang = lang;
     }
     if (currentLang !== 'en') setLang(currentLang);
+    </script>
+
+    <script>
+    /* === SCANNER ENGINE === */
+    const domainInput=document.getElementById('domainInput'),scanBtn=document.getElementById('scanBtn'),progressEl=document.getElementById('scanProgress'),progressLog=document.getElementById('progressLog'),errorEl=document.getElementById('scanError'),resultsEl=document.getElementById('results');domainInput.addEventListener('keydown',e=>{if(e.key==='Enter')startScan()});const SCAN_STEPS=['Resolving DNS...','Establishing TLS connection...','Analyzing cipher suite...','Inspecting certificate chain...','Probing supported TLS versions...','Checking HTTP security headers...','Evaluating quantum risks...','Generating report...'];async function startScan(){const domain=domainInput.value.trim();if(!domain){domainInput.focus();return}errorEl.classList.remove('active');resultsEl.classList.remove('active');resultsEl.innerHTML='';progressEl.classList.add('active');progressLog.innerHTML='';scanBtn.disabled=true;scanBtn.textContent=(currentLang==='cs'?'Skenuji...':currentLang==='de'?'Scanne....':'Scanning...');let stepIndex=0;const stepInterval=setInterval(()=>{if(stepIndex<SCAN_STEPS.length){const prev=progressLog.querySelector('.active-step');if(prev){prev.classList.remove('active-step');prev.classList.add('done');prev.textContent='✓ '+prev.textContent.replace('→ ','')}const div=document.createElement('div');div.className='active-step';div.textContent='→ '+SCAN_STEPS[stepIndex];progressLog.appendChild(div);stepIndex++}},800);try{const resp=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain})});clearInterval(stepInterval);const data=await resp.json();if(!resp.ok)throw new Error(data.error||'Scan failed');const prev=progressLog.querySelector('.active-step');if(prev){prev.classList.remove('active-step');prev.classList.add('done');prev.textContent='✓ '+prev.textContent.replace('→ ','')}await new Promise(r=>setTimeout(r,400));progressEl.classList.remove('active');renderResults(data)}catch(err){clearInterval(stepInterval);progressEl.classList.remove('active');errorEl.textContent='✕ '+(err.message||'Connection failed.');errorEl.classList.add('active')}finally{scanBtn.disabled=false;scanBtn.textContent='Scan'}}function scoreColor(s){if(s<=20)return'var(--green)';if(s<=40)return'var(--yellow)';if(s<=65)return'var(--orange)';return'var(--red)'}function riskClass(l){return'risk-'+(l||'MEDIUM').toUpperCase()}function statusLabel(s){return{'SAFE':'Quantum Safe','LOW_RISK':'Low Risk','MEDIUM_RISK':'Medium Risk','VULNERABLE':'Vulnerable','CRITICAL':'Critical','ERROR':'Error'}[s]||s}function renderResults(d){const c=2*Math.PI*54,o=c-(d.overall_risk_score/100)*c,cl=scoreColor(d.overall_risk_score);let h=`<div class="results-header"><div class="results-target">${esc(d.hostname)} <span>· ${esc(d.ip_address)}:${d.port}</span></div><div class="status-badge status-${d.overall_pqc_status}">${statusLabel(d.overall_pqc_status)}</div></div><div class="score-section"><div class="score-ring-wrap"><svg width="130" height="130" viewBox="0 0 130 130"><circle class="score-ring-bg" cx="65" cy="65" r="54"/><circle class="score-ring-fill" cx="65" cy="65" r="54" stroke="${cl}" stroke-dasharray="${c}" stroke-dashoffset="${o}"/></svg><div class="score-value"><div class="score-number" style="color:${cl}">${d.overall_risk_score}</div><div class="score-label">Risk Score</div></div></div><div class="score-details"><div class="score-detail-row"><span class="score-detail-key">TLS Version</span><span class="score-detail-val">${esc(d.tls_version)}</span></div><div class="score-detail-row"><span class="score-detail-key">Cipher Suite</span><span class="score-detail-val">${esc(d.cipher.name)}</span></div><div class="score-detail-row"><span class="score-detail-key">Key Exchange</span><span class="score-detail-val">${esc(d.cipher.key_exchange)}</span></div><div class="score-detail-row"><span class="score-detail-key">Encryption</span><span class="score-detail-val">${esc(d.cipher.encryption)} (${d.cipher.encryption_bits}-bit)</span></div><div class="score-detail-row"><span class="score-detail-key">PQC Key Exchange</span><span class="score-detail-val" style="color:${d.cipher.is_pqc?'var(--green)':'var(--red)'}">${d.cipher.is_pqc?'✓ YES':'✕ NO'}</span></div></div></div>`;const ce=d.certificate;h+=`<div class="cards-grid"><div class="card"><div class="card-label">Certificate Subject</div><div class="card-value">${esc(ce.subject)}</div><div class="card-sub">Issuer: ${esc(ce.issuer)}</div></div><div class="card"><div class="card-label">Key Type</div><div class="card-value">${esc(ce.key_type)} (${ce.key_size}-bit)</div><div class="card-sub">Sig: ${esc(ce.signature_algorithm)}</div></div><div class="card"><div class="card-label">Expiry</div><div class="card-value" style="color:${ce.is_expired?'var(--red)':ce.days_until_expiry<30?'var(--orange)':'var(--text-bright)'}">${ce.is_expired?'EXPIRED':ce.days_until_expiry+' days'}</div><div class="card-sub">${esc(ce.not_after)}</div></div></div>`;if(d.quantum_risks&&d.quantum_risks.length>0){h+=`<div class="section-title">Quantum Risk Assessment</div><table class="risk-table"><thead><tr><th>Component</th><th>Level</th><th>Threat</th><th>Details</th></tr></thead><tbody>`;for(const r of d.quantum_risks)h+=`<tr><td style="color:var(--text-bright);font-weight:500">${esc(r.component)}</td><td><span class="risk-level ${riskClass(r.level)}">${esc(r.level)}</span></td><td>${esc(r.threat)}</td><td><div>${esc(r.detail)}</div><div class="risk-detail">→ ${esc(r.recommendation)}</div></td></tr>`;h+='</tbody></table>'}if(d.supported_protocols&&d.supported_protocols.length>0){h+=`<div class="section-title">Supported TLS Versions</div><div class="proto-grid">`;for(const p of d.supported_protocols){const cs=p.supported?(p.status==='CRITICAL'?'proto-critical':'proto-enabled'):'proto-disabled',lb=p.supported?(p.status==='CRITICAL'?'⚠ ENABLED':'✓ Enabled'):'— Disabled';h+=`<div class="proto-item"><div class="proto-name">${esc(p.protocol)}</div><div class="proto-status ${cs}">${lb}</div></div>`}h+='</div>'}if(d.http_headers){const hd=d.http_headers,hc=hd.score>=80?'var(--green)':hd.score>=50?'var(--orange)':'var(--red)';h+=`<div class="section-title">HTTP Security Headers</div><div class="headers-bar"><div><div class="headers-score" style="color:${hc}">${hd.score}/100</div><div class="headers-label">Header Score</div></div>`;if(hd.missing_headers&&hd.missing_headers.length>0)h+=`<div class="headers-missing">Missing: ${hd.missing_headers.map(esc).join(', ')}</div>`;h+='</div>'}if(d.recommendations&&d.recommendations.length>0){h+=`<div class="section-title">Recommendations</div><ul class="recs-list">`;d.recommendations.forEach((r,i)=>{h+=`<li><span class="rec-num">${i+1}.</span> ${esc(r)}</li>`});h+='</ul>'}if(d.chain_issues&&d.chain_issues.length>0){h+=`<div class="section-title">⚠ Warnings</div><ul class="recs-list">`;d.chain_issues.forEach(i=>{h+=`<li><span class="rec-num" style="color:var(--orange)">!</span> ${esc(i)}</li>`});h+='</ul>'}if(d.errors&&d.errors.length>0){h+=`<div class="section-title" style="color:var(--red)">Errors</div><ul class="recs-list">`;d.errors.forEach(e=>{h+=`<li><span class="rec-num" style="color:var(--red)">✕</span> ${esc(e)}</li>`});h+='</ul>'}resultsEl.innerHTML=h;resultsEl.classList.add('active')}function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+
+    /* MODULE SEARCH */
+    document.getElementById('moduleSearch').addEventListener('input', function() {
+        const q = this.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.mc');
+        const blocks = document.querySelectorAll('.cat-block');
+        let visible = 0;
+        cards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            const match = !q || text.includes(q);
+            card.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        blocks.forEach(block => {
+            const visCards = block.querySelectorAll('.mc:not([style*="display: none"])');
+            block.style.display = visCards.length > 0 ? '' : 'none';
+        });
+        document.getElementById('moduleCount').textContent = visible + ' / 52 modules';
+    });
 
     /* INTERSECTION OBSERVER */
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => { if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; } });
     }, { threshold: 0.1 });
+    document.querySelectorAll('.feature, .card, .ap-card, .mc, .tier').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+    </script>
+</body>
+</html>
