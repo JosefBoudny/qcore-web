@@ -563,7 +563,7 @@
             const visCards = block.querySelectorAll('.mc:not([style*="display: none"])');
             block.style.display = visCards.length > 0 ? '' : 'none';
         });
-        document.getElementById('moduleCount').textContent = `${visible} / 52 modules`;
+        document.getElementById('moduleCount').textContent = visible + ' / 52 modules';
     });
 
     /* i18n */
@@ -653,7 +653,7 @@
         currentLang = lang;
         localStorage.setItem('qcore_lang', lang);
         document.querySelectorAll('.flag-btn').forEach(b => b.classList.remove('active'));
-        const activeBtn = document.querySelector(`.flag-btn[onclick="setLang('${lang}')"]`);
+        const activeBtn = document.querySelector('.flag-btn[onclick="setLang(\'' + lang + '\')"]');
         if (activeBtn) activeBtn.classList.add('active');
         const t = i18n[lang];
         if (!t) return;
