@@ -45,9 +45,9 @@
         .nav-github { display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.85rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.72rem; transition: border-color 0.2s, color 0.2s; }
         .nav-github:hover { border-color: var(--cyan); color: var(--cyan) !important; }
         .flag-switcher { display: flex; gap: 4px; align-items: center; }
-        .flag-btn { background: none; border: 1px solid transparent; border-radius: 4px; cursor: pointer; font-size: 1.1rem; padding: 2px 4px; opacity: .5; transition: opacity .2s, border-color .2s; line-height: 1; }
-        .flag-btn:hover { opacity: .8; }
-        .flag-btn.active { opacity: 1; border-color: var(--cyan); }
+        .flag-btn { background: none; border: 1px solid rgba(0,188,212,0.3); border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600; font-family: 'JetBrains Mono', monospace; padding: 3px 8px; color: var(--cyan); opacity: .6; transition: opacity .2s, border-color .2s; line-height: 1; letter-spacing: 1px; }
+        .flag-btn:hover { opacity: .9; border-color: var(--cyan); }
+        .flag-btn.active { opacity: 1; border-color: var(--cyan); background: rgba(0,188,212,0.15); color: var(--cyan); }
         .nav-mobile-toggle { display: none; background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-bright); font-size: 1.2rem; cursor: pointer; padding: 0.3rem 0.6rem; }
 
         /* HERO */
@@ -273,8 +273,9 @@
                 <a href="#platform" data-i18n="nav.platform">Platform</a>
                 <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
                 <div class="flag-switcher">
-                    <button class="flag-btn active" onclick="setLang('en')" title="English">🇬🇧</button>
-                    <button class="flag-btn" onclick="setLang('cs')" title="Čeština">🇨🇿</button>
+                    <button class="flag-btn active" onclick="setLang('en')" title="English">EN</button>
+                    <button class="flag-btn" onclick="setLang('cs')" title="Cesky">CZ</button>
+                    <button class="flag-btn" onclick="setLang('de')" title="Deutsch">DE</button>
                 </div>
                 <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="nav-github">GitHub</a>
             </div>
@@ -617,6 +618,34 @@
             'about.p2':'Na\u0161e mise: zp\u0159\u00edstupnit post-kvantovou bezpe\u010dnost \u2014 ne\u017e bude pozd\u011b.',
             'about.modules':'Modul\u016f','about.categories':'Kategori\u00ed','about.tests':'Test\u016f','about.compliant':'Kompatibiln\u00ed',
             'cta.title':'P\u0159ipraveni na kvantovou bezpe\u010dnost?','cta.desc':'A\u0165 pot\u0159ebujete bezplatn\u00fd sken nebo enterprise PQC migraci \u2014 jsme tu pro v\u00e1s.'
+        },
+        de: {
+            'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Plattform','nav.pricing':'Preise',
+            'hero.badge':'Q-SCANNER v2.1 \u2014 Kostenloser PQC-Audit','hero.title1':'Ist Ihr Server bereit f\u00fcr','hero.title2':'Quantenbedrohungen?',
+            'hero.desc':'Scannen Sie jede Domain \u2014 TLS-Konfiguration, Cipher Suites, Zertifikate und Post-Quanten-Kryptografie-Bereitschaft. Kostenlos, Open-Source, sofortige Ergebnisse.',
+            'hero.scan_btn':'Scannen','hero.hint':'Versuchen: google.com \u00b7 github.com \u00b7 cloudflare.com',
+            'feat.quantum':'Quantenrisiko-Analyse','feat.tls':'TLS-Tiefenscan','feat.pqc':'PQC-Bereitschaft',
+            'feat.quantum.d':'Bewertet den Einfluss von Shors und Grovers Algorithmus auf Schl\u00fcsseltausch, Verschl\u00fcsselung und Zertifikate.',
+            'feat.tls.d':'Pr\u00fcft alle TLS-Versionen, Cipher Suites, Zertifikatketten und HTTP-Sicherheitsheader.',
+            'feat.pqc.d':'Erkennt ML-KEM (Kyber), ML-DSA (Dilithium) und andere NIST Post-Quanten-Standards.',
+            'ap.title':'\u2014 SOC-Orchestrator','ap.desc':'Autonomes Security Operations Center. Q-AUTOPILOT verbindet alle 52 Module zu einer selbstoperierenden Sicherheitsengine \u2014 24/7.',
+            'ap.c1t':'Bedrohungs-Korrelationsengine','ap.c2t':'Automatische Vorfallreaktion','ap.c3t':'Risikobewertung & Priorisierung',
+            'ap.c4t':'Cross-Modul-Orchestrierung','ap.c5t':'Adaptives Threat Hunting','ap.c6t':'Compliance-Automatisierung',
+            'plat.t1':'Die','plat.t2':'Plattform \u2014 52 Module','plat.desc':'Ein kompletter Post-Quanten-Sicherheitsstack. Vom Scannen bis zur Forensik.',
+            'plat.search':'Module suchen...',
+            'cat.crypto':'Kernkryptografie','cat.scanning':'Scanning & Compliance','cat.ai':'KI-Sicherheit',
+            'cat.advcrypto':'Erweiterte Kryptografie','cat.network':'Netzwerkverteidigung','cat.forensics':'Forensik & IR',
+            'cat.ops':'Sicherheitsoperationen','cat.gov':'Governance & Risiko','cat.edu':'Bildung & Planung',
+            'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'Verfolgen Sie Ihre EU CRA-Compliance in Echtzeit. Automatische Berichte, NIS2-Zuordnung, PDF-Export (EN/CS/DE).','cra.btn':'CRA Dashboard \u00f6ffnen \u2192',
+            'price.t1':'Einfache','price.t2':'Preisgestaltung','price.desc':'Starten Sie kostenlos. Skalieren Sie f\u00fcr Enterprise-Grade Post-Quanten-Schutz.',
+            'price.community':'Community','price.free':'Kostenlos','price.free.price':'$0 / f\u00fcr immer',
+            'price.start':'Scannen starten','price.popular':'Beliebteste','price.pro':'Professionell','price.pro.name':'Pro',
+            'price.touch':'Kontaktieren Sie uns','price.ent':'Enterprise','price.sales':'Vertrieb kontaktieren',
+            'about.title':'\u00dcber <span class="accent">Q-CORE Systems</span>',
+            'about.p1':'Q-CORE Systems ist ein Cybersicherheitsunternehmen mit Fokus auf Post-Quanten-Kryptografie.',
+            'about.p2':'Unsere Mission: Post-Quanten-Sicherheit zug\u00e4nglich machen \u2014 bevor es zu sp\u00e4t ist.',
+            'about.modules':'Module','about.categories':'Kategorien','about.tests':'Scantests','about.compliant':'Konform',
+            'cta.title':'Bereit f\u00fcr Quantensicherheit?','cta.desc':'Ob kostenloser Scan oder komplette Enterprise PQC-Migration \u2014 wir helfen Ihnen.'
         }
     };
 
@@ -644,12 +673,3 @@
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => { if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; } });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.feature, .card, .ap-card, .mc, .tier').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-    </script>
-</body>
-</html>
