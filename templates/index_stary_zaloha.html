@@ -45,9 +45,9 @@
         .nav-github { display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.85rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.72rem; transition: border-color 0.2s, color 0.2s; }
         .nav-github:hover { border-color: var(--cyan); color: var(--cyan) !important; }
         .flag-switcher { display: flex; gap: 4px; align-items: center; }
-        .flag-btn { background: none; border: 1px solid transparent; border-radius: 4px; cursor: pointer; font-size: 1.1rem; padding: 2px 4px; opacity: .5; transition: opacity .2s, border-color .2s; line-height: 1; }
-        .flag-btn:hover { opacity: .8; }
-        .flag-btn.active { opacity: 1; border-color: var(--cyan); }
+        .flag-btn { background: none; border: 1px solid rgba(0,188,212,0.3); border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600; font-family: 'JetBrains Mono', monospace; padding: 3px 8px; color: var(--cyan); opacity: .6; transition: opacity .2s, border-color .2s; line-height: 1; letter-spacing: 1px; }
+        .flag-btn:hover { opacity: .9; border-color: var(--cyan); }
+        .flag-btn.active { opacity: 1; border-color: var(--cyan); background: rgba(0,188,212,0.15); color: var(--cyan); }
         .nav-mobile-toggle { display: none; background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-bright); font-size: 1.2rem; cursor: pointer; padding: 0.3rem 0.6rem; }
 
         /* HERO */
@@ -273,8 +273,9 @@
                 <a href="#platform" data-i18n="nav.platform">Platform</a>
                 <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
                 <div class="flag-switcher">
-                    <button class="flag-btn active" onclick="setLang('en')" title="English">🇬🇧</button>
-                    <button class="flag-btn" onclick="setLang('cs')" title="Čeština">🇨🇿</button>
+                    <button class="flag-btn active" data-lang="en" onclick="setLang('en')" title="English">EN</button>
+                    <button class="flag-btn" data-lang="cs" onclick="setLang('cs')" title="Cesky">CZ</button>
+                    <button class="flag-btn" data-lang="de" onclick="setLang('de')" title="Deutsch">DE</button>
                 </div>
                 <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="nav-github">GitHub</a>
             </div>
@@ -445,6 +446,59 @@
             </div>
         </section>
 
+        <!-- ZKB / NIS2 COMPLIANCE SECTION -->
+        <section id="zkb" style="max-width:920px;margin:0 auto;padding:3rem 2rem">
+            <div style="text-align:center;margin-bottom:2.5rem">
+                <div style="display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;border:1px solid #ff9f1c44;border-radius:100px;font-size:.7rem;color:#ff9f1c;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5rem;background:#ff9f1c11;font-family:var(--font-mono)">
+                    <span style="width:6px;height:6px;border-radius:50%;background:#ff9f1c;display:inline-block"></span>
+                    <span data-i18n="zkb.badge">Zákon č. 264/2025 Sb. — účinný od 1.11.2025</span>
+                </div>
+                <h2 style="font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.4rem);font-weight:700;color:var(--text-bright);line-height:1.15;margin-bottom:1rem">
+                    🇨🇿 <span data-i18n="zkb.t1">Český ZKB &amp; NIS2</span><br><span class="accent" data-i18n="zkb.t2">Compliance pro firmy</span>
+                </h2>
+                <p style="font-size:.95rem;color:var(--text-dim);line-height:1.7;max-width:620px;margin:0 auto;font-family:var(--font-display);font-weight:300" data-i18n="zkb.desc">
+                    Nový zákon o kybernetické bezpečnosti se týká <strong style="color:var(--text-bright)">6 000+ českých organizací</strong>. 
+                    Pokuta za nesplnění: <strong style="color:#ff3b5c">až 250 mil. Kč</strong> nebo 2 % z obratu. 
+                    Q-CRA Dashboard vám pomůže splnit všechny požadavky.
+                </p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:2rem;text-align:center">
+                <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:1.25rem .75rem">
+                    <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:#ff3b5c">6 000+</div>
+                    <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem" data-i18n="zkb.s1">regulovaných firem</div>
+                </div>
+                <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:1.25rem .75rem">
+                    <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:#ff9f1c">250M</div>
+                    <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem" data-i18n="zkb.s2">Kč maximální pokuta</div>
+                </div>
+                <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:1.25rem .75rem">
+                    <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--green)">98%</div>
+                    <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem" data-i18n="zkb.s3">Q-CORE compliance score</div>
+                </div>
+                <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:1.25rem .75rem">
+                    <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--cyan)">18</div>
+                    <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem" data-i18n="zkb.s4">§ paragrafů ZKB pokryto</div>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:2rem">
+                <div class="feat-card"><div class="feat-icon">📋</div><h3 data-i18n="zkb.f1.t">ZKB § Mapování</h3><p data-i18n="zkb.f1.d">Kompletní mapování vašich systémů na 18 paragrafů zákona č. 264/2025 Sb. Každý požadavek propojený s konkrétním Q-CORE modulem a NIS2 článkem.</p></div>
+                <div class="feat-card"><div class="feat-icon">🚨</div><h3 data-i18n="zkb.f2.t">Hlášení incidentů pro NÚKIB</h3><p data-i18n="zkb.f2.d">Předpřipravené formuláře 24h / 72h / 30d podle § 15 a § 16 ZKB. Vyplníte, stáhnete PDF a odešlete přes Portál NÚKIB.</p></div>
+                <div class="feat-card"><div class="feat-icon">📊</div><h3 data-i18n="zkb.f3.t">Sovereign Compliance Score</h3><p data-i18n="zkb.f3.d">Skóre 0–100 % v reálném čase. Vidíte přesně jak jste na tom se zákonem. Detailní rozpis po oblastech.</p></div>
+                <div class="feat-card"><div class="feat-icon">🔍</div><h3 data-i18n="zkb.f4.t">Gap Analysis</h3><p data-i18n="zkb.f4.d">Přesný checklist co splňujete a co vám chybí k 100% shodě. Ke každé mezeře konkrétní doporučení.</p></div>
+                <div class="feat-card"><div class="feat-icon">🏢</div><h3 data-i18n="zkb.f5.t">Samoidentifikace</h3><p data-i18n="zkb.f5.d">Kalkulačka podle vyhlášky č. 408/2025 Sb. Zadáte odvětví a velikost firmy — okamžitě víte jestli spadáte pod zákon.</p></div>
+                <div class="feat-card"><div class="feat-icon">📄</div><h3 data-i18n="zkb.f6.t">PDF reporty CZ / DE / EN</h3><p data-i18n="zkb.f6.d">Profesionální compliance reporty v češtině, němčině a angličtině. Digitálně podepsané. Připravené pro audit NÚKIB.</p></div>
+            </div>
+            <div style="border:1px solid #ff9f1c44;border-radius:16px;padding:2.5rem;text-align:center;background:linear-gradient(135deg,#ff9f1c06,#00e5ff06);position:relative;overflow:hidden">
+                <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#ff9f1c,transparent)"></div>
+                <h3 style="font-family:var(--font-display);font-size:1.2rem;font-weight:600;color:var(--text-bright);margin-bottom:.5rem" data-i18n="zkb.cta.t">Spadáte pod nový zákon o kybernetické bezpečnosti?</h3>
+                <p style="color:var(--text-dim);font-size:.85rem;font-family:var(--font-display);margin-bottom:1.5rem" data-i18n="zkb.cta.d">Zjistěte to za 30 sekund. Zkontrolujte svou firmu a začněte s compliance ještě dnes.</p>
+                <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap">
+                    <a href="/cra-dashboard" class="btn-primary" data-i18n="zkb.cta.btn1">Otevřít CRA Dashboard →</a>
+                    <a href="https://portal.nukib.gov.cz" target="_blank" class="btn-secondary" data-i18n="zkb.cta.btn2">Portál NÚKIB ↗</a>
+                </div>
+            </div>
+        </section>
+
         <!-- PRICING -->
         <section class="pricing-section" id="pricing">
             <div class="sec-header"><h2><span data-i18n="price.t1">Simple</span> <span class="accent" data-i18n="price.t2">Pricing</span></h2><p data-i18n="price.desc">Start free. Scale when you need enterprise-grade post-quantum protection.</p></div>
@@ -483,7 +537,7 @@
                         <li>Q-SENTINEL AI detection</li>
                         <li>Email &amp; priority support</li>
                     </ul>
-                    <a href="mailto:josef@qcore.systems" class="pricing-btn pricing-btn-pro" data-i18n="price.touch">Get in Touch</a>
+                    <a href="/cdn-cgi/l/email-protection#3d57524e585b7d4c5e524f58134e444e4958504e" class="pricing-btn pricing-btn-pro" data-i18n="price.touch">Get in Touch</a>
                 </div>
                 <div class="pricing-card">
                     <div class="pricing-tier tier-ent" data-i18n="price.ent">Enterprise</div>
@@ -501,7 +555,7 @@
                         <li>PQC migration roadmap</li>
                         <li>Q-SIMULATE attack drills</li>
                     </ul>
-                    <a href="mailto:josef@qcore.systems" class="pricing-btn pricing-btn-ent" data-i18n="price.sales">Contact Sales</a>
+                    <a href="/cdn-cgi/l/email-protection#5933362a3c3f19283a362b3c772a202a2d3c342a" class="pricing-btn pricing-btn-ent" data-i18n="price.sales">Contact Sales</a>
                 </div>
             </div>
         </section>
@@ -532,7 +586,7 @@
                 <h2 data-i18n="cta.title">Ready to go quantum-safe?</h2>
                 <p data-i18n="cta.desc">Whether you need a free scan or a full enterprise PQC migration — we're here to help.</p>
                 <div class="cta-buttons">
-                    <a href="mailto:josef@qcore.systems" class="btn-primary">✉ josef@qcore.systems</a>
+                    <a href="/cdn-cgi/l/email-protection#6f05001c0a092f1e0c001d0a411c161c1b0a021c" class="btn-primary">✉ <span class="__cf_email__" data-cfemail="d1bbbea2b4b791a0b2bea3b4ffa2a8a2a5b4bca2">[email&#160;protected]</span></a>
                     <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="btn-secondary">View on GitHub →</a>
                     <a href="https://linkedin.com/in/josef-boudný-a274aa3aa/" target="_blank" rel="noopener" class="btn-secondary">in — LinkedIn</a>
                 </div>
@@ -542,8 +596,122 @@
         <footer class="footer">© 2024–2026 Q-CORE SYSTEMS · Built by <a href="https://linkedin.com/in/josef-boudný-a274aa3aa/" target="_blank" rel="noopener">Josef Boudny</a> · <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener">Open Source</a></footer>
     </div>
 
+    
     <script>
-    const domainInput=document.getElementById('domainInput'),scanBtn=document.getElementById('scanBtn'),progressEl=document.getElementById('scanProgress'),progressLog=document.getElementById('progressLog'),errorEl=document.getElementById('scanError'),resultsEl=document.getElementById('results');domainInput.addEventListener('keydown',e=>{if(e.key==='Enter')startScan()});const SCAN_STEPS=['Resolving DNS...','Establishing TLS connection...','Analyzing cipher suite...','Inspecting certificate chain...','Probing supported TLS versions...','Checking HTTP security headers...','Evaluating quantum risks...','Generating report...'];async function startScan(){const domain=domainInput.value.trim();if(!domain){domainInput.focus();return}errorEl.classList.remove('active');resultsEl.classList.remove('active');resultsEl.innerHTML='';progressEl.classList.add('active');progressLog.innerHTML='';scanBtn.disabled=true;scanBtn.textContent=(currentLang==='cs'?'Skenuji...':currentLang==='de'?'Scanne....':'Scanning...');let stepIndex=0;const stepInterval=setInterval(()=>{if(stepIndex<SCAN_STEPS.length){const prev=progressLog.querySelector('.active-step');if(prev){prev.classList.remove('active-step');prev.classList.add('done');prev.textContent='✓ '+prev.textContent.replace('→ ','')}const div=document.createElement('div');div.className='active-step';div.textContent='→ '+SCAN_STEPS[stepIndex];progressLog.appendChild(div);stepIndex++}},800);try{const resp=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain})});clearInterval(stepInterval);const data=await resp.json();if(!resp.ok)throw new Error(data.error||'Scan failed');const prev=progressLog.querySelector('.active-step');if(prev){prev.classList.remove('active-step');prev.classList.add('done');prev.textContent='✓ '+prev.textContent.replace('→ ','')}await new Promise(r=>setTimeout(r,400));progressEl.classList.remove('active');renderResults(data)}catch(err){clearInterval(stepInterval);progressEl.classList.remove('active');errorEl.textContent='✕ '+(err.message||'Connection failed.');errorEl.classList.add('active')}finally{scanBtn.disabled=false;scanBtn.textContent='Scan'}}function scoreColor(s){if(s<=20)return'var(--green)';if(s<=40)return'var(--yellow)';if(s<=65)return'var(--orange)';return'var(--red)'}function riskClass(l){return'risk-'+(l||'MEDIUM').toUpperCase()}function statusLabel(s){return{'SAFE':'Quantum Safe','LOW_RISK':'Low Risk','MEDIUM_RISK':'Medium Risk','VULNERABLE':'Vulnerable','CRITICAL':'Critical','ERROR':'Error'}[s]||s}function renderResults(d){const c=2*Math.PI*54,o=c-(d.overall_risk_score/100)*c,cl=scoreColor(d.overall_risk_score);let h=`<div class="results-header"><div class="results-target">${esc(d.hostname)} <span>· ${esc(d.ip_address)}:${d.port}</span></div><div class="status-badge status-${d.overall_pqc_status}">${statusLabel(d.overall_pqc_status)}</div></div><div class="score-section"><div class="score-ring-wrap"><svg width="130" height="130" viewBox="0 0 130 130"><circle class="score-ring-bg" cx="65" cy="65" r="54"/><circle class="score-ring-fill" cx="65" cy="65" r="54" stroke="${cl}" stroke-dasharray="${c}" stroke-dashoffset="${o}"/></svg><div class="score-value"><div class="score-number" style="color:${cl}">${d.overall_risk_score}</div><div class="score-label">Risk Score</div></div></div><div class="score-details"><div class="score-detail-row"><span class="score-detail-key">TLS Version</span><span class="score-detail-val">${esc(d.tls_version)}</span></div><div class="score-detail-row"><span class="score-detail-key">Cipher Suite</span><span class="score-detail-val">${esc(d.cipher.name)}</span></div><div class="score-detail-row"><span class="score-detail-key">Key Exchange</span><span class="score-detail-val">${esc(d.cipher.key_exchange)}</span></div><div class="score-detail-row"><span class="score-detail-key">Encryption</span><span class="score-detail-val">${esc(d.cipher.encryption)} (${d.cipher.encryption_bits}-bit)</span></div><div class="score-detail-row"><span class="score-detail-key">PQC Key Exchange</span><span class="score-detail-val" style="color:${d.cipher.is_pqc?'var(--green)':'var(--red)'}">${d.cipher.is_pqc?'✓ YES':'✕ NO'}</span></div></div></div>`;const ce=d.certificate;h+=`<div class="cards-grid"><div class="card"><div class="card-label">Certificate Subject</div><div class="card-value">${esc(ce.subject)}</div><div class="card-sub">Issuer: ${esc(ce.issuer)}</div></div><div class="card"><div class="card-label">Key Type</div><div class="card-value">${esc(ce.key_type)} (${ce.key_size}-bit)</div><div class="card-sub">Sig: ${esc(ce.signature_algorithm)}</div></div><div class="card"><div class="card-label">Expiry</div><div class="card-value" style="color:${ce.is_expired?'var(--red)':ce.days_until_expiry<30?'var(--orange)':'var(--text-bright)'}">${ce.is_expired?'EXPIRED':ce.days_until_expiry+' days'}</div><div class="card-sub">${esc(ce.not_after)}</div></div></div>`;if(d.quantum_risks&&d.quantum_risks.length>0){h+=`<div class="section-title">Quantum Risk Assessment</div><table class="risk-table"><thead><tr><th>Component</th><th>Level</th><th>Threat</th><th>Details</th></tr></thead><tbody>`;for(const r of d.quantum_risks)h+=`<tr><td style="color:var(--text-bright);font-weight:500">${esc(r.component)}</td><td><span class="risk-level ${riskClass(r.level)}">${esc(r.level)}</span></td><td>${esc(r.threat)}</td><td><div>${esc(r.detail)}</div><div class="risk-detail">→ ${esc(r.recommendation)}</div></td></tr>`;h+='</tbody></table>'}if(d.supported_protocols&&d.supported_protocols.length>0){h+=`<div class="section-title">Supported TLS Versions</div><div class="proto-grid">`;for(const p of d.supported_protocols){const cs=p.supported?(p.status==='CRITICAL'?'proto-critical':'proto-enabled'):'proto-disabled',lb=p.supported?(p.status==='CRITICAL'?'⚠ ENABLED':'✓ Enabled'):'— Disabled';h+=`<div class="proto-item"><div class="proto-name">${esc(p.protocol)}</div><div class="proto-status ${cs}">${lb}</div></div>`}h+='</div>'}if(d.http_headers){const hd=d.http_headers,hc=hd.score>=80?'var(--green)':hd.score>=50?'var(--orange)':'var(--red)';h+=`<div class="section-title">HTTP Security Headers</div><div class="headers-bar"><div><div class="headers-score" style="color:${hc}">${hd.score}/100</div><div class="headers-label">Header Score</div></div>`;if(hd.missing_headers&&hd.missing_headers.length>0)h+=`<div class="headers-missing">Missing: ${hd.missing_headers.map(esc).join(', ')}</div>`;h+='</div>'}if(d.recommendations&&d.recommendations.length>0){h+=`<div class="section-title">Recommendations</div><ul class="recs-list">`;d.recommendations.forEach((r,i)=>{h+=`<li><span class="rec-num">${i+1}.</span> ${esc(r)}</li>`});h+='</ul>'}if(d.chain_issues&&d.chain_issues.length>0){h+=`<div class="section-title">⚠ Warnings</div><ul class="recs-list">`;d.chain_issues.forEach(i=>{h+=`<li><span class="rec-num" style="color:var(--orange)">!</span> ${esc(i)}</li>`});h+='</ul>'}if(d.errors&&d.errors.length>0){h+=`<div class="section-title" style="color:var(--red)">Errors</div><ul class="recs-list">`;d.errors.forEach(e=>{h+=`<li><span class="rec-num" 
+    /* === I18N & LANGUAGE SWITCHER (isolated from Cloudflare interference) === */
+    var currentLang = localStorage.getItem('qcore_lang') || 'en';
+    var i18n = {
+        en: {
+            'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Platform','nav.pricing':'Pricing',
+            'hero.badge':'Q-SCANNER v2.1 \u2014 Free PQC Vulnerability Audit','hero.title1':'Is your server ready for','hero.title2':'quantum threats?',
+            'hero.desc':'Scan any domain to analyze TLS configuration, cipher suites, certificates, and post-quantum cryptography readiness. Free, open-source, instant results.',
+            'hero.scan_btn':'Scan','hero.hint':'Try: google.com \u00b7 github.com \u00b7 cloudflare.com',
+            'feat.quantum':'Quantum Risk Analysis','feat.quantum.d':'Evaluates Shor\'s & Grover\'s algorithm impact on your key exchange, encryption and certificates.',
+            'feat.tls':'TLS Deep Scan','feat.tls.d':'Probes all TLS versions, cipher suites, certificate chain, and HTTP security headers.',
+            'feat.pqc':'PQC Readiness','feat.pqc.d':'Detects ML-KEM (Kyber), ML-DSA (Dilithium) and other NIST post-quantum standards.',
+            'ap.title':'\u2014 SOC Orchestrator','ap.desc':'Autonomous Security Operations Center. Q-AUTOPILOT connects all 52 modules into a self-operating security engine that monitors, triages, and responds \u2014 24/7.',
+            'ap.c1t':'Threat Correlation Engine','ap.c2t':'Automated Incident Response','ap.c3t':'Risk Scoring & Prioritization',
+            'ap.c4t':'Cross-Module Orchestration','ap.c5t':'Adaptive Threat Hunting','ap.c6t':'Compliance Automation',
+            'plat.t1':'The','plat.t2':'Platform \u2014 52 Modules','plat.desc':'A complete post-quantum cybersecurity stack. From scanning to forensics.',
+            'plat.search':'Search modules...',
+            'cat.crypto':'Core Cryptography','cat.scanning':'Scanning & Compliance','cat.ai':'AI-Powered Security',
+            'cat.advcrypto':'Advanced Cryptography','cat.network':'Network Defense','cat.forensics':'Forensics & Incident Response',
+            'cat.ops':'Security Operations','cat.gov':'Governance & Risk','cat.edu':'Education & Planning',
+            'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'Track your EU Cyber Resilience Act compliance in real-time. Automated reports, gap analysis, NIS2 mapping, multilingual PDF export (EN/CS/DE).','cra.btn':'Open CRA Dashboard \u2192',
+            'zkb.badge':'Czech Cybersecurity Act No. 264/2025 — effective Nov 1, 2025','zkb.t1':'Czech ZKB & NIS2','zkb.t2':'Compliance for businesses','zkb.desc':'The new Cybersecurity Act applies to <strong style="color:var(--text-bright)">6,000+ Czech organizations</strong>. Penalty for non-compliance: <strong style="color:#ff3b5c">up to 250M CZK</strong> or 2% of revenue. Q-CRA Dashboard helps you meet all requirements.','zkb.s1':'regulated organizations','zkb.s2':'CZK maximum penalty','zkb.s3':'Q-CORE compliance score','zkb.s4':'§ ZKB articles covered','zkb.f1.t':'ZKB § Mapping','zkb.f1.d':'Complete mapping of your systems to 18 articles of Act No. 264/2025. Each requirement linked to a specific Q-CORE module and NIS2 article.','zkb.f2.t':'NÚKIB Incident Reporting','zkb.f2.d':'Pre-built 24h / 72h / 30d report templates per § 15 and § 16 ZKB. Fill in, download PDF, submit via NÚKIB Portal.','zkb.f3.t':'Sovereign Compliance Score','zkb.f3.d':'Real-time 0–100% score. See exactly where you stand. Detailed breakdown by area.','zkb.f4.t':'Gap Analysis','zkb.f4.d':'Precise checklist of what you meet and what\'s missing for 100% compliance. Specific recommendations for each gap.','zkb.f5.t':'Self-Identification','zkb.f5.d':'Calculator per Decree No. 408/2025. Enter your sector and company size — instantly know if you fall under the law.','zkb.f6.t':'PDF Reports CZ / DE / EN','zkb.f6.d':'Professional compliance reports in Czech, German and English. Digitally signed. Ready for NÚKIB audit.','zkb.cta.t':'Does the new Cybersecurity Act apply to you?','zkb.cta.d':'Find out in 30 seconds. Check your organization and start compliance today.','zkb.cta.btn1':'Open CRA Dashboard \u2192','zkb.cta.btn2':'NÚKIB Portal \u2197',
+            'price.t1':'Simple','price.t2':'Pricing','price.desc':'Start free. Scale when you need enterprise-grade post-quantum protection.',
+            'price.community':'Community','price.free':'Free','price.free.price':'$0 / forever',
+            'price.start':'Start Scanning','price.popular':'Most Popular','price.pro':'Professional','price.pro.name':'Pro',
+            'price.touch':'Get in Touch','price.ent':'Enterprise','price.sales':'Contact Sales',
+            'about.title':'About <span class="accent">Q-CORE Systems</span>',
+            'about.p1':'Q-CORE Systems is a cybersecurity company focused on post-quantum cryptography. We build tools that help organizations prepare for the quantum era.',
+            'about.p2':'Our mission: make post-quantum security accessible \u2014 before it\'s too late.',
+            'about.modules':'Modules','about.categories':'Categories','about.tests':'Scan Tests','about.compliant':'Compliant',
+            'cta.title':'Ready to go quantum-safe?','cta.desc':'Whether you need a free scan or a full enterprise PQC migration \u2014 we\'re here to help.'
+        },
+        cs: {
+            'nav.scanner':'Skener','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Platforma','nav.pricing':'Cen\u00edk',
+            'hero.badge':'Q-SCANNER v2.1 \u2014 Bezplatn\u00fd PQC audit','hero.title1':'Je v\u00e1\u0161 server p\u0159ipraven na','hero.title2':'kvantov\u00e9 hrozby?',
+            'hero.desc':'Skenujte libovolnou dom\u00e9nu \u2014 TLS, \u0161ifrovac\u00ed sady, certifik\u00e1ty a p\u0159ipravenost na post-kvantovou kryptografii. Zdarma, open-source.',
+            'hero.scan_btn':'Skenovat','hero.hint':'Zkuste: google.com \u00b7 github.com \u00b7 cloudflare.com',
+            'feat.quantum':'Anal\u00fdza kvantov\u00fdch rizik','feat.quantum.d':'Vyhodnocuje dopad Shorova a Groverova algoritmu na v\u00fdm\u011bnu kl\u00ed\u010d\u016f, \u0161ifrov\u00e1n\u00ed a certifik\u00e1ty.',
+            'feat.tls':'Hloubkov\u00fd TLS sken','feat.tls.d':'Testuje v\u0161echny verze TLS, \u0161ifrovac\u00ed sady, \u0159et\u011bzec certifik\u00e1t\u016f a HTTP bezpe\u010dnostn\u00ed hlavi\u010dky.',
+            'feat.pqc':'PQC p\u0159ipravenost','feat.pqc.d':'Detekuje ML-KEM (Kyber), ML-DSA (Dilithium) a dal\u0161\u00ed NIST post-kvantov\u00e9 standardy.',
+            'ap.title':'\u2014 SOC orchestr\u00e1tor','ap.desc':'Autonomn\u00ed Security Operations Center. Q-AUTOPILOT propojuje v\u0161ech 52 modul\u016f do samo\u010dinn\u00e9ho bezpe\u010dnostn\u00edho enginu \u2014 24/7.',
+            'ap.c1t':'Korela\u010dn\u00ed engine hrozeb','ap.c2t':'Automatick\u00e1 reakce na incidenty','ap.c3t':'Hodnocen\u00ed a prioritizace rizik',
+            'ap.c4t':'Cross-modulov\u00e1 orchestrace','ap.c5t':'Adaptivn\u00ed threat hunting','ap.c6t':'Automatizace compliance',
+            'plat.t1':'','plat.t2':'Platforma \u2014 52 modul\u016f','plat.desc':'Kompletn\u00ed post-kvantov\u00fd bezpe\u010dnostn\u00ed stack. Od skenov\u00e1n\u00ed po forenziku.',
+            'plat.search':'Hledat moduly...',
+            'cat.crypto':'J\u00e1drov\u00e1 kryptografie','cat.scanning':'Skenov\u00e1n\u00ed a compliance','cat.ai':'AI bezpe\u010dnost',
+            'cat.advcrypto':'Pokro\u010dil\u00e1 kryptografie','cat.network':'S\u00ed\u0165ov\u00e1 obrana','cat.forensics':'Forenzika a IR',
+            'cat.ops':'Bezpe\u010dnostn\u00ed operace','cat.gov':'Governance a rizika','cat.edu':'Vzd\u011bl\u00e1v\u00e1n\u00ed a pl\u00e1nov\u00e1n\u00ed',
+            'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'Sledujte compliance s EU CRA v re\u00e1ln\u00e9m \u010dase. Automatick\u00e9 reporty, NIS2 mapov\u00e1n\u00ed, PDF export (EN/CS/DE).','cra.btn':'Otev\u0159\u00edt CRA Dashboard \u2192',
+            'zkb.badge':'Z\u00e1kon \u010d. 264/2025 Sb. \u2014 \u00fa\u010dinn\u00fd od 1.11.2025','zkb.t1':'\u010cesk\u00fd ZKB & NIS2','zkb.t2':'Compliance pro firmy','zkb.desc':'Nov\u00fd z\u00e1kon o kybernetick\u00e9 bezpe\u010dnosti se t\u00fdk\u00e1 <strong style="color:var(--text-bright)">6 000+ \u010desk\u00fdch organizac\u00ed</strong>. Pokuta za nespln\u011bn\u00ed: <strong style="color:#ff3b5c">a\u017e 250 mil. K\u010d</strong> nebo 2 % z obratu. Q-CRA Dashboard v\u00e1m pom\u016f\u017ee splnit v\u0161echny po\u017eadavky.','zkb.s1':'regulovan\u00fdch firem','zkb.s2':'K\u010d maxim\u00e1ln\u00ed pokuta','zkb.s3':'Q-CORE compliance sk\u00f3re','zkb.s4':'\u00a7 paragraf\u016f ZKB pokryto','zkb.f1.t':'ZKB \u00a7 Mapov\u00e1n\u00ed','zkb.f1.d':'Kompletn\u00ed mapov\u00e1n\u00ed va\u0161ich syst\u00e9m\u016f na 18 paragraf\u016f z\u00e1kona \u010d. 264/2025 Sb. Ka\u017ed\u00fd po\u017eadavek propojen\u00fd s konkr\u00e9tn\u00edm Q-CORE modulem a NIS2 \u010dl\u00e1nkem.','zkb.f2.t':'Hl\u00e1\u0161en\u00ed incident\u016f pro N\u00daKIB','zkb.f2.d':'P\u0159edp\u0159ipraven\u00e9 formul\u00e1\u0159e 24h / 72h / 30d podle \u00a7 15 a \u00a7 16 ZKB. Vypln\u00edte, st\u00e1hnete PDF a ode\u0161lete p\u0159es Port\u00e1l N\u00daKIB.','zkb.f3.t':'Sovereign Compliance Score','zkb.f3.d':'Sk\u00f3re 0\u2013100 % v re\u00e1ln\u00e9m \u010dase. Vid\u00edte p\u0159esn\u011b jak jste na tom se z\u00e1konem. Detailn\u00ed rozpis po oblastech.','zkb.f4.t':'Gap Anal\u00fdza','zkb.f4.d':'P\u0159esn\u00fd checklist co spl\u0148ujete a co v\u00e1m chyb\u00ed k 100% shod\u011b. Ke ka\u017ed\u00e9 meze\u0159e konkr\u00e9tn\u00ed doporu\u010den\u00ed.','zkb.f5.t':'Samoidentifikace','zkb.f5.d':'Kalkula\u010dka podle vyhl\u00e1\u0161ky \u010d. 408/2025 Sb. Zad\u00e1te odv\u011btv\u00ed a velikost firmy \u2014 okam\u017eit\u011b v\u00edte jestli spad\u00e1te pod z\u00e1kon.','zkb.f6.t':'PDF reporty CZ / DE / EN','zkb.f6.d':'Profesion\u00e1ln\u00ed compliance reporty v \u010de\u0161tin\u011b, n\u011bm\u010din\u011b a angli\u010dtin\u011b. Digit\u00e1ln\u011b podepsan\u00e9. P\u0159ipraven\u00e9 pro audit N\u00daKIB.','zkb.cta.t':'Spad\u00e1te pod nov\u00fd z\u00e1kon o kybernetick\u00e9 bezpe\u010dnosti?','zkb.cta.d':'Zjist\u011bte to za 30 sekund. Zkontrolujte svou firmu a za\u010dn\u011bte s compliance je\u0161t\u011b dnes.','zkb.cta.btn1':'Otev\u0159\u00edt CRA Dashboard \u2192','zkb.cta.btn2':'Port\u00e1l N\u00daKIB \u2197',
+            'price.t1':'Jednoduch\u00fd','price.t2':'cen\u00edk','price.desc':'Za\u010dn\u011bte zdarma. \u0160k\u00e1lujte pro enterprise-grade post-kvantovou ochranu.',
+            'price.community':'Komunita','price.free':'Zdarma','price.free.price':'$0 / nav\u017edy',
+            'price.start':'Za\u010d\u00edt skenovat','price.popular':'Nejobl\u00edben\u011bj\u0161\u00ed','price.pro':'Profesion\u00e1ln\u00ed','price.pro.name':'Pro',
+            'price.touch':'Kontaktujte n\u00e1s','price.ent':'Enterprise','price.sales':'Kontaktovat obchod',
+            'about.title':'O <span class="accent">Q-CORE Systems</span>',
+            'about.p1':'Q-CORE Systems je kyberbezpe\u010dnostn\u00ed firma zam\u011b\u0159en\u00e1 na post-kvantovou kryptografii.',
+            'about.p2':'Na\u0161e mise: zp\u0159\u00edstupnit post-kvantovou bezpe\u010dnost \u2014 ne\u017e bude pozd\u011b.',
+            'about.modules':'Modul\u016f','about.categories':'Kategori\u00ed','about.tests':'Test\u016f','about.compliant':'Kompatibiln\u00ed',
+            'cta.title':'P\u0159ipraveni na kvantovou bezpe\u010dnost?','cta.desc':'A\u0165 pot\u0159ebujete bezplatn\u00fd sken nebo enterprise PQC migraci \u2014 jsme tu pro v\u00e1s.'
+        },
+        de: {
+            'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Plattform','nav.pricing':'Preise',
+            'hero.badge':'Q-SCANNER v2.1 \u2014 Kostenloser PQC-Audit','hero.title1':'Ist Ihr Server bereit f\u00fcr','hero.title2':'Quantenbedrohungen?',
+            'hero.desc':'Scannen Sie jede Domain \u2014 TLS-Konfiguration, Cipher Suites, Zertifikate und Post-Quanten-Kryptografie-Bereitschaft. Kostenlos, Open-Source.',
+            'hero.scan_btn':'Scannen','hero.hint':'Versuchen: google.com \u00b7 github.com \u00b7 cloudflare.com',
+            'feat.quantum':'Quantenrisiko-Analyse','feat.quantum.d':'Bewertet den Einfluss von Shors und Grovers Algorithmus auf Schl\u00fcsseltausch und Zertifikate.',
+            'feat.tls':'TLS-Tiefenscan','feat.tls.d':'Pr\u00fcft alle TLS-Versionen, Cipher Suites, Zertifikatketten und HTTP-Sicherheitsheader.',
+            'feat.pqc':'PQC-Bereitschaft','feat.pqc.d':'Erkennt ML-KEM (Kyber), ML-DSA (Dilithium) und andere NIST Post-Quanten-Standards.',
+            'ap.title':'\u2014 SOC-Orchestrator','ap.desc':'Autonomes Security Operations Center. Q-AUTOPILOT verbindet alle 52 Module zu einer selbstoperierenden Sicherheitsengine \u2014 24/7.',
+            'ap.c1t':'Bedrohungs-Korrelationsengine','ap.c2t':'Automatische Vorfallreaktion','ap.c3t':'Risikobewertung & Priorisierung',
+            'ap.c4t':'Cross-Modul-Orchestrierung','ap.c5t':'Adaptives Threat Hunting','ap.c6t':'Compliance-Automatisierung',
+            'plat.t1':'Die','plat.t2':'Plattform \u2014 52 Module','plat.desc':'Ein kompletter Post-Quanten-Sicherheitsstack. Vom Scannen bis zur Forensik.',
+            'plat.search':'Module suchen...',
+            'cat.crypto':'Kernkryptografie','cat.scanning':'Scanning & Compliance','cat.ai':'KI-Sicherheit',
+            'cat.advcrypto':'Erweiterte Kryptografie','cat.network':'Netzwerkverteidigung','cat.forensics':'Forensik & IR',
+            'cat.ops':'Sicherheitsoperationen','cat.gov':'Governance & Risiko','cat.edu':'Bildung & Planung',
+            'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'EU CRA-Compliance in Echtzeit. Automatische Berichte, NIS2-Zuordnung, PDF-Export (EN/CS/DE).','cra.btn':'CRA Dashboard \u00f6ffnen \u2192',
+            'zkb.badge':'Tschechisches Cybersicherheitsgesetz Nr. 264/2025 \u2014 g\u00fcltig ab 1.11.2025','zkb.t1':'Tschechisches ZKB & NIS2','zkb.t2':'Compliance f\u00fcr Unternehmen','zkb.desc':'Das neue Cybersicherheitsgesetz betrifft <strong style="color:var(--text-bright)">6.000+ tschechische Organisationen</strong>. Strafe bei Nichteinhalten: <strong style="color:#ff3b5c">bis zu 250 Mio. CZK</strong> oder 2% des Umsatzes. Q-CRA Dashboard hilft bei der Erf\u00fcllung aller Anforderungen.','zkb.s1':'regulierte Unternehmen','zkb.s2':'CZK H\u00f6chststrafe','zkb.s3':'Q-CORE Compliance-Score','zkb.s4':'\u00a7 ZKB-Artikel abgedeckt','zkb.f1.t':'ZKB \u00a7 Zuordnung','zkb.f1.d':'Vollst\u00e4ndige Zuordnung Ihrer Systeme zu 18 Paragraphen des Gesetzes Nr. 264/2025. Jede Anforderung mit Q-CORE Modul und NIS2-Artikel verkn\u00fcpft.','zkb.f2.t':'N\u00daKIB Vorfallmeldung','zkb.f2.d':'Vorgefertigte Formulare 24h / 72h / 30d gem\u00e4\u00df \u00a7 15 und \u00a7 16 ZKB. Ausf\u00fcllen, PDF herunterladen, \u00fcber N\u00daKIB-Portal einreichen.','zkb.f3.t':'Sovereign Compliance Score','zkb.f3.d':'Echtzeit-Score 0\u2013100%. Sehen Sie genau wo Sie stehen. Detaillierte Aufschl\u00fcsselung nach Bereichen.','zkb.f4.t':'Gap-Analyse','zkb.f4.d':'Pr\u00e4zise Checkliste was Sie erf\u00fcllen und was fehlt. Konkrete Empfehlungen f\u00fcr jede L\u00fccke.','zkb.f5.t':'Selbstidentifikation','zkb.f5.d':'Rechner gem\u00e4\u00df Verordnung Nr. 408/2025. Branche und Unternehmensgr\u00f6\u00dfe eingeben \u2014 sofort wissen ob Sie unter das Gesetz fallen.','zkb.f6.t':'PDF-Berichte CZ / DE / EN','zkb.f6.d':'Professionelle Compliance-Berichte in Tschechisch, Deutsch und Englisch. Digital signiert. Bereit f\u00fcr N\u00daKIB-Audit.','zkb.cta.t':'F\u00e4llt Ihr Unternehmen unter das neue Cybersicherheitsgesetz?','zkb.cta.d':'Finden Sie es in 30 Sekunden heraus. Pr\u00fcfen Sie Ihr Unternehmen und starten Sie noch heute.','zkb.cta.btn1':'CRA Dashboard \u00f6ffnen \u2192','zkb.cta.btn2':'N\u00daKIB-Portal \u2197',
+            'price.t1':'Einfache','price.t2':'Preisgestaltung','price.desc':'Starten Sie kostenlos. Skalieren Sie f\u00fcr Enterprise-Grade Post-Quanten-Schutz.',
+            'price.community':'Community','price.free':'Kostenlos','price.free.price':'$0 / f\u00fcr immer',
+            'price.start':'Scannen starten','price.popular':'Beliebteste','price.pro':'Professionell','price.pro.name':'Pro',
+            'price.touch':'Kontaktieren Sie uns','price.ent':'Enterprise','price.sales':'Vertrieb kontaktieren',
+            'about.title':'\u00dcber <span class="accent">Q-CORE Systems</span>',
+            'about.p1':'Q-CORE Systems ist ein Cybersicherheitsunternehmen mit Fokus auf Post-Quanten-Kryptografie.',
+            'about.p2':'Unsere Mission: Post-Quanten-Sicherheit zug\u00e4nglich machen \u2014 bevor es zu sp\u00e4t ist.',
+            'about.modules':'Module','about.categories':'Kategorien','about.tests':'Scantests','about.compliant':'Konform',
+            'cta.title':'Bereit f\u00fcr Quantensicherheit?','cta.desc':'Ob kostenloser Scan oder Enterprise PQC-Migration \u2014 wir helfen Ihnen.'
+        }
+    };
+    function setLang(lang) {
+        currentLang = lang;
+        try { localStorage.setItem('qcore_lang', lang); } catch(e) {}
+        document.querySelectorAll('.flag-btn').forEach(function(b) { b.classList.remove('active'); });
+        var btns = document.querySelectorAll('.flag-btn');
+        for (var i = 0; i < btns.length; i++) {
+            if (btns[i].getAttribute('data-lang') === lang) btns[i].classList.add('active');
+        }
+        var t = i18n[lang];
+        if (!t) return;
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n');
+            if (t[key] !== undefined) el.innerHTML = t[key];
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n-placeholder');
+            if (t[key]) el.placeholder = t[key];
+        });
+        document.documentElement.lang = lang;
+    }
+    if (currentLang !== 'en') setLang(currentLang);
+    </script>
+
+    <script>
+    /* === SCANNER ENGINE === */
+    const domainInput=document.getElementById('domainInput'),scanBtn=document.getElementById('scanBtn'),progressEl=document.getElementById('scanProgress'),progressLog=document.getElementById('progressLog'),errorEl=document.getElementById('scanError'),resultsEl=document.getElementById('results');domainInput.addEventListener('keydown',e=>{if(e.key==='Enter')startScan()});const SCAN_STEPS=['Resolving DNS...','Establishing TLS connection...','Analyzing cipher suite...','Inspecting certificate chain...','Probing supported TLS versions...','Checking HTTP security headers...','Evaluating quantum risks...','Generating report...'];async function startScan(){const domain=domainInput.value.trim();if(!domain){domainInput.focus();return}errorEl.classList.remove('active');resultsEl.classList.remove('active');resultsEl.innerHTML='';progressEl.classList.add('active');progressLog.innerHTML='';scanBtn.disabled=true;scanBtn.textContent=(currentLang==='cs'?'Skenuji...':currentLang==='de'?'Scanne....':'Scanning...');let stepIndex=0;const stepInterval=setInterval(()=>{if(stepIndex<SCAN_STEPS.length){const prev=progressLog.querySelector('.active-step');if(prev){prev.classList.remove('active-step');prev.classList.add('done');prev.textContent='✓ '+prev.textContent.replace('→ ','')}const div=document.createElement('div');div.className='active-step';div.textContent='→ '+SCAN_STEPS[stepIndex];progressLog.appendChild(div);stepIndex++}},800);try{const resp=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain})});clearInterval(stepInterval);const data=await resp.json();if(!resp.ok)throw new Error(data.error||'Scan failed');const prev=progressLog.querySelector('.active-step');if(prev){prev.classList.remove('active-step');prev.classList.add('done');prev.textContent='✓ '+prev.textContent.replace('→ ','')}await new Promise(r=>setTimeout(r,400));progressEl.classList.remove('active');renderResults(data)}catch(err){clearInterval(stepInterval);progressEl.classList.remove('active');errorEl.textContent='✕ '+(err.message||'Connection failed.');errorEl.classList.add('active')}finally{scanBtn.disabled=false;scanBtn.textContent='Scan'}}function scoreColor(s){if(s<=20)return'var(--green)';if(s<=40)return'var(--yellow)';if(s<=65)return'var(--orange)';return'var(--red)'}function riskClass(l){return'risk-'+(l||'MEDIUM').toUpperCase()}function statusLabel(s){return{'SAFE':'Quantum Safe','LOW_RISK':'Low Risk','MEDIUM_RISK':'Medium Risk','VULNERABLE':'Vulnerable','CRITICAL':'Critical','ERROR':'Error'}[s]||s}function renderResults(d){const c=2*Math.PI*54,o=c-(d.overall_risk_score/100)*c,cl=scoreColor(d.overall_risk_score);let h=`<div class="results-header"><div class="results-target">${esc(d.hostname)} <span>· ${esc(d.ip_address)}:${d.port}</span></div><div class="status-badge status-${d.overall_pqc_status}">${statusLabel(d.overall_pqc_status)}</div></div><div class="score-section"><div class="score-ring-wrap"><svg width="130" height="130" viewBox="0 0 130 130"><circle class="score-ring-bg" cx="65" cy="65" r="54"/><circle class="score-ring-fill" cx="65" cy="65" r="54" stroke="${cl}" stroke-dasharray="${c}" stroke-dashoffset="${o}"/></svg><div class="score-value"><div class="score-number" style="color:${cl}">${d.overall_risk_score}</div><div class="score-label">Risk Score</div></div></div><div class="score-details"><div class="score-detail-row"><span class="score-detail-key">TLS Version</span><span class="score-detail-val">${esc(d.tls_version)}</span></div><div class="score-detail-row"><span class="score-detail-key">Cipher Suite</span><span class="score-detail-val">${esc(d.cipher.name)}</span></div><div class="score-detail-row"><span class="score-detail-key">Key Exchange</span><span class="score-detail-val">${esc(d.cipher.key_exchange)}</span></div><div class="score-detail-row"><span class="score-detail-key">Encryption</span><span class="score-detail-val">${esc(d.cipher.encryption)} (${d.cipher.encryption_bits}-bit)</span></div><div class="score-detail-row"><span class="score-detail-key">PQC Key Exchange</span><span class="score-detail-val" style="color:${d.cipher.is_pqc?'var(--green)':'var(--red)'}">${d.cipher.is_pqc?'✓ YES':'✕ NO'}</span></div></div></div>`;const ce=d.certificate;h+=`<div class="cards-grid"><div class="card"><div class="card-label">Certificate Subject</div><div class="card-value">${esc(ce.subject)}</div><div class="card-sub">Issuer: ${esc(ce.issuer)}</div></div><div class="card"><div class="card-label">Key Type</div><div class="card-value">${esc(ce.key_type)} (${ce.key_size}-bit)</div><div class="card-sub">Sig: ${esc(ce.signature_algorithm)}</div></div><div class="card"><div class="card-label">Expiry</div><div class="card-value" style="color:${ce.is_expired?'var(--red)':ce.days_until_expiry<30?'var(--orange)':'var(--text-bright)'}">${ce.is_expired?'EXPIRED':ce.days_until_expiry+' days'}</div><div class="card-sub">${esc(ce.not_after)}</div></div></div>`;if(d.quantum_risks&&d.quantum_risks.length>0){h+=`<div class="section-title">Quantum Risk Assessment</div><table class="risk-table"><thead><tr><th>Component</th><th>Level</th><th>Threat</th><th>Details</th></tr></thead><tbody>`;for(const r of d.quantum_risks)h+=`<tr><td style="color:var(--text-bright);font-weight:500">${esc(r.component)}</td><td><span class="risk-level ${riskClass(r.level)}">${esc(r.level)}</span></td><td>${esc(r.threat)}</td><td><div>${esc(r.detail)}</div><div class="risk-detail">→ ${esc(r.recommendation)}</div></td></tr>`;h+='</tbody></table>'}if(d.supported_protocols&&d.supported_protocols.length>0){h+=`<div class="section-title">Supported TLS Versions</div><div class="proto-grid">`;for(const p of d.supported_protocols){const cs=p.supported?(p.status==='CRITICAL'?'proto-critical':'proto-enabled'):'proto-disabled',lb=p.supported?(p.status==='CRITICAL'?'⚠ ENABLED':'✓ Enabled'):'— Disabled';h+=`<div class="proto-item"><div class="proto-name">${esc(p.protocol)}</div><div class="proto-status ${cs}">${lb}</div></div>`}h+='</div>'}if(d.http_headers){const hd=d.http_headers,hc=hd.score>=80?'var(--green)':hd.score>=50?'var(--orange)':'var(--red)';h+=`<div class="section-title">HTTP Security Headers</div><div class="headers-bar"><div><div class="headers-score" style="color:${hc}">${hd.score}/100</div><div class="headers-label">Header Score</div></div>`;if(hd.missing_headers&&hd.missing_headers.length>0)h+=`<div class="headers-missing">Missing: ${hd.missing_headers.map(esc).join(', ')}</div>`;h+='</div>'}if(d.recommendations&&d.recommendations.length>0){h+=`<div class="section-title">Recommendations</div><ul class="recs-list">`;d.recommendations.forEach((r,i)=>{h+=`<li><span class="rec-num">${i+1}.</span> ${esc(r)}</li>`});h+='</ul>'}if(d.chain_issues&&d.chain_issues.length>0){h+=`<div class="section-title">⚠ Warnings</div><ul class="recs-list">`;d.chain_issues.forEach(i=>{h+=`<li><span class="rec-num" style="color:var(--orange)">!</span> ${esc(i)}</li>`});h+='</ul>'}if(d.errors&&d.errors.length>0){h+=`<div class="section-title" style="color:var(--red)">Errors</div><ul class="recs-list">`;d.errors.forEach(e=>{h+=`<li><span class="rec-num" style="color:var(--red)">✕</span> ${esc(e)}</li>`});h+='</ul>'}resultsEl.innerHTML=h;resultsEl.classList.add('active')}function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 
 
     /* MODULE SEARCH */
@@ -562,93 +730,23 @@
             const visCards = block.querySelectorAll('.mc:not([style*="display: none"])');
             block.style.display = visCards.length > 0 ? '' : 'none';
         });
-        document.getElementById('moduleCount').textContent = `${visible} / 52 modules`;
+        document.getElementById('moduleCount').textContent = visible + ' / 52 modules';
     });
-
-    /* i18n */
-    let currentLang = localStorage.getItem('qcore_lang') || 'en';
-    const i18n = {
-        en: {
-            'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Platform','nav.pricing':'Pricing',
-            'hero.badge':'Q-SCANNER v2.1 \u2014 Free PQC Vulnerability Audit','hero.title1':'Is your server ready for','hero.title2':'quantum threats?',
-            'hero.desc':'Scan any domain to analyze TLS configuration, cipher suites, certificates, and post-quantum cryptography readiness. Free, open-source, instant results.',
-            'hero.scan_btn':'Scan','hero.hint':'Try: google.com \u00b7 github.com \u00b7 cloudflare.com',
-            'feat.quantum':'Quantum Risk Analysis','feat.tls':'TLS Deep Scan','feat.pqc':'PQC Readiness',
-            'ap.title':'\u2014 SOC Orchestrator','ap.desc':'Autonomous Security Operations Center. Q-AUTOPILOT connects all 52 modules into a self-operating security engine that monitors, triages, and responds \u2014 24/7.',
-            'ap.c1t':'Threat Correlation Engine','ap.c2t':'Automated Incident Response','ap.c3t':'Risk Scoring & Prioritization',
-            'ap.c4t':'Cross-Module Orchestration','ap.c5t':'Adaptive Threat Hunting','ap.c6t':'Compliance Automation',
-            'plat.t1':'The','plat.t2':'Platform \u2014 52 Modules','plat.desc':'A complete post-quantum cybersecurity stack. From scanning to forensics.',
-            'plat.search':'Search modules...',
-            'cat.crypto':'Core Cryptography','cat.scanning':'Scanning & Compliance','cat.ai':'AI-Powered Security',
-            'cat.advcrypto':'Advanced Cryptography','cat.network':'Network Defense','cat.forensics':'Forensics & Incident Response',
-            'cat.ops':'Security Operations','cat.gov':'Governance & Risk','cat.edu':'Education & Planning',
-            'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'Track your EU Cyber Resilience Act compliance in real-time. Automated reports, gap analysis, NIS2 mapping, multilingual PDF export (EN/CS/DE).','cra.btn':'Open CRA Dashboard \u2192',
-            'price.t1':'Simple','price.t2':'Pricing','price.desc':'Start free. Scale when you need enterprise-grade post-quantum protection.',
-            'price.community':'Community','price.free':'Free','price.free.price':'$0 / forever',
-            'price.start':'Start Scanning','price.popular':'Most Popular','price.pro':'Professional','price.pro.name':'Pro',
-            'price.touch':'Get in Touch','price.ent':'Enterprise','price.sales':'Contact Sales',
-            'about.title':'About <span class="accent">Q-CORE Systems</span>',
-            'about.p1':'Q-CORE Systems is a cybersecurity company focused on post-quantum cryptography. We build tools that help organizations prepare for the quantum era.',
-            'about.p2':'Our mission: make post-quantum security accessible \u2014 before it\'s too late.',
-            'about.modules':'Modules','about.categories':'Categories','about.tests':'Scan Tests','about.compliant':'Compliant',
-            'cta.title':'Ready to go quantum-safe?','cta.desc':'Whether you need a free scan or a full enterprise PQC migration \u2014 we\'re here to help.'
-        },
-        cs: {
-            'nav.scanner':'Skener','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Platforma','nav.pricing':'Cen\u00edk',
-            'hero.badge':'Q-SCANNER v2.1 \u2014 Bezplatn\u00fd PQC audit','hero.title1':'Je v\u00e1\u0161 server p\u0159ipraven na','hero.title2':'kvantov\u00e9 hrozby?',
-            'hero.desc':'Skenujte libovolnou dom\u00e9nu \u2014 TLS, \u0161ifrovac\u00ed sady, certifik\u00e1ty a p\u0159ipravenost na post-kvantovou kryptografii. Zdarma, open-source.',
-            'hero.scan_btn':'Skenovat','hero.hint':'Zkuste: google.com \u00b7 github.com \u00b7 cloudflare.com',
-            'feat.quantum':'Anal\u00fdza kvantov\u00fdch rizik','feat.tls':'Hloubkov\u00fd TLS sken','feat.pqc':'PQC p\u0159ipravenost',
-            'ap.title':'\u2014 SOC orchestr\u00e1tor','ap.desc':'Autonomn\u00ed Security Operations Center. Q-AUTOPILOT propojuje v\u0161ech 52 modul\u016f do samo\u010dinn\u00e9ho bezpe\u010dnostn\u00edho enginu \u2014 24/7.',
-            'ap.c1t':'Korela\u010dn\u00ed engine hrozeb','ap.c2t':'Automatick\u00e1 reakce na incidenty','ap.c3t':'Hodnocen\u00ed a prioritizace rizik',
-            'ap.c4t':'Cross-modulov\u00e1 orchestrace','ap.c5t':'Adaptivn\u00ed threat hunting','ap.c6t':'Automatizace compliance',
-            'plat.t1':'','plat.t2':'Platforma \u2014 52 modul\u016f','plat.desc':'Kompletn\u00ed post-kvantov\u00fd bezpe\u010dnostn\u00ed stack. Od skenov\u00e1n\u00ed po forenziku.',
-            'plat.search':'Hledat moduly...',
-            'cat.crypto':'J\u00e1drov\u00e1 kryptografie','cat.scanning':'Skenov\u00e1n\u00ed a compliance','cat.ai':'AI bezpe\u010dnost',
-            'cat.advcrypto':'Pokro\u010dil\u00e1 kryptografie','cat.network':'S\u00ed\u0165ov\u00e1 obrana','cat.forensics':'Forenzika a IR',
-            'cat.ops':'Bezpe\u010dnostn\u00ed operace','cat.gov':'Governance a rizika','cat.edu':'Vzd\u011bl\u00e1v\u00e1n\u00ed a pl\u00e1nov\u00e1n\u00ed',
-            'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'Sledujte compliance s EU CRA v re\u00e1ln\u00e9m \u010dase. Automatick\u00e9 reporty, NIS2 mapov\u00e1n\u00ed, PDF export (EN/CS/DE).','cra.btn':'Otev\u0159\u00edt CRA Dashboard \u2192',
-            'price.t1':'Jednoduch\u00fd','price.t2':'cen\u00edk','price.desc':'Za\u010dn\u011bte zdarma. \u0160k\u00e1lujte pro enterprise-grade post-kvantovou ochranu.',
-            'price.community':'Komunita','price.free':'Zdarma','price.free.price':'$0 / nav\u017edy',
-            'price.start':'Za\u010d\u00edt skenovat','price.popular':'Nejobl\u00edben\u011bj\u0161\u00ed','price.pro':'Profesion\u00e1ln\u00ed','price.pro.name':'Pro',
-            'price.touch':'Kontaktujte n\u00e1s','price.ent':'Enterprise','price.sales':'Kontaktovat obchod',
-            'about.title':'O <span class="accent">Q-CORE Systems</span>',
-            'about.p1':'Q-CORE Systems je kyberbezpe\u010dnostn\u00ed firma zam\u011b\u0159en\u00e1 na post-kvantovou kryptografii.',
-            'about.p2':'Na\u0161e mise: zp\u0159\u00edstupnit post-kvantovou bezpe\u010dnost \u2014 ne\u017e bude pozd\u011b.',
-            'about.modules':'Modul\u016f','about.categories':'Kategori\u00ed','about.tests':'Test\u016f','about.compliant':'Kompatibiln\u00ed',
-            'cta.title':'P\u0159ipraveni na kvantovou bezpe\u010dnost?','cta.desc':'A\u0165 pot\u0159ebujete bezplatn\u00fd sken nebo enterprise PQC migraci \u2014 jsme tu pro v\u00e1s.'
-        }
-    };
-
-    function setLang(lang) {
-        currentLang = lang;
-        localStorage.setItem('qcore_lang', lang);
-        document.querySelectorAll('.flag-btn').forEach(b => b.classList.remove('active'));
-        const activeBtn = document.querySelector(`.flag-btn[onclick="setLang('${lang}')"]`);
-        if (activeBtn) activeBtn.classList.add('active');
-        const t = i18n[lang];
-        if (!t) return;
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (t[key] !== undefined) el.innerHTML = t[key];
-        });
-        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-            const key = el.getAttribute('data-i18n-placeholder');
-            if (t[key]) el.placeholder = t[key];
-        });
-        document.documentElement.lang = lang;
-    }
-    if (currentLang !== 'en') setLang(currentLang);
 
     /* INTERSECTION OBSERVER */
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => { if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; } });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.cat-block, .ap-card, .pricing-card, .about-card, .cra-banner, .feature').forEach(el => {
-        el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    document.querySelectorAll('.feature, .card, .ap-card, .mc, .tier').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(el);
     });
-
     </script>
+    
+</body>
+</html>
+!--/email_off-->
 </body>
 </html>

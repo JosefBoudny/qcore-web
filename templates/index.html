@@ -180,6 +180,10 @@
         .tag-free { background: var(--green-dim); color: var(--green); }
         .tag-pro { background: var(--cyan-dim); color: var(--cyan); }
         .tag-ent { background: var(--purple-dim); color: var(--purple); }
+        .tag-sov { background: linear-gradient(135deg,#ff336622,#a855f722); color: #ff6699; border: 1px solid #ff336644; }
+        .tag-starter { background: var(--green-dim); color: var(--green); }
+        .tag-business { background: var(--cyan-dim); color: var(--cyan); }
+        .tag-enterprise { background: var(--purple-dim); color: var(--purple); }
 
         /* CRA BANNER */
         .cra-section { max-width: 1000px; margin: 0 auto 3rem; padding: 0 2rem; }
@@ -190,8 +194,8 @@
 
         /* PRICING */
         .pricing-section { max-width: 1000px; margin: 0 auto 3rem; padding: 0 2rem; }
-        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
-        .pricing-card { padding: 2rem; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-panel); display: flex; flex-direction: column; transition: border-color 0.3s, transform 0.2s; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+        .pricing-card { padding: 2rem; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-panel); display: flex; flex-direction: column; transition: border-color 0.3s, transform 0.2s; position: relative; overflow: hidden; }
         .pricing-card:hover { transform: translateY(-3px); }
         .pricing-card.featured { border-color: var(--cyan); position: relative; }
         .pricing-card.featured::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), var(--purple)); }
@@ -207,6 +211,8 @@
         .pricing-btn-free { background: transparent; color: var(--green); border: 1px solid var(--green-dim); } .pricing-btn-free:hover { background: var(--green-dim); }
         .pricing-btn-pro { background: var(--cyan); color: var(--bg); border: 1px solid var(--cyan); } .pricing-btn-pro:hover { background: #33edff; }
         .pricing-btn-ent { background: transparent; color: var(--purple); border: 1px solid var(--purple-dim); } .pricing-btn-ent:hover { background: var(--purple-dim); }
+        .pricing-btn-sov { background: linear-gradient(135deg, #ff3366, #a855f7); color: #fff; border: none; } .pricing-btn-sov:hover { opacity: 0.9; transform: translateY(-1px); }
+        .tier-starter { color: var(--green); } .tier-business { color: var(--cyan); } .tier-enterprise { color: var(--purple); } .tier-sovereign { color: #ff6699; }
         .popular-badge { position: absolute; top: -1px; right: 1.5rem; background: var(--cyan); color: var(--bg); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.3rem 0.75rem; border-radius: 0 0 6px 6px; }
 
         /* ABOUT */
@@ -237,6 +243,7 @@
         .footer a { color: var(--text-dim); text-decoration: none; } .footer a:hover { color: var(--cyan); }
 
         /* RESPONSIVE */
+        @media (max-width: 1100px) { .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) {
             .nav { padding: 0.9rem 1rem; } .nav-links { display: none; }
             .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(7,8,12,0.98); padding: 1.25rem; border-bottom: 1px solid var(--border); gap: 0.75rem; }
@@ -246,6 +253,7 @@
             .features { padding: 0 1.25rem; }
             .ap-section, .plat-section, .pricing-section, .about-section, .cta-section, .cra-section { padding: 0 1.25rem 3rem; }
             .pricing-grid { grid-template-columns: 1fr; }
+            .pricing-card { position: relative; }
             .mg { grid-template-columns: 1fr; }
             .about-card { padding: 2rem; flex-direction: column; text-align: center; }
             .about-logo { width: 120px; height: 120px; } .about-stats { justify-content: center; }
@@ -277,6 +285,7 @@
                     <button class="flag-btn" data-lang="cs" onclick="setLang('cs')" title="Cesky">CZ</button>
                     <button class="flag-btn" data-lang="de" onclick="setLang('de')" title="Deutsch">DE</button>
                 </div>
+                <a href="/academy" data-i18n="nav.academy" style="color:var(--pink);">Q-Academy</a>
                 <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="nav-github">GitHub</a>
             </div>
             <button class="nav-mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
@@ -334,106 +343,106 @@
             <div class="cat-block" data-cat="core-crypto">
                 <div class="cat-hdr"><div class="cat-dot" style="background:var(--cyan)"></div><div class="cat-name" data-i18n="cat.crypto">Core Cryptography</div><div class="cat-cnt">8 modules</div></div>
                 <div class="mg">
-                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-01</span><div class="mn">Q-SHIELD</div><div class="mdesc">ML-KEM (Kyber-768) key encapsulation for quantum-safe key exchange. NIST FIPS 203.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-02</span><div class="mn">Q-SIGN</div><div class="mdesc">ML-DSA (Dilithium) digital signatures with ECDSA P-384 fallback. FIPS 204 compliant.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-03</span><div class="mn">Q-VAULT</div><div class="mdesc">AES-256-GCM authenticated encryption with HKDF key derivation. Tamper-evident storage.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-04</span><div class="mn">Q-GATE</div><div class="mdesc">FIDO2/WebAuthn zero-trust authentication. Hardware token MFA, phishing-resistant.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-05</span><div class="mn">Q-HSM</div><div class="mdesc">TPM 2.0 / PKCS#11 hardware security module interface. Hardware-bound key storage.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-06</span><div class="mn">Q-CYCLE</div><div class="mdesc">Automated key lifecycle — rotation, re-encryption, revocation. Plaintext never on disk.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-07</span><div class="mn">Q-HYBRID</div><div class="mdesc">Hybrid classical+PQC encryption. Dual-layer protection during quantum transition period.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-08</span><div class="mn">Q-ENTROPY</div><div class="mdesc">Quantum-grade random number generation. NIST SP 800-90B entropy source validation.</div><span class="mt tag-pro">Pro</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-01</span><div class="mn">Q-SHIELD</div><div class="mdesc">ML-KEM (Kyber-768) key encapsulation for quantum-safe key exchange. NIST FIPS 203.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-02</span><div class="mn">Q-SIGN</div><div class="mdesc">ML-DSA (Dilithium) digital signatures with ECDSA P-384 fallback. FIPS 204 compliant.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-03</span><div class="mn">Q-VAULT</div><div class="mdesc">AES-256-GCM authenticated encryption with HKDF key derivation. Tamper-evident storage.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-04</span><div class="mn">Q-GATE</div><div class="mdesc">FIDO2/WebAuthn zero-trust authentication. Hardware token MFA, phishing-resistant.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-05</span><div class="mn">Q-HSM</div><div class="mdesc">TPM 2.0 / PKCS#11 hardware security module interface. Hardware-bound key storage.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-06</span><div class="mn">Q-CYCLE</div><div class="mdesc">Automated key lifecycle — rotation, re-encryption, revocation. Plaintext never on disk.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-07</span><div class="mn">Q-HYBRID</div><div class="mdesc">Hybrid classical+PQC encryption. Dual-layer protection during quantum transition period.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-08</span><div class="mn">Q-ENTROPY</div><div class="mdesc">Quantum-grade random number generation. NIST SP 800-90B entropy source validation.</div><span class="mt tag-business">Business+</span></div></div>
                 </div>
             </div>
 
             <div class="cat-block" data-cat="scanning">
                 <div class="cat-hdr"><div class="cat-dot" style="background:var(--green)"></div><div class="cat-name" data-i18n="cat.scanning">Scanning &amp; Compliance</div><div class="cat-cnt">7 modules</div></div>
                 <div class="mg">
-                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-09</span><div class="mn">Q-SCANNER</div><div class="mdesc">TLS/PQC vulnerability scanner. 9 scan areas, 117 tests, quantum risk scoring.</div><span class="mt tag-free">Free</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-10</span><div class="mn">Q-CRA</div><div class="mdesc">EU Cyber Resilience Act compliance dashboard. Automated reports, gap analysis, NIS2 mapping.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-11</span><div class="mn">Q-AUDIT</div><div class="mdesc">Hash-chained tamper-evident audit trail. FIPS-ready compliance logging for all crypto ops.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-12</span><div class="mn">Q-COMPLY</div><div class="mdesc">Multi-framework compliance engine — ISO 27001, SOC 2, GDPR, HIPAA, PCI DSS mapping.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-13</span><div class="mn">Q-POLICY</div><div class="mdesc">Auto-generate security policies from scan results and regulatory requirements.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-14</span><div class="mn">Q-RADAR</div><div class="mdesc">Regulatory change monitoring. AI-tracked updates to CRA, NIS2, DORA with impact analysis.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-15</span><div class="mn">Q-BENCH</div><div class="mdesc">CIS Benchmark automated assessment. Infrastructure hardening validation and scoring.</div><span class="mt tag-pro">Pro</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-09</span><div class="mn">Q-SCANNER</div><div class="mdesc">TLS/PQC vulnerability scanner. 9 scan areas, 117 tests, quantum risk scoring.</div><span class="mt tag-starter">Free</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-10</span><div class="mn">Q-CRA</div><div class="mdesc">EU Cyber Resilience Act compliance dashboard. Automated reports, gap analysis, NIS2 mapping.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-11</span><div class="mn">Q-AUDIT</div><div class="mdesc">Hash-chained tamper-evident audit trail. FIPS-ready compliance logging for all crypto ops.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-12</span><div class="mn">Q-COMPLY</div><div class="mdesc">Multi-framework compliance engine — ISO 27001, SOC 2, GDPR, HIPAA, PCI DSS mapping.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-13</span><div class="mn">Q-POLICY</div><div class="mdesc">Auto-generate security policies from scan results and regulatory requirements.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-14</span><div class="mn">Q-RADAR</div><div class="mdesc">Regulatory change monitoring. AI-tracked updates to CRA, NIS2, DORA with impact analysis.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-15</span><div class="mn">Q-BENCH</div><div class="mdesc">CIS Benchmark automated assessment. Infrastructure hardening validation and scoring.</div><span class="mt tag-business">Business+</span></div></div>
                 </div>
             </div>
 
             <div class="cat-block" data-cat="ai-security">
                 <div class="cat-hdr"><div class="cat-dot" style="background:var(--purple)"></div><div class="cat-name" data-i18n="cat.ai">AI-Powered Security</div><div class="cat-cnt">6 modules</div></div>
                 <div class="mg">
-                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-16</span><div class="mn">Q-AUTOPILOT</div><div class="mdesc">SOC orchestrator. Autonomous threat correlation, IR playbooks, cross-module response.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-17</span><div class="mn">Q-SENTINEL</div><div class="mdesc">AI behavioral anomaly detection. ML models trained on network baselines detect zero-days.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-18</span><div class="mn">Q-PREDICT</div><div class="mdesc">Threat prediction engine. Forecasts attack vectors based on CVE trends and threat intel.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-19</span><div class="mn">Q-CLASSIFY</div><div class="mdesc">Automated data classification. Identifies PII, secrets, and sensitive data across repos.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-20</span><div class="mn">Q-DECEPTION</div><div class="mdesc">AI-managed honeypots and decoy systems. Lure attackers, gather TTPs, alert on intrusion.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-21</span><div class="mn">Q-INTEL</div><div class="mdesc">Threat intelligence aggregation. IOC feeds, STIX/TAXII, dark web monitoring integration.</div><span class="mt tag-pro">Pro</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-16</span><div class="mn">Q-AUTOPILOT</div><div class="mdesc">SOC orchestrator. Autonomous threat correlation, IR playbooks, cross-module response.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-17</span><div class="mn">Q-SENTINEL</div><div class="mdesc">AI behavioral anomaly detection. ML models trained on network baselines detect zero-days.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-18</span><div class="mn">Q-PREDICT</div><div class="mdesc">Threat prediction engine. Forecasts attack vectors based on CVE trends and threat intel.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-19</span><div class="mn">Q-CLASSIFY</div><div class="mdesc">Automated data classification. Identifies PII, secrets, and sensitive data across repos.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-20</span><div class="mn">Q-DECEPTION</div><div class="mdesc">AI-managed honeypots and decoy systems. Lure attackers, gather TTPs, alert on intrusion.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-21</span><div class="mn">Q-INTEL</div><div class="mdesc">Threat intelligence aggregation. IOC feeds, STIX/TAXII, dark web monitoring integration.</div><span class="mt tag-business">Business+</span></div></div>
                 </div>
             </div>
 
             <div class="cat-block" data-cat="adv-crypto">
                 <div class="cat-hdr"><div class="cat-dot" style="background:var(--yellow)"></div><div class="cat-name" data-i18n="cat.advcrypto">Advanced Cryptography</div><div class="cat-cnt">5 modules</div></div>
                 <div class="mg">
-                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-22</span><div class="mn">Q-CERT</div><div class="mdesc">X.509 certificate lifecycle management. Issuance, renewal, revocation, CT log monitoring.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-23</span><div class="mn">Q-PKI</div><div class="mdesc">Private PKI infrastructure. Internal CA, certificate templates, OCSP responder.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-24</span><div class="mn">Q-TOKEN</div><div class="mdesc">Cryptographic tokenization. Replace sensitive data with tokens while preserving format.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-25</span><div class="mn">Q-SEAL</div><div class="mdesc">Code signing and firmware verification. Tamper-evident software supply chain integrity.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-26</span><div class="mn">Q-MIGRATE</div><div class="mdesc">PQC migration toolkit. Crypto inventory, algorithm replacement planner, transition roadmap.</div><span class="mt tag-ent">Enterprise</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-22</span><div class="mn">Q-CERT</div><div class="mdesc">X.509 certificate lifecycle management. Issuance, renewal, revocation, CT log monitoring.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-23</span><div class="mn">Q-PKI</div><div class="mdesc">Private PKI infrastructure. Internal CA, certificate templates, OCSP responder.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-24</span><div class="mn">Q-TOKEN</div><div class="mdesc">Cryptographic tokenization. Replace sensitive data with tokens while preserving format.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-25</span><div class="mn">Q-SEAL</div><div class="mdesc">Code signing and firmware verification. Tamper-evident software supply chain integrity.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-26</span><div class="mn">Q-MIGRATE</div><div class="mdesc">PQC migration toolkit. Crypto inventory, algorithm replacement planner, transition roadmap.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
                 </div>
             </div>
 
             <div class="cat-block" data-cat="network">
                 <div class="cat-hdr"><div class="cat-dot" style="background:var(--red)"></div><div class="cat-name" data-i18n="cat.network">Network Defense</div><div class="cat-cnt">6 modules</div></div>
                 <div class="mg">
-                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-27</span><div class="mn">Q-FIREWALL</div><div class="mdesc">Next-gen application firewall with DPI, protocol analysis, and ML threat detection.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-28</span><div class="mn">Q-MESH</div><div class="mdesc">Zero-trust service mesh. mTLS everywhere, micro-segmentation, identity-based access.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-29</span><div class="mn">Q-DNS</div><div class="mdesc">Secure DNS with DNSSEC validation, DoH/DoT, DNS-based threat blocking.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-30</span><div class="mn">Q-PROXY</div><div class="mdesc">TLS-intercepting forward proxy. Content inspection, DLP, and PQC protocol enforcement.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-31</span><div class="mn">Q-VPN</div><div class="mdesc">Post-quantum VPN tunnel. WireGuard-based with ML-KEM key exchange layer.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-32</span><div class="mn">Q-ENDPOINT</div><div class="mdesc">Endpoint detection and response. Behavioral analysis, process isolation, auto-quarantine.</div><span class="mt tag-pro">Pro</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-27</span><div class="mn">Q-FIREWALL</div><div class="mdesc">Next-gen application firewall with DPI, protocol analysis, and ML threat detection.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-28</span><div class="mn">Q-MESH</div><div class="mdesc">Zero-trust service mesh. mTLS everywhere, micro-segmentation, identity-based access.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-29</span><div class="mn">Q-DNS</div><div class="mdesc">Secure DNS with DNSSEC validation, DoH/DoT, DNS-based threat blocking.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-30</span><div class="mn">Q-PROXY</div><div class="mdesc">TLS-intercepting forward proxy. Content inspection, DLP, and PQC protocol enforcement.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-31</span><div class="mn">Q-VPN</div><div class="mdesc">Post-quantum VPN tunnel. WireGuard-based with ML-KEM key exchange layer.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-32</span><div class="mn">Q-ENDPOINT</div><div class="mdesc">Endpoint detection and response. Behavioral analysis, process isolation, auto-quarantine.</div><span class="mt tag-business">Business+</span></div></div>
                 </div>
             </div>
 
             <div class="cat-block" data-cat="forensics">
                 <div class="cat-hdr"><div class="cat-dot" style="background:var(--orange)"></div><div class="cat-name" data-i18n="cat.forensics">Forensics &amp; Incident Response</div><div class="cat-cnt">5 modules</div></div>
                 <div class="mg">
-                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-33</span><div class="mn">Q-FORENSIC</div><div class="mdesc">Digital forensics toolkit. Memory dumps, disk imaging, artifact extraction with chain-of-custody.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-34</span><div class="mn">Q-LOG</div><div class="mdesc">Centralized SIEM. Log aggregation, correlation rules, ML anomaly detection across all sources.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-35</span><div class="mn">Q-PLAYBOOK</div><div class="mdesc">IR playbook engine. SOAR-style automated response with human-in-the-loop escalation.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-36</span><div class="mn">Q-TRACE</div><div class="mdesc">Attack path reconstruction. Visualizes lateral movement, timeline, and IOC correlation.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-37</span><div class="mn">Q-RECOVER</div><div class="mdesc">Disaster recovery orchestrator. Automated backup verification, failover, and restoration.</div><span class="mt tag-ent">Enterprise</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-33</span><div class="mn">Q-FORENSIC</div><div class="mdesc">Digital forensics toolkit. Memory dumps, disk imaging, artifact extraction with chain-of-custody.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-34</span><div class="mn">Q-LOG</div><div class="mdesc">Centralized SIEM. Log aggregation, correlation rules, ML anomaly detection across all sources.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-35</span><div class="mn">Q-PLAYBOOK</div><div class="mdesc">IR playbook engine. SOAR-style automated response with human-in-the-loop escalation.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-36</span><div class="mn">Q-TRACE</div><div class="mdesc">Attack path reconstruction. Visualizes lateral movement, timeline, and IOC correlation.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-37</span><div class="mn">Q-RECOVER</div><div class="mdesc">Disaster recovery orchestrator. Automated backup verification, failover, and restoration.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
                 </div>
             </div>
 
             <div class="cat-block" data-cat="operations">
                 <div class="cat-hdr"><div class="cat-dot" style="background:var(--blue)"></div><div class="cat-name" data-i18n="cat.ops">Security Operations</div><div class="cat-cnt">5 modules</div></div>
                 <div class="mg">
-                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-38</span><div class="mn">Q-ASSET</div><div class="mdesc">IT asset discovery and inventory. Auto-detect endpoints, services, certificates, keys.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-39</span><div class="mn">Q-PATCH</div><div class="mdesc">Vulnerability patch management. CVE tracking, auto-prioritization, deployment orchestration.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-40</span><div class="mn">Q-LICENSE</div><div class="mdesc">Ed25519-signed enterprise licensing. Feature toggling, expiration, HMAC anti-tampering.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-41</span><div class="mn">Q-CONFIG</div><div class="mdesc">Security configuration management. Baseline enforcement, drift detection, auto-remediation.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-42</span><div class="mn">Q-PIPELINE</div><div class="mdesc">Secure CI/CD pipeline. SAST/DAST integration, dependency scanning, build attestation.</div><span class="mt tag-pro">Pro</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-38</span><div class="mn">Q-ASSET</div><div class="mdesc">IT asset discovery and inventory. Auto-detect endpoints, services, certificates, keys.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-39</span><div class="mn">Q-PATCH</div><div class="mdesc">Vulnerability patch management. CVE tracking, auto-prioritization, deployment orchestration.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-40</span><div class="mn">Q-LICENSE</div><div class="mdesc">Ed25519-signed enterprise licensing. Feature toggling, expiration, HMAC anti-tampering.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-41</span><div class="mn">Q-CONFIG</div><div class="mdesc">Security configuration management. Baseline enforcement, drift detection, auto-remediation.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-42</span><div class="mn">Q-PIPELINE</div><div class="mdesc">Secure CI/CD pipeline. SAST/DAST integration, dependency scanning, build attestation.</div><span class="mt tag-business">Business+</span></div></div>
                 </div>
             </div>
 
             <div class="cat-block" data-cat="governance">
                 <div class="cat-hdr"><div class="cat-dot" style="background:var(--teal)"></div><div class="cat-name" data-i18n="cat.gov">Governance &amp; Risk</div><div class="cat-cnt">5 modules</div></div>
                 <div class="mg">
-                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-43</span><div class="mn">Q-RISK</div><div class="mdesc">Quantitative risk assessment. FAIR methodology, loss exposure modeling, board-ready reports.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-44</span><div class="mn">Q-VENDOR</div><div class="mdesc">Third-party risk management. Vendor security questionnaires, continuous monitoring, scoring.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-45</span><div class="mn">Q-PRIVACY</div><div class="mdesc">Data privacy engine. DSAR automation, consent management, data mapping, breach notification.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-46</span><div class="mn">Q-ACCESS</div><div class="mdesc">Identity &amp; access governance. Role mining, access reviews, privilege escalation detection.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-47</span><div class="mn">Q-BCP</div><div class="mdesc">Business continuity planning. Impact analysis, recovery strategies, tabletop exercise automation.</div><span class="mt tag-ent">Enterprise</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-43</span><div class="mn">Q-RISK</div><div class="mdesc">Quantitative risk assessment. FAIR methodology, loss exposure modeling, board-ready reports.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-44</span><div class="mn">Q-VENDOR</div><div class="mdesc">Third-party risk management. Vendor security questionnaires, continuous monitoring, scoring.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-45</span><div class="mn">Q-PRIVACY</div><div class="mdesc">Data privacy engine. DSAR automation, consent management, data mapping, breach notification.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-46</span><div class="mn">Q-ACCESS</div><div class="mdesc">Identity &amp; access governance. Role mining, access reviews, privilege escalation detection.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-47</span><div class="mn">Q-BCP</div><div class="mdesc">Business continuity planning. Impact analysis, recovery strategies, tabletop exercise automation.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
                 </div>
             </div>
 
             <div class="cat-block" data-cat="education">
                 <div class="cat-hdr"><div class="cat-dot" style="background:var(--pink)"></div><div class="cat-name" data-i18n="cat.edu">Education &amp; Planning</div><div class="cat-cnt">5 modules</div></div>
                 <div class="mg">
-                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-48</span><div class="mn">Q-ACADEMY</div><div class="mdesc">PQC education platform. 6 interactive modules: Y2Q, CRA, NIST FIPS 203/204. Certification.</div><span class="mt tag-free">Free / Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-49</span><div class="mn">Q-BRIDGE</div><div class="mdesc">Academy Bridge. Maps scanner findings to lessons. Personalized Scan → Learn → Fix cycle.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-50</span><div class="mn">Q-SIMULATE</div><div class="mdesc">Attack simulation platform. Quantum attack scenarios, red team exercises, tabletop drills.</div><span class="mt tag-ent">Enterprise</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-51</span><div class="mn">Q-ROADMAP</div><div class="mdesc">PQC migration roadmap generator. Timeline, milestones, resource planning for quantum transition.</div><span class="mt tag-pro">Pro</span></div></div>
-                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-52</span><div class="mn">Q-REPORT</div><div class="mdesc">Executive reporting engine. Board-ready security posture reports with trend analysis and benchmarks.</div><span class="mt tag-pro">Pro</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-48</span><div class="mn">Q-ACADEMY</div><div class="mdesc">PQC education platform. 6 interactive modules: Y2Q, CRA, NIST FIPS 203/204. Certification.</div><span class="mt tag-starter">Free</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-49</span><div class="mn">Q-BRIDGE</div><div class="mdesc">Academy Bridge. Maps scanner findings to lessons. Personalized Scan → Learn → Fix cycle.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-50</span><div class="mn">Q-SIMULATE</div><div class="mdesc">Attack simulation platform. Quantum attack scenarios, red team exercises, tabletop drills.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-51</span><div class="mn">Q-ROADMAP</div><div class="mdesc">PQC migration roadmap generator. Timeline, milestones, resource planning for quantum transition.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-52</span><div class="mn">Q-REPORT</div><div class="mdesc">Executive reporting engine. Board-ready security posture reports with trend analysis and benchmarks.</div><span class="mt tag-business">Business+</span></div></div>
                 </div>
             </div>
         </section>
@@ -501,62 +510,96 @@
 
         <!-- PRICING -->
         <section class="pricing-section" id="pricing">
-            <div class="sec-header"><h2><span data-i18n="price.t1">Simple</span> <span class="accent" data-i18n="price.t2">Pricing</span></h2><p data-i18n="price.desc">Start free. Scale when you need enterprise-grade post-quantum protection.</p></div>
+            <div class="sec-header">
+                <h2><span data-i18n="price.t1">Choose Your</span> <span class="accent" data-i18n="price.t2">Protection Level</span></h2>
+                <p data-i18n="price.desc">From SME essentials to sovereign-grade defense. All packages include Q-SCANNER. Prices on request.</p>
+            </div>
             <div class="pricing-grid">
+
+                <!-- STARTER -->
                 <div class="pricing-card">
-                    <div class="pricing-tier tier-free" data-i18n="price.community">Community</div>
-                    <div class="pricing-name" data-i18n="price.free">Free</div>
-                    <div class="pricing-price" data-i18n="price.free.price">$0 / forever</div>
+                    <div class="pricing-tier tier-starter">Starter</div>
+                    <div class="pricing-name">Starter</div>
+                    <div class="pricing-price" style="font-size:0.85rem;color:var(--text-dim);">5 modules · Price on request</div>
+                    <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:1rem;font-family:var(--font-display);">For small businesses taking their first quantum-safe step.</div>
                     <ul class="pricing-features">
-                        <li>Q-SCANNER web interface</li>
-                        <li>Unlimited domain scans</li>
-                        <li>Quantum risk scoring</li>
-                        <li>Basic recommendations</li>
-                        <li>Q-ACADEMY (basics)</li>
-                        <li class="disabled">CLI &amp; batch scanning</li>
-                        <li class="disabled">Q-SHIELD, Q-VAULT, Q-GATE</li>
-                        <li class="disabled">CRA Dashboard</li>
-                        <li class="disabled">Q-AUTOPILOT SOC</li>
+                        <li>Q-AUTOPILOT — AI orchestrator</li>
+                        <li>Q-SHIELD — PQC encryption</li>
+                        <li>Q-GATE — Zero-trust access</li>
+                        <li>Q-SUPPLY — Supply chain</li>
+                        <li>Q-RANSOM — Ransomware defense</li>
+                        <li>Q-SCANNER — Free included</li>
                     </ul>
-                    <a href="#scanner" class="pricing-btn pricing-btn-free" data-i18n="price.start">Start Scanning</a>
+                    <a href="mailto:info@qcore.systems">info@qcore.systems</a>
                 </div>
+
+                <!-- BUSINESS -->
                 <div class="pricing-card featured">
-                    <div class="popular-badge" data-i18n="price.popular">Most Popular</div>
-                    <div class="pricing-tier tier-pro" data-i18n="price.pro">Professional</div>
-                    <div class="pricing-name" data-i18n="price.pro.name">Pro</div>
-                    <div class="pricing-price">Contact us</div>
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="pricing-tier tier-business">Business</div>
+                    <div class="pricing-name">Business</div>
+                    <div class="pricing-price" style="font-size:0.85rem;color:var(--text-dim);">12 modules · Price on request</div>
+                    <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:1rem;font-family:var(--font-display);">For growing companies that need full visibility and compliance.</div>
                     <ul class="pricing-features">
-                        <li>Everything in Free</li>
-                        <li>35+ modules unlocked</li>
-                        <li>Q-AUTOPILOT SOC orchestrator</li>
-                        <li>Q-SHIELD PQC encryption</li>
-                        <li>Q-VAULT, Q-GATE, Q-SIGN</li>
-                        <li>Q-CRA compliance dashboard</li>
-                        <li>CLI &amp; batch scanning</li>
-                        <li>PDF security reports</li>
-                        <li>Q-SENTINEL AI detection</li>
-                        <li>Email &amp; priority support</li>
+                        <li>Everything in Starter</li>
+                        <li>Q-GENESIS — Hardware integrity</li>
+                        <li>Q-PANOPTICON — Sensor fusion</li>
+                        <li>Q-LEVIATHAN — OSINT &amp; dark web</li>
+                        <li>Q-ORACLE — AI attack prediction</li>
+                        <li>Q-SCADA-ZT — Industrial ZT</li>
+                        <li>Q-HARVEST — PQC migration</li>
+                        <li>Q-IDENTITY — Anti-deepfake ID</li>
+                        <li>CRA / NIS2 / ZKB dashboard</li>
                     </ul>
-                    <a href="/cdn-cgi/l/email-protection#3d57524e585b7d4c5e524f58134e444e4958504e" class="pricing-btn pricing-btn-pro" data-i18n="price.touch">Get in Touch</a>
+                    <a href="mailto:info@qcore.systems">info@qcore.systems</a>
                 </div>
+
+                <!-- ENTERPRISE -->
                 <div class="pricing-card">
-                    <div class="pricing-tier tier-ent" data-i18n="price.ent">Enterprise</div>
+                    <div class="pricing-tier tier-enterprise">Enterprise</div>
                     <div class="pricing-name">Enterprise</div>
-                    <div class="pricing-price">Contact us</div>
+                    <div class="pricing-price" style="font-size:0.85rem;color:var(--text-dim);">20 modules · Price on request</div>
+                    <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:1rem;font-family:var(--font-display);">For banks, hospitals and corporations — full deception layer.</div>
                     <ul class="pricing-features">
-                        <li>Everything in Pro</li>
-                        <li>All 52 modules</li>
-                        <li>Q-HSM (TPM / PKCS#11)</li>
-                        <li>Q-CYCLE key rotation</li>
-                        <li>Q-FORENSIC &amp; Q-TRACE</li>
+                        <li>Everything in Business</li>
+                        <li>Q-MIRAGE — Honeypot network</li>
+                        <li>Q-ECHO — Deepfake detection</li>
+                        <li>Q-TEMPEST — EM shield</li>
+                        <li>Q-MIDAS — Financial warfare</li>
+                        <li>Q-NEXUS — Quantum comms</li>
+                        <li>Q-SENTINEL — AI vs AI combat</li>
+                        <li>Q-PROVENANCE — C2PA auth</li>
+                        <li>Q-GENOME — DNA backup</li>
                         <li>On-premise deployment</li>
-                        <li>Custom integrations</li>
-                        <li>SLA &amp; dedicated engineer</li>
-                        <li>PQC migration roadmap</li>
-                        <li>Q-SIMULATE attack drills</li>
                     </ul>
-                    <a href="/cdn-cgi/l/email-protection#5933362a3c3f19283a362b3c772a202a2d3c342a" class="pricing-btn pricing-btn-ent" data-i18n="price.sales">Contact Sales</a>
+                    <a href="mailto:info@qcore.systems">info@qcore.systems</a>
                 </div>
+
+                <!-- SOVEREIGN -->
+                <div class="pricing-card" style="border-color:#ff336633;background:linear-gradient(160deg,var(--bg-panel),#ff336608);">
+                    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#ff3366,#a855f7,#ff3366);"></div>
+                    <div class="pricing-tier tier-sovereign">⚔ Sovereign</div>
+                    <div class="pricing-name" style="color:#ff6699;">Sovereign</div>
+                    <div class="pricing-price" style="font-size:0.85rem;color:var(--text-dim);">33 modules · Authorization required</div>
+                    <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:1rem;font-family:var(--font-display);">For governments &amp; defense. Strategic frameworks, kinetic-layer modules.</div>
+                    <ul class="pricing-features">
+                        <li>Everything in Enterprise</li>
+                        <li>Q-AETHER</li>
+                        <li>Q-STRIKE</li>
+                        <li>Q-DOMINANCE</li>
+                        <li>Q-ORBITAL</li>
+                        <li>Q-CHRONOS</li>
+                        <li>Q-ABYSS</li>
+                        <li>Q-SYNAPSE</li>
+                        <li>Q-GAIA</li>
+                        <li>Q-vCISO</li>
+                        <li>Q-ELECTION</li>
+                        <li>Q-AIRGAP</li>
+                        <li style="color:#ff6699;font-weight:600;">Q-modules on request<br><span style="font-size:0.68rem;font-weight:400;color:var(--text-dim);">Government / defense verification required</span></li>
+                    </ul>
+                    <a href="mailto:info@qcore.systems">info@qcore.systems</a>
+                </div>
+
             </div>
         </section>
 
@@ -568,7 +611,7 @@
                     <p data-i18n="about.p1">Q-CORE Systems is a cybersecurity company focused on post-quantum cryptography. We build tools that help organizations understand and prepare for the quantum computing era — from free scanning to full enterprise PQC migration.</p>
                     <p data-i18n="about.p2">Our mission: make post-quantum security accessible — before it's too late.</p>
                     <div class="about-stats">
-                        <div class="about-stat"><div class="about-stat-num">52</div><div class="about-stat-label" data-i18n="about.modules">Modules</div></div>
+                        <div class="about-stat"><div class="about-stat-num">66</div><div class="about-stat-label" data-i18n="about.modules">Modules</div></div>
                         <div class="about-stat"><div class="about-stat-num">9</div><div class="about-stat-label" data-i18n="about.categories">Categories</div></div>
                         <div class="about-stat"><div class="about-stat-num">117</div><div class="about-stat-label" data-i18n="about.tests">Scan Tests</div></div>
                         <div class="about-stat"><div class="about-stat-num">FIPS</div><div class="about-stat-label" data-i18n="about.compliant">Compliant</div></div>
@@ -586,23 +629,23 @@
                 <h2 data-i18n="cta.title">Ready to go quantum-safe?</h2>
                 <p data-i18n="cta.desc">Whether you need a free scan or a full enterprise PQC migration — we're here to help.</p>
                 <div class="cta-buttons">
-                    <a href="/cdn-cgi/l/email-protection#6f05001c0a092f1e0c001d0a411c161c1b0a021c" class="btn-primary">✉ <span class="__cf_email__" data-cfemail="d1bbbea2b4b791a0b2bea3b4ffa2a8a2a5b4bca2">[email&#160;protected]</span></a>
+                    <a href="mailto:info@qcore.systems">info@qcore.systems</a>
                     <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="btn-secondary">View on GitHub →</a>
                     <a href="https://linkedin.com/in/josef-boudný-a274aa3aa/" target="_blank" rel="noopener" class="btn-secondary">in — LinkedIn</a>
                 </div>
             </div>
         </section>
 
-        <footer class="footer">© 2024–2026 Q-CORE SYSTEMS · Built by <a href="https://linkedin.com/in/josef-boudný-a274aa3aa/" target="_blank" rel="noopener">Josef Boudny</a> · <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener">Open Source</a></footer>
+        <footer class="footer">© 2025–2026 Q-CORE SYSTEMS · Built by <a href="https://linkedin.com/in/josef-boudný-a274aa3aa/" target="_blank" rel="noopener">Josef Boudny</a> · <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener">Open Source</a></footer>
     </div>
 
     
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     /* === I18N & LANGUAGE SWITCHER (isolated from Cloudflare interference) === */
     var currentLang = localStorage.getItem('qcore_lang') || 'en';
     var i18n = {
         en: {
-            'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Platform','nav.pricing':'Pricing',
+            'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Platform','nav.pricing':'Pricing','nav.academy':'Q-Academy',
             'hero.badge':'Q-SCANNER v2.1 \u2014 Free PQC Vulnerability Audit','hero.title1':'Is your server ready for','hero.title2':'quantum threats?',
             'hero.desc':'Scan any domain to analyze TLS configuration, cipher suites, certificates, and post-quantum cryptography readiness. Free, open-source, instant results.',
             'hero.scan_btn':'Scan','hero.hint':'Try: google.com \u00b7 github.com \u00b7 cloudflare.com',
@@ -619,7 +662,7 @@
             'cat.ops':'Security Operations','cat.gov':'Governance & Risk','cat.edu':'Education & Planning',
             'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'Track your EU Cyber Resilience Act compliance in real-time. Automated reports, gap analysis, NIS2 mapping, multilingual PDF export (EN/CS/DE).','cra.btn':'Open CRA Dashboard \u2192',
             'zkb.badge':'Czech Cybersecurity Act No. 264/2025 — effective Nov 1, 2025','zkb.t1':'Czech ZKB & NIS2','zkb.t2':'Compliance for businesses','zkb.desc':'The new Cybersecurity Act applies to <strong style="color:var(--text-bright)">6,000+ Czech organizations</strong>. Penalty for non-compliance: <strong style="color:#ff3b5c">up to 250M CZK</strong> or 2% of revenue. Q-CRA Dashboard helps you meet all requirements.','zkb.s1':'regulated organizations','zkb.s2':'CZK maximum penalty','zkb.s3':'Q-CORE compliance score','zkb.s4':'§ ZKB articles covered','zkb.f1.t':'ZKB § Mapping','zkb.f1.d':'Complete mapping of your systems to 18 articles of Act No. 264/2025. Each requirement linked to a specific Q-CORE module and NIS2 article.','zkb.f2.t':'NÚKIB Incident Reporting','zkb.f2.d':'Pre-built 24h / 72h / 30d report templates per § 15 and § 16 ZKB. Fill in, download PDF, submit via NÚKIB Portal.','zkb.f3.t':'Sovereign Compliance Score','zkb.f3.d':'Real-time 0–100% score. See exactly where you stand. Detailed breakdown by area.','zkb.f4.t':'Gap Analysis','zkb.f4.d':'Precise checklist of what you meet and what\'s missing for 100% compliance. Specific recommendations for each gap.','zkb.f5.t':'Self-Identification','zkb.f5.d':'Calculator per Decree No. 408/2025. Enter your sector and company size — instantly know if you fall under the law.','zkb.f6.t':'PDF Reports CZ / DE / EN','zkb.f6.d':'Professional compliance reports in Czech, German and English. Digitally signed. Ready for NÚKIB audit.','zkb.cta.t':'Does the new Cybersecurity Act apply to you?','zkb.cta.d':'Find out in 30 seconds. Check your organization and start compliance today.','zkb.cta.btn1':'Open CRA Dashboard \u2192','zkb.cta.btn2':'NÚKIB Portal \u2197',
-            'price.t1':'Simple','price.t2':'Pricing','price.desc':'Start free. Scale when you need enterprise-grade post-quantum protection.',
+            'price.t1':'Choose Your','price.t2':'Protection Level','price.desc':'Start free. Scale when you need enterprise-grade post-quantum protection.',
             'price.community':'Community','price.free':'Free','price.free.price':'$0 / forever',
             'price.start':'Start Scanning','price.popular':'Most Popular','price.pro':'Professional','price.pro.name':'Pro',
             'price.touch':'Get in Touch','price.ent':'Enterprise','price.sales':'Contact Sales',
@@ -658,7 +701,7 @@
             'cta.title':'P\u0159ipraveni na kvantovou bezpe\u010dnost?','cta.desc':'A\u0165 pot\u0159ebujete bezplatn\u00fd sken nebo enterprise PQC migraci \u2014 jsme tu pro v\u00e1s.'
         },
         de: {
-            'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Plattform','nav.pricing':'Preise',
+            'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Plattform','nav.pricing':'Preise','nav.academy':'Q-Akademie',
             'hero.badge':'Q-SCANNER v2.1 \u2014 Kostenloser PQC-Audit','hero.title1':'Ist Ihr Server bereit f\u00fcr','hero.title2':'Quantenbedrohungen?',
             'hero.desc':'Scannen Sie jede Domain \u2014 TLS-Konfiguration, Cipher Suites, Zertifikate und Post-Quanten-Kryptografie-Bereitschaft. Kostenlos, Open-Source.',
             'hero.scan_btn':'Scannen','hero.hint':'Versuchen: google.com \u00b7 github.com \u00b7 cloudflare.com',
@@ -675,7 +718,7 @@
             'cat.ops':'Sicherheitsoperationen','cat.gov':'Governance & Risiko','cat.edu':'Bildung & Planung',
             'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'EU CRA-Compliance in Echtzeit. Automatische Berichte, NIS2-Zuordnung, PDF-Export (EN/CS/DE).','cra.btn':'CRA Dashboard \u00f6ffnen \u2192',
             'zkb.badge':'Tschechisches Cybersicherheitsgesetz Nr. 264/2025 \u2014 g\u00fcltig ab 1.11.2025','zkb.t1':'Tschechisches ZKB & NIS2','zkb.t2':'Compliance f\u00fcr Unternehmen','zkb.desc':'Das neue Cybersicherheitsgesetz betrifft <strong style="color:var(--text-bright)">6.000+ tschechische Organisationen</strong>. Strafe bei Nichteinhalten: <strong style="color:#ff3b5c">bis zu 250 Mio. CZK</strong> oder 2% des Umsatzes. Q-CRA Dashboard hilft bei der Erf\u00fcllung aller Anforderungen.','zkb.s1':'regulierte Unternehmen','zkb.s2':'CZK H\u00f6chststrafe','zkb.s3':'Q-CORE Compliance-Score','zkb.s4':'\u00a7 ZKB-Artikel abgedeckt','zkb.f1.t':'ZKB \u00a7 Zuordnung','zkb.f1.d':'Vollst\u00e4ndige Zuordnung Ihrer Systeme zu 18 Paragraphen des Gesetzes Nr. 264/2025. Jede Anforderung mit Q-CORE Modul und NIS2-Artikel verkn\u00fcpft.','zkb.f2.t':'N\u00daKIB Vorfallmeldung','zkb.f2.d':'Vorgefertigte Formulare 24h / 72h / 30d gem\u00e4\u00df \u00a7 15 und \u00a7 16 ZKB. Ausf\u00fcllen, PDF herunterladen, \u00fcber N\u00daKIB-Portal einreichen.','zkb.f3.t':'Sovereign Compliance Score','zkb.f3.d':'Echtzeit-Score 0\u2013100%. Sehen Sie genau wo Sie stehen. Detaillierte Aufschl\u00fcsselung nach Bereichen.','zkb.f4.t':'Gap-Analyse','zkb.f4.d':'Pr\u00e4zise Checkliste was Sie erf\u00fcllen und was fehlt. Konkrete Empfehlungen f\u00fcr jede L\u00fccke.','zkb.f5.t':'Selbstidentifikation','zkb.f5.d':'Rechner gem\u00e4\u00df Verordnung Nr. 408/2025. Branche und Unternehmensgr\u00f6\u00dfe eingeben \u2014 sofort wissen ob Sie unter das Gesetz fallen.','zkb.f6.t':'PDF-Berichte CZ / DE / EN','zkb.f6.d':'Professionelle Compliance-Berichte in Tschechisch, Deutsch und Englisch. Digital signiert. Bereit f\u00fcr N\u00daKIB-Audit.','zkb.cta.t':'F\u00e4llt Ihr Unternehmen unter das neue Cybersicherheitsgesetz?','zkb.cta.d':'Finden Sie es in 30 Sekunden heraus. Pr\u00fcfen Sie Ihr Unternehmen und starten Sie noch heute.','zkb.cta.btn1':'CRA Dashboard \u00f6ffnen \u2192','zkb.cta.btn2':'N\u00daKIB-Portal \u2197',
-            'price.t1':'Einfache','price.t2':'Preisgestaltung','price.desc':'Starten Sie kostenlos. Skalieren Sie f\u00fcr Enterprise-Grade Post-Quanten-Schutz.',
+            'price.t1':'Wählen Sie Ihren','price.t2':'Schutzlevel','price.desc':'Starten Sie kostenlos. Skalieren Sie f\u00fcr Enterprise-Grade Post-Quanten-Schutz.',
             'price.community':'Community','price.free':'Kostenlos','price.free.price':'$0 / f\u00fcr immer',
             'price.start':'Scannen starten','price.popular':'Beliebteste','price.pro':'Professionell','price.pro.name':'Pro',
             'price.touch':'Kontaktieren Sie uns','price.ent':'Enterprise','price.sales':'Vertrieb kontaktieren',
@@ -737,16 +780,4 @@
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => { if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; } });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.feature, .card, .ap-card, .mc, .tier').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-    </script>
-    
-</body>
-</html>
-!--/email_off-->
-</body>
-</html>
+    document.querySelectorAll('.feature, .card, .ap-card, .mc, .tier'
