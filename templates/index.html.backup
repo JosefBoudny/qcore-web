@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-CORE SYSTEMS — Post-Quantum Security Platform | qcore.systems</title>
+    <meta name="description" content="Post-quantum cybersecurity platform with 66 security modules. Q-AUTOPILOT SOC orchestrator, PQC vulnerability scanner, FIDO2 auth, key lifecycle management. NIST FIPS 203/204.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #07080c; --bg-panel: #0c0e14; --bg-elevated: #11141d;
+            --border: #1a1f2e; --text: #c8cdd8; --text-dim: #5a6178; --text-bright: #eaecf2;
+            --cyan: #00e5ff; --cyan-dim: #00e5ff44;
+            --green: #00ff9d; --green-dim: #00ff9d33;
+            --red: #ff3b5c; --red-dim: #ff3b5c33;
+            --orange: #ff9f1c; --orange-dim: #ff9f1c33;
+            --yellow: #ffd60a; --yellow-dim: #ffd60a22;
+            --purple: #a855f7; --purple-dim: #a855f744;
+            --blue: #3b82f6; --blue-dim: #3b82f633;
+            --pink: #ec4899; --pink-dim: #ec489933;
+            --teal: #14b8a6; --teal-dim: #14b8a633;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-display: 'Outfit', sans-serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-mono); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        body::before { content: ''; position: fixed; inset: 0; background: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; opacity: 0.12; pointer-events: none; z-index: 0; }
+        body::after { content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 20%, #00e5ff06 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, #a855f708 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        .page-wrap { position: relative; z-index: 1; }
+        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 3px; }
+        .accent { color: var(--cyan); }
+
+        /* NAV */
+        .nav { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; background: rgba(7,8,12,0.92); }
+        .nav-logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .nav-logo svg { width: 36px; height: 36px; }
+        .nav-brand { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; color: var(--text-bright); letter-spacing: 0.02em; }
+        .nav-brand span { color: var(--cyan); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.72rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--cyan); }
+        .nav-github { display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.85rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.72rem; transition: border-color 0.2s, color 0.2s; }
+        .nav-github:hover { border-color: var(--cyan); color: var(--cyan) !important; }
+        .flag-switcher { display: flex; gap: 4px; align-items: center; }
+        .flag-btn { background: none; border: 1px solid rgba(0,188,212,0.3); border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600; font-family: 'JetBrains Mono', monospace; padding: 3px 8px; color: var(--cyan); opacity: .6; transition: opacity .2s, border-color .2s; line-height: 1; letter-spacing: 1px; }
+        .flag-btn:hover { opacity: .9; border-color: var(--cyan); }
+        .flag-btn.active { opacity: 1; border-color: var(--cyan); background: rgba(0,188,212,0.15); color: var(--cyan); }
+        .nav-mobile-toggle { display: none; background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-bright); font-size: 1.2rem; cursor: pointer; padding: 0.3rem 0.6rem; }
+
+        /* HERO */
+        .hero { text-align: center; padding: 5rem 2rem 3rem; max-width: 850px; margin: 0 auto; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border: 1px solid var(--cyan-dim); border-radius: 100px; font-size: 0.7rem; color: var(--cyan); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2rem; background: var(--cyan-dim); animation: fadeInDown 0.6s ease-out; }
+        .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(2.4rem, 5.5vw, 3.8rem); font-weight: 800; color: var(--text-bright); line-height: 1.1; margin-bottom: 1.25rem; animation: fadeInDown 0.6s ease-out 0.1s both; letter-spacing: -0.02em; }
+        .hero > p { font-size: 1rem; color: var(--text-dim); line-height: 1.7; max-width: 580px; margin: 0 auto 2.5rem; font-family: var(--font-display); font-weight: 300; animation: fadeInDown 0.6s ease-out 0.2s both; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* SCAN BOX */
+        .scan-box { max-width: 620px; margin: 0 auto 1.5rem; animation: fadeInDown 0.6s ease-out 0.3s both; }
+        .scan-input-wrap { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg-panel); transition: border-color 0.3s, box-shadow 0.3s; }
+        .scan-input-wrap:focus-within { border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-dim), 0 0 30px var(--cyan-dim); }
+        .scan-prefix { display: flex; align-items: center; padding: 0 0 0 1.25rem; color: var(--text-dim); font-size: 0.85rem; white-space: nowrap; user-select: none; }
+        .scan-input { flex: 1; padding: 1rem 0.5rem; background: transparent; border: none; color: var(--text-bright); font-family: var(--font-mono); font-size: 0.95rem; outline: none; }
+        .scan-input::placeholder { color: var(--text-dim); opacity: 0.5; }
+        .scan-btn { padding: 1rem 1.75rem; background: var(--cyan); color: var(--bg); border: none; font-family: var(--font-mono); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.1s; white-space: nowrap; }
+        .scan-btn:hover { background: #33edff; }
+        .scan-btn:active { transform: scale(0.97); }
+        .scan-btn:disabled { background: var(--text-dim); cursor: not-allowed; }
+        .scan-hint { text-align: center; font-size: 0.7rem; color: var(--text-dim); margin-top: 0.75rem; opacity: 0.6; }
+
+        /* SCANNING */
+        .scan-progress { display: none; max-width: 620px; margin: 0 auto 2rem; padding: 1.5rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-panel); }
+        .scan-progress.active { display: block; animation: fadeIn 0.3s ease-out; }
+        .progress-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+        .progress-spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top: 2px solid var(--cyan); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .progress-text { font-size: 0.8rem; color: var(--cyan); letter-spacing: 0.05em; }
+        .progress-log { font-size: 0.72rem; color: var(--text-dim); line-height: 1.8; }
+        .progress-log div { animation: fadeIn 0.3s ease-out; }
+        .progress-log .done { color: var(--green); }
+        .progress-log .active-step { color: var(--cyan); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .scan-error { display: none; max-width: 620px; margin: 0 auto 2rem; padding: 1.25rem; border: 1px solid var(--red-dim); border-radius: 12px; background: #ff3b5c0a; color: var(--red); font-size: 0.85rem; }
+        .scan-error.active { display: block; animation: fadeIn 0.3s; }
+
+        /* RESULTS */
+        .results { display: none; max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem; }
+        .results.active { display: block; animation: fadeIn 0.5s ease-out; }
+        .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .results-target { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: var(--text-bright); }
+        .results-target span { color: var(--text-dim); font-weight: 300; font-size: 0.9rem; }
+        .status-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.25rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+        .status-badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; }
+        .status-SAFE { background: var(--green-dim); color: var(--green); border: 1px solid #00ff9d44; } .status-SAFE::before { background: var(--green); }
+        .status-LOW_RISK { background: #ffd60a1a; color: var(--yellow); border: 1px solid #ffd60a33; } .status-LOW_RISK::before { background: var(--yellow); }
+        .status-MEDIUM_RISK { background: var(--orange-dim); color: var(--orange); border: 1px solid #ff9f1c44; } .status-MEDIUM_RISK::before { background: var(--orange); }
+        .status-VULNERABLE { background: var(--red-dim); color: var(--red); border: 1px solid #ff3b5c44; } .status-VULNERABLE::before { background: var(--red); }
+        .status-CRITICAL { background: var(--red-dim); color: var(--red); border: 1px solid #ff3b5c44; } .status-CRITICAL::before { background: var(--red); animation: pulse-dot 1s infinite; }
+        .status-ERROR { background: #5a617822; color: var(--text-dim); border: 1px solid var(--border); } .status-ERROR::before { background: var(--text-dim); }
+        .score-section { display: flex; align-items: center; gap: 2.5rem; padding: 2rem; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-panel); margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .score-ring-wrap { position: relative; width: 130px; height: 130px; flex-shrink: 0; } .score-ring-wrap svg { transform: rotate(-90deg); }
+        .score-ring-bg { fill: none; stroke: var(--border); stroke-width: 8; }
+        .score-ring-fill { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1.2s ease-out, stroke 0.5s; }
+        .score-value { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--font-display); }
+        .score-number { font-size: 2.25rem; font-weight: 700; line-height: 1; }
+        .score-label { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.25rem; }
+        .score-details { flex: 1; min-width: 200px; }
+        .score-detail-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; } .score-detail-row:last-child { border: none; }
+        .score-detail-key { color: var(--text-dim); } .score-detail-val { color: var(--text-bright); font-weight: 500; }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .card { padding: 1.5rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-panel); transition: border-color 0.3s; } .card:hover { border-color: #2a3048; }
+        .card-label { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem; }
+        .card-value { font-size: 1rem; color: var(--text-bright); font-weight: 500; word-break: break-all; }
+        .card-sub { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.35rem; }
+        .section-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--text-bright); margin: 2.5rem 0 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .section-title::before { content: ''; width: 3px; height: 1.1em; background: var(--cyan); border-radius: 2px; }
+        .risk-table { width: 100%; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg-panel); border-collapse: separate; border-spacing: 0; margin-bottom: 1.5rem; }
+        .risk-table th { text-align: left; padding: 0.85rem 1.25rem; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; border-bottom: 1px solid var(--border); background: var(--bg-elevated); font-weight: 500; }
+        .risk-table td { padding: 0.85rem 1.25rem; font-size: 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; } .risk-table tr:last-child td { border-bottom: none; }
+        .risk-level { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; }
+        .risk-SAFE { background: var(--green-dim); color: var(--green); } .risk-LOW { background: #ffd60a1a; color: var(--yellow); } .risk-MEDIUM { background: var(--orange-dim); color: var(--orange); } .risk-HIGH { background: var(--red-dim); color: var(--red); } .risk-CRITICAL { background: var(--red-dim); color: var(--red); }
+        .risk-detail { color: var(--text-dim); font-size: 0.75rem; margin-top: 0.3rem; }
+        .recs-list { list-style: none; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg-panel); margin-bottom: 1.5rem; }
+        .recs-list li { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.82rem; display: flex; gap: 0.75rem; line-height: 1.6; } .recs-list li:last-child { border: none; }
+        .rec-num { color: var(--cyan); font-weight: 600; flex-shrink: 0; width: 1.5rem; }
+        .proto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+        .proto-item { padding: 1rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-panel); text-align: center; }
+        .proto-name { font-size: 0.85rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.4rem; }
+        .proto-status { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em; } .proto-enabled { color: var(--green); } .proto-disabled { color: var(--text-dim); } .proto-critical { color: var(--red); }
+        .headers-bar { display: flex; align-items: center; gap: 1.25rem; padding: 1.25rem 1.5rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-panel); margin-bottom: 0.75rem; flex-wrap: wrap; }
+        .headers-score { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; }
+        .headers-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+        .headers-missing { font-size: 0.8rem; color: var(--orange); }
+
+        /* FEATURES */
+        .features { max-width: 900px; margin: 0 auto 3rem; padding: 0 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .feature { padding: 1.5rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-panel); transition: border-color 0.3s; } .feature:hover { border-color: var(--cyan-dim); }
+        .feature-icon { font-size: 1.3rem; margin-bottom: 0.75rem; }
+        .feature h3 { font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.4rem; }
+        .feature p { font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; font-family: var(--font-display); }
+
+        /* AUTOPILOT */
+        .ap-section { max-width: 1100px; margin: 0 auto 3rem; padding: 0 2rem; }
+        .sec-header { text-align: center; margin-bottom: 2.5rem; }
+        .sec-header h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--text-bright); margin-bottom: 0.75rem; }
+        .sec-header p { font-family: var(--font-display); font-size: 0.95rem; color: var(--text-dim); max-width: 620px; margin: 0 auto; line-height: 1.6; }
+        .ap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .ap-card { padding: 1.75rem; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-panel); transition: border-color 0.3s, transform 0.2s; position: relative; overflow: hidden; }
+        .ap-card:hover { border-color: var(--cyan-dim); transform: translateY(-2px); }
+        .ap-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), var(--purple)); opacity: 0; transition: opacity 0.3s; }
+        .ap-card:hover::before { opacity: 1; }
+        .ap-card-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        .ap-card h3 { font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.5rem; }
+        .ap-card p { font-family: var(--font-display); font-size: 0.78rem; color: var(--text-dim); line-height: 1.6; }
+
+        /* PLATFORM 52 MODULES */
+        .plat-section { max-width: 1200px; margin: 0 auto 3rem; padding: 0 2rem; }
+        .msearch-wrap { max-width: 460px; margin: 0 auto 1.5rem; position: relative; }
+        .msearch { width: 100%; padding: 0.85rem 1rem 0.85rem 2.5rem; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; color: var(--text-bright); font-family: var(--font-mono); font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+        .msearch:focus { border-color: var(--cyan); } .msearch::placeholder { color: var(--text-dim); }
+        .msearch-icon { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 0.9rem; pointer-events: none; }
+        .mcount { text-align: center; font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); margin-bottom: 2rem; letter-spacing: 0.05em; }
+        .cat-block { margin-bottom: 2.5rem; }
+        .cat-hdr { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+        .cat-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .cat-name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; color: var(--text-bright); }
+        .cat-cnt { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-dim); margin-left: auto; background: rgba(255,255,255,0.03); padding: 0.2rem 0.6rem; border-radius: 100px; }
+        .mg { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; }
+        .mc { padding: 1rem 1.1rem; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; display: flex; gap: 0.85rem; align-items: flex-start; transition: all 0.2s; }
+        .mc:hover { border-color: var(--cyan-dim); background: var(--bg-elevated); transform: translateY(-1px); }
+        .md { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+        .mi { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-dim); opacity: 0.5; }
+        .mn { font-family: var(--font-display); font-size: 0.82rem; font-weight: 600; color: var(--text-bright); margin-bottom: 2px; }
+        .mdesc { font-family: var(--font-display); font-size: 0.7rem; color: var(--text-dim); line-height: 1.4; }
+        .mt { display: inline-block; margin-top: 0.4rem; padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.55rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+        .tag-free { background: var(--green-dim); color: var(--green); }
+        .tag-pro { background: var(--cyan-dim); color: var(--cyan); }
+        .tag-ent { background: var(--purple-dim); color: var(--purple); }
+        .tag-sov { background: linear-gradient(135deg,#ff336622,#a855f722); color: #ff6699; border: 1px solid #ff336644; }
+        .tag-starter { background: var(--green-dim); color: var(--green); }
+        .tag-business { background: var(--cyan-dim); color: var(--cyan); }
+        .tag-enterprise { background: var(--purple-dim); color: var(--purple); }
+
+        /* CRA BANNER */
+        .cra-section { max-width: 1000px; margin: 0 auto 3rem; padding: 0 2rem; }
+        .cra-banner { padding: 2.5rem; border: 1px solid var(--cyan-dim); border-radius: 16px; background: linear-gradient(135deg, #00e5ff06, #a855f706); display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; position: relative; overflow: hidden; }
+        .cra-banner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+        .cra-banner h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--text-bright); margin-bottom: 0.5rem; }
+        .cra-banner p { font-family: var(--font-display); font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; max-width: 550px; }
+
+        /* PRICING */
+        .pricing-section { max-width: 1000px; margin: 0 auto 3rem; padding: 0 2rem; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+        .pricing-card { padding: 2rem; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-panel); display: flex; flex-direction: column; transition: border-color 0.3s, transform 0.2s; position: relative; overflow: hidden; }
+        .pricing-card:hover { transform: translateY(-3px); }
+        .pricing-card.featured { border-color: var(--cyan); position: relative; }
+        .pricing-card.featured::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), var(--purple)); }
+        .pricing-tier { font-family: var(--font-display); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .tier-free { color: var(--green); } .tier-pro { color: var(--cyan); } .tier-ent { color: var(--purple); }
+        .pricing-name { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--text-bright); margin-bottom: 0.25rem; }
+        .pricing-price { font-family: var(--font-display); font-size: 1.1rem; color: var(--text-dim); margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+        .pricing-features { list-style: none; flex: 1; margin-bottom: 1.5rem; }
+        .pricing-features li { font-family: var(--font-display); font-size: 0.78rem; color: var(--text); padding: 0.35rem 0; display: flex; align-items: flex-start; gap: 0.5rem; line-height: 1.4; }
+        .pricing-features li::before { content: '¹3'; color: var(--green); font-weight: 600; flex-shrink: 0; }
+        .pricing-features li.disabled { color: var(--text-dim); } .pricing-features li.disabled::before { content: '4'; color: var(--text-dim); }
+        .pricing-btn { display: block; text-align: center; padding: 0.8rem; border-radius: 8px; font-family: var(--font-mono); font-weight: 600; font-size: 0.75rem; letter-spacing: 0.05em; text-decoration: none; transition: all 0.2s; }
+        .pricing-btn-free { background: transparent; color: var(--green); border: 1px solid var(--green-dim); } .pricing-btn-free:hover { background: var(--green-dim); }
+        .pricing-btn-pro { background: var(--cyan); color: var(--bg); border: 1px solid var(--cyan); } .pricing-btn-pro:hover { background: #33edff; }
+        .pricing-btn-ent { background: transparent; color: var(--purple); border: 1px solid var(--purple-dim); } .pricing-btn-ent:hover { background: var(--purple-dim); }
+        .pricing-btn-sov { background: linear-gradient(135deg, #ff3366, #a855f7); color: #fff; border: none; } .pricing-btn-sov:hover { opacity: 0.9; transform: translateY(-1px); }
+        .tier-starter { color: var(--green); } .tier-business { color: var(--cyan); } .tier-enterprise { color: var(--purple); } .tier-sovereign { color: #ff6699; }
+        .popular-badge { position: absolute; top: -1px; right: 1.5rem; background: var(--cyan); color: var(--bg); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.3rem 0.75rem; border-radius: 0 0 6px 6px; }
+
+        /* ABOUT */
+        .about-section { max-width: 900px; margin: 0 auto 3rem; padding: 0 2rem; }
+        .about-card { border: 1px solid var(--border); border-radius: 16px; padding: 3rem; background: var(--bg-panel); display: flex; gap: 3rem; align-items: center; flex-wrap: wrap; }
+        .about-content { flex: 1; min-width: 280px; }
+        .about-content h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--text-bright); margin-bottom: 1rem; }
+        .about-content p { font-family: var(--font-display); font-size: 0.88rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 1rem; }
+        .about-stats { display: flex; gap: 1.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+        .about-stat { text-align: center; }
+        .about-stat-num { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; color: var(--cyan); }
+        .about-stat-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.25rem; }
+        .about-logo { flex-shrink: 0; width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; }
+        .about-logo svg { width: 140px; height: 140px; }
+
+        /* CTA */
+        .cta-section { max-width: 900px; margin: 0 auto; padding: 0 2rem 5rem; }
+        .cta-card { border: 1px solid var(--cyan-dim); border-radius: 16px; padding: 3rem; text-align: center; background: linear-gradient(135deg, #00e5ff06, #a855f706); position: relative; overflow: hidden; }
+        .cta-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+        .cta-card h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.75rem; }
+        .cta-card p { color: var(--text-dim); font-size: 0.9rem; font-family: var(--font-display); margin-bottom: 2rem; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+        .cta-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+        .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem; background: var(--cyan); color: var(--bg); border: none; border-radius: 8px; font-family: var(--font-mono); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.05em; text-decoration: none; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+        .btn-primary:hover { background: #33edff; transform: translateY(-1px); }
+        .btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.05em; text-decoration: none; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+        .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+        .footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; font-size: 0.7rem; color: var(--text-dim); }
+        .footer a { color: var(--text-dim); text-decoration: none; } .footer a:hover { color: var(--cyan); }
+
+        /* RESPONSIVE */
+        @media (max-width: 1100px) { .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) {
+            .nav { padding: 0.9rem 1rem; } .nav-links { display: none; }
+            .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(7,8,12,0.98); padding: 1.25rem; border-bottom: 1px solid var(--border); gap: 0.75rem; }
+            .nav-mobile-toggle { display: block; }
+            .hero { padding: 3rem 1.25rem 2rem; }
+            .features, .ap-grid { grid-template-columns: 1fr; }
+            .features { padding: 0 1.25rem; }
+            .ap-section, .plat-section, .pricing-section, .about-section, .cta-section, .cra-section { padding: 0 1.25rem 3rem; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .pricing-card { position: relative; }
+            .mg { grid-template-columns: 1fr; }
+            .about-card { padding: 2rem; flex-direction: column; text-align: center; }
+            .about-logo { width: 120px; height: 120px; } .about-stats { justify-content: center; }
+            .results { padding: 0 1.25rem 3rem; }
+            .score-section { flex-direction: column; align-items: center; text-align: center; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .scan-btn { padding: 1rem 1.25rem; font-size: 0.7rem; }
+            .cra-banner { flex-direction: column; text-align: center; }
+        }
+        @media (max-width: 480px) { .scan-prefix { display: none; } .proto-grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+
+        <nav class="nav">
+            <a href="/" class="nav-logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g1)" stroke-width="2.5" transform="rotate(-30 50 50)" opacity="0.9"/><ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g2)" stroke-width="2.5" transform="rotate(30 50 50)" opacity="0.9"/><ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g3)" stroke-width="2.5" transform="rotate(90 50 50)" opacity="0.9"/><circle cx="50" cy="50" r="6" fill="url(#gc)"/><circle cx="50" cy="50" r="10" fill="none" stroke="var(--cyan)" stroke-width="1" opacity="0.3"/><circle cx="22" cy="30" r="3" fill="#a855f7"/><circle cx="78" cy="30" r="3" fill="var(--cyan)"/><circle cx="50" cy="82" r="3" fill="#33edff"/><defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient><linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#33edff"/></linearGradient><linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></linearGradient><radialGradient id="gc"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></radialGradient></defs></svg>
+                <div class="nav-brand">Q-CORE <span>SYSTEMS</span></div>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="#scanner" data-i18n="nav.scanner">Scanner</a>
+                <a href="#autopilot" data-i18n="nav.autopilot">Q-Autopilot</a>
+                <a href="/cra-dashboard" style="color: var(--cyan); font-weight: 600;" data-i18n="nav.cra">CRA Dashboard</a>
+                <a href="#platform" data-i18n="nav.platform">Platform</a>
+                <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
+                <div class="flag-switcher">
+                    <button class="flag-btn active" data-lang="en" onclick="setLang('en')" title="English">EN</button>
+                    <button class="flag-btn" data-lang="cs" onclick="setLang('cs')" title="Cesky">CZ</button>
+                    <button class="flag-btn" data-lang="de" onclick="setLang('de')" title="Deutsch">DE</button>
+                </div>
+                <a href="/academy" data-i18n="nav.academy" style="color:var(--pink);">Q-Academy</a>
+                <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="nav-github">GitHub</a>
+            </div>
+            <button class="nav-mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+        </nav>
+
+        <section class="hero" id="scanner">
+            <div class="hero-badge" data-i18n="hero.badge">Q-SCANNER v2.1 — Free PQC Vulnerability Audit</div>
+            <h1><span data-i18n="hero.title1">Is your server ready for</span><br><span class="accent" data-i18n="hero.title2">quantum threats?</span></h1>
+            <p data-i18n="hero.desc">Scan any domain to analyze TLS configuration, cipher suites, certificates, and post-quantum cryptography readiness. Free, open-source, instant results.</p>
+            <div class="scan-box">
+                <div class="scan-input-wrap">
+                    <span class="scan-prefix">https://</span>
+                    <input type="text" class="scan-input" id="domainInput" placeholder="example.com" autocomplete="off" spellcheck="false">
+                    <button class="scan-btn" id="scanBtn" onclick="startScan()" data-i18n="hero.scan_btn">Scan</button>
+                </div>
+                <div class="scan-hint" data-i18n="hero.hint">Try: google.com · github.com · cloudflare.com</div>
+            </div>
+            <div class="scan-progress" id="scanProgress"><div class="progress-header"><div class="progress-spinner"></div><div class="progress-text">Scanning target...</div></div><div class="progress-log" id="progressLog"></div></div>
+            <div class="scan-error" id="scanError"></div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="feature"><div class="feature-icon">⚛</div><h3 data-i18n="feat.quantum">Quantum Risk Analysis</h3><p data-i18n="feat.quantum.d">Evaluates Shor's &amp; Grover's algorithm impact on your key exchange, encryption and certificates.</p></div>
+            <div class="feature"><div class="feature-icon">🔐</div><h3 data-i18n="feat.tls">TLS Deep Scan</h3><p data-i18n="feat.tls.d">Probes all TLS versions, cipher suites, certificate chain, and HTTP security headers.</p></div>
+            <div class="feature"><div class="feature-icon">🛡</div><h3 data-i18n="feat.pqc">PQC Readiness</h3><p data-i18n="feat.pqc.d">Detects ML-KEM (Kyber), ML-DSA (Dilithium) and other NIST post-quantum standards.</p></div>
+        </section>
+
+        <div class="results" id="results"></div>
+
+        <!-- Q-AUTOPILOT SOC -->
+        <section class="ap-section" id="autopilot">
+            <div class="sec-header">
+                <h2><span class="accent">Q-AUTOPILOT</span> <span data-i18n="ap.title">— SOC Orchestrator</span></h2>
+                <p data-i18n="ap.desc">Autonomous Security Operations Center. Q-AUTOPILOT connects all 52 modules into a self-operating security engine that monitors, triages, and responds — 24/7.</p>
+            </div>
+            <div class="ap-grid">
+                <div class="ap-card"><div class="ap-card-icon">🧠</div><h3 data-i18n="ap.c1t">Threat Correlation Engine</h3><p data-i18n="ap.c1d">Cross-references scanner results, vulnerability feeds, and network telemetry. Correlates events across all modules to detect advanced persistent threats.</p></div>
+                <div class="ap-card"><div class="ap-card-icon">⚡</div><h3 data-i18n="ap.c2t">Automated Incident Response</h3><p data-i18n="ap.c2d">Pre-built and custom IR playbooks execute automatically. Isolate endpoints, rotate keys, trigger Q-SHIELD encryption — sub-second response.</p></div>
+                <div class="ap-card"><div class="ap-card-icon">📊</div><h3 data-i18n="ap.c3t">Risk Scoring &amp; Prioritization</h3><p data-i18n="ap.c3d">ML-driven risk scoring aggregates signals from Q-SCANNER, Q-SENTINEL, and Q-RADAR. Prioritizes critical issues by exploitability and blast radius.</p></div>
+                <div class="ap-card"><div class="ap-card-icon">🔗</div><h3 data-i18n="ap.c4t">Cross-Module Orchestration</h3><p data-i18n="ap.c4d">When Q-SCANNER detects a weak cipher, Q-AUTOPILOT triggers Q-CYCLE for key rotation, Q-AUDIT for logging, and Q-CRA for compliance update.</p></div>
+                <div class="ap-card"><div class="ap-card-icon">🎯</div><h3 data-i18n="ap.c5t">Adaptive Threat Hunting</h3><p data-i18n="ap.c5d">Continuously learns from your environment. Refines detection models based on false positive feedback and emerging quantum-era attack patterns.</p></div>
+                <div class="ap-card"><div class="ap-card-icon">📋</div><h3 data-i18n="ap.c6t">Compliance Automation</h3><p data-i18n="ap.c6d">Maps security events to CRA, NIS2, GDPR, ISO 27001 requirements automatically. Generates audit-ready evidence with full decision explainability.</p></div>
+            </div>
+        </section>
+
+        <!-- PLATFORM 52 MODULES -->
+        <section class="plat-section" id="platform">
+            <div class="sec-header">
+                <h2><span data-i18n="plat.t1">The</span> <span class="accent">Q-CORE</span> <span data-i18n="plat.t2">Platform — 66 Modules</span></h2>
+                <p data-i18n="plat.desc">A complete post-quantum cybersecurity stack. From scanning to forensics — everything you need to protect your infrastructure against quantum-era threats.</p>
+            </div>
+            <div class="msearch-wrap"><span class="msearch-icon">⌕</span><input type="text" class="msearch" id="moduleSearch" placeholder="Search modules..." data-i18n-placeholder="plat.search"></div>
+            <div class="mcount" id="moduleCount">66 / 66 modules</div>
+
+            <div class="cat-block" data-cat="core-crypto">
+                <div class="cat-hdr"><div class="cat-dot" style="background:var(--cyan)"></div><div class="cat-name" data-i18n="cat.crypto">Core Cryptography</div><div class="cat-cnt">8 modules</div></div>
+                <div class="mg">
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-01</span><div class="mn">Q-SHIELD</div><div class="mdesc">ML-KEM (Kyber-768) key encapsulation for quantum-safe key exchange. NIST FIPS 203.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-02</span><div class="mn">Q-SIGN</div><div class="mdesc">ML-DSA (Dilithium) digital signatures with ECDSA P-384 fallback. FIPS 204 compliant.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-03</span><div class="mn">Q-VAULT</div><div class="mdesc">AES-256-GCM authenticated encryption with HKDF key derivation. Tamper-evident storage.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-04</span><div class="mn">Q-GATE</div><div class="mdesc">FIDO2/WebAuthn zero-trust authentication. Hardware token MFA, phishing-resistant.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-05</span><div class="mn">Q-HSM</div><div class="mdesc">TPM 2.0 / PKCS#11 hardware security module interface. Hardware-bound key storage.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-06</span><div class="mn">Q-CYCLE</div><div class="mdesc">Automated key lifecycle — rotation, re-encryption, revocation. Plaintext never on disk.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-07</span><div class="mn">Q-HYBRID</div><div class="mdesc">Hybrid classical+PQC encryption. Dual-layer protection during quantum transition period.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--cyan)"></div><div><span class="mi">Q-08</span><div class="mn">Q-ENTROPY</div><div class="mdesc">Quantum-grade random number generation. NIST SP 800-90B entropy source validation.</div><span class="mt tag-business">Business+</span></div></div>
+                </div>
+            </div>
+
+            <div class="cat-block" data-cat="scanning">
+                <div class="cat-hdr"><div class="cat-dot" style="background:var(--green)"></div><div class="cat-name" data-i18n="cat.scanning">Scanning &amp; Compliance</div><div class="cat-cnt">7 modules</div></div>
+                <div class="mg">
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-09</span><div class="mn">Q-SCANNER</div><div class="mdesc">TLS/PQC vulnerability scanner. 9 scan areas, 117 tests, quantum risk scoring.</div><span class="mt tag-starter">Free</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-10</span><div class="mn">Q-CRA</div><div class="mdesc">EU Cyber Resilience Act compliance dashboard. Automated reports, gap analysis, NIS2 mapping.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-11</span><div class="mn">Q-AUDIT</div><div class="mdesc">Hash-chained tamper-evident audit trail. FIPS-ready compliance logging for all crypto ops.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-12</span><div class="mn">Q-COMPLY</div><div class="mdesc">Multi-framework compliance engine — ISO 27001, SOC 2, GDPR, HIPAA, PCI DSS mapping.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-13</span><div class="mn">Q-POLICY</div><div class="mdesc">Auto-generate security policies from scan results and regulatory requirements.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-14</span><div class="mn">Q-RADAR</div><div class="mdesc">Regulatory change monitoring. AI-tracked updates to CRA, NIS2, DORA with impact analysis.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--green)"></div><div><span class="mi">Q-15</span><div class="mn">Q-BENCH</div><div class="mdesc">CIS Benchmark automated assessment. Infrastructure hardening validation and scoring.</div><span class="mt tag-business">Business+</span></div></div>
+                </div>
+            </div>
+
+            <div class="cat-block" data-cat="ai-security">
+                <div class="cat-hdr"><div class="cat-dot" style="background:var(--purple)"></div><div class="cat-name" data-i18n="cat.ai">AI-Powered Security</div><div class="cat-cnt">6 modules</div></div>
+                <div class="mg">
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-16</span><div class="mn">Q-AUTOPILOT</div><div class="mdesc">SOC orchestrator. Autonomous threat correlation, IR playbooks, cross-module response.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-17</span><div class="mn">Q-SENTINEL</div><div class="mdesc">AI behavioral anomaly detection. ML models trained on network baselines detect zero-days.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-18</span><div class="mn">Q-PREDICT</div><div class="mdesc">Threat prediction engine. Forecasts attack vectors based on CVE trends and threat intel.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-19</span><div class="mn">Q-CLASSIFY</div><div class="mdesc">Automated data classification. Identifies PII, secrets, and sensitive data across repos.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-20</span><div class="mn">Q-DECEPTION</div><div class="mdesc">AI-managed honeypots and decoy systems. Lure attackers, gather TTPs, alert on intrusion.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--purple)"></div><div><span class="mi">Q-21</span><div class="mn">Q-INTEL</div><div class="mdesc">Threat intelligence aggregation. IOC feeds, STIX/TAXII, dark web monitoring integration.</div><span class="mt tag-business">Business+</span></div></div>
+                </div>
+            </div>
+
+            <div class="cat-block" data-cat="adv-crypto">
+                <div class="cat-hdr"><div class="cat-dot" style="background:var(--yellow)"></div><div class="cat-name" data-i18n="cat.advcrypto">Advanced Cryptography</div><div class="cat-cnt">5 modules</div></div>
+                <div class="mg">
+                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-22</span><div class="mn">Q-CERT</div><div class="mdesc">X.509 certificate lifecycle management. Issuance, renewal, revocation, CT log monitoring.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-23</span><div class="mn">Q-PKI</div><div class="mdesc">Private PKI infrastructure. Internal CA, certificate templates, OCSP responder.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-24</span><div class="mn">Q-TOKEN</div><div class="mdesc">Cryptographic tokenization. Replace sensitive data with tokens while preserving format.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-25</span><div class="mn">Q-SEAL</div><div class="mdesc">Code signing and firmware verification. Tamper-evident software supply chain integrity.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--yellow)"></div><div><span class="mi">Q-26</span><div class="mn">Q-MIGRATE</div><div class="mdesc">PQC migration toolkit. Crypto inventory, algorithm replacement planner, transition roadmap.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                </div>
+            </div>
+
+            <div class="cat-block" data-cat="network">
+                <div class="cat-hdr"><div class="cat-dot" style="background:var(--red)"></div><div class="cat-name" data-i18n="cat.network">Network Defense</div><div class="cat-cnt">6 modules</div></div>
+                <div class="mg">
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-27</span><div class="mn">Q-FIREWALL</div><div class="mdesc">Next-gen application firewall with DPI, protocol analysis, and ML threat detection.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-28</span><div class="mn">Q-MESH</div><div class="mdesc">Zero-trust service mesh. mTLS everywhere, micro-segmentation, identity-based access.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-29</span><div class="mn">Q-DNS</div><div class="mdesc">Secure DNS with DNSSEC validation, DoH/DoT, DNS-based threat blocking.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-30</span><div class="mn">Q-PROXY</div><div class="mdesc">TLS-intercepting forward proxy. Content inspection, DLP, and PQC protocol enforcement.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-31</span><div class="mn">Q-VPN</div><div class="mdesc">Post-quantum VPN tunnel. WireGuard-based with ML-KEM key exchange layer.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--red)"></div><div><span class="mi">Q-32</span><div class="mn">Q-ENDPOINT</div><div class="mdesc">Endpoint detection and response. Behavioral analysis, process isolation, auto-quarantine.</div><span class="mt tag-business">Business+</span></div></div>
+                </div>
+            </div>
+
+            <div class="cat-block" data-cat="forensics">
+                <div class="cat-hdr"><div class="cat-dot" style="background:var(--orange)"></div><div class="cat-name" data-i18n="cat.forensics">Forensics &amp; Incident Response</div><div class="cat-cnt">5 modules</div></div>
+                <div class="mg">
+                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-33</span><div class="mn">Q-FORENSIC</div><div class="mdesc">Digital forensics toolkit. Memory dumps, disk imaging, artifact extraction with chain-of-custody.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-34</span><div class="mn">Q-LOG</div><div class="mdesc">Centralized SIEM. Log aggregation, correlation rules, ML anomaly detection across all sources.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-35</span><div class="mn">Q-PLAYBOOK</div><div class="mdesc">IR playbook engine. SOAR-style automated response with human-in-the-loop escalation.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-36</span><div class="mn">Q-TRACE</div><div class="mdesc">Attack path reconstruction. Visualizes lateral movement, timeline, and IOC correlation.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--orange)"></div><div><span class="mi">Q-37</span><div class="mn">Q-RECOVER</div><div class="mdesc">Disaster recovery orchestrator. Automated backup verification, failover, and restoration.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                </div>
+            </div>
+
+            <div class="cat-block" data-cat="operations">
+                <div class="cat-hdr"><div class="cat-dot" style="background:var(--blue)"></div><div class="cat-name" data-i18n="cat.ops">Security Operations</div><div class="cat-cnt">5 modules</div></div>
+                <div class="mg">
+                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-38</span><div class="mn">Q-ASSET</div><div class="mdesc">IT asset discovery and inventory. Auto-detect endpoints, services, certificates, keys.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-39</span><div class="mn">Q-PATCH</div><div class="mdesc">Vulnerability patch management. CVE tracking, auto-prioritization, deployment orchestration.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-40</span><div class="mn">Q-LICENSE</div><div class="mdesc">Ed25519-signed enterprise licensing. Feature toggling, expiration, HMAC anti-tampering.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-41</span><div class="mn">Q-CONFIG</div><div class="mdesc">Security configuration management. Baseline enforcement, drift detection, auto-remediation.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--blue)"></div><div><span class="mi">Q-42</span><div class="mn">Q-PIPELINE</div><div class="mdesc">Secure CI/CD pipeline. SAST/DAST integration, dependency scanning, build attestation.</div><span class="mt tag-business">Business+</span></div></div>
+                </div>
+            </div>
+
+            <div class="cat-block" data-cat="governance">
+                <div class="cat-hdr"><div class="cat-dot" style="background:var(--teal)"></div><div class="cat-name" data-i18n="cat.gov">Governance &amp; Risk</div><div class="cat-cnt">5 modules</div></div>
+                <div class="mg">
+                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-43</span><div class="mn">Q-RISK</div><div class="mdesc">Quantitative risk assessment. FAIR methodology, loss exposure modeling, board-ready reports.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-44</span><div class="mn">Q-VENDOR</div><div class="mdesc">Third-party risk management. Vendor security questionnaires, continuous monitoring, scoring.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-45</span><div class="mn">Q-PRIVACY</div><div class="mdesc">Data privacy engine. DSAR automation, consent management, data mapping, breach notification.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-46</span><div class="mn">Q-ACCESS</div><div class="mdesc">Identity &amp; access governance. Role mining, access reviews, privilege escalation detection.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--teal)"></div><div><span class="mi">Q-47</span><div class="mn">Q-BCP</div><div class="mdesc">Business continuity planning. Impact analysis, recovery strategies, tabletop exercise automation.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                </div>
+            </div>
+
+            <div class="cat-block" data-cat="education">
+                <div class="cat-hdr"><div class="cat-dot" style="background:var(--pink)"></div><div class="cat-name" data-i18n="cat.edu">Education &amp; Planning</div><div class="cat-cnt">5 modules</div></div>
+                <div class="mg">
+                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-48</span><div class="mn">Q-ACADEMY</div><div class="mdesc">PQC education platform. 6 interactive modules: Y2Q, CRA, NIST FIPS 203/204. Certification.</div><span class="mt tag-starter">Free</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-49</span><div class="mn">Q-BRIDGE</div><div class="mdesc">Academy Bridge. Maps scanner findings to lessons. Personalized Scan → Learn → Fix cycle.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-50</span><div class="mn">Q-SIMULATE</div><div class="mdesc">Attack simulation platform. Quantum attack scenarios, red team exercises, tabletop drills.</div><span class="mt tag-enterprise">Enterprise+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-51</span><div class="mn">Q-ROADMAP</div><div class="mdesc">PQC migration roadmap generator. Timeline, milestones, resource planning for quantum transition.</div><span class="mt tag-business">Business+</span></div></div>
+                    <div class="mc"><div class="md" style="background:var(--pink)"></div><div><span class="mi">Q-52</span><div class="mn">Q-REPORT</div><div class="mdesc">Executive reporting engine. Board-ready security posture reports with trend analysis and benchmarks.</div><span class="mt tag-business">Business+</span></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CRA BANNER -->
+        <section class="cra-section" id="cra">
+            <div class="cra-banner">
+                <div><h3 data-i18n="cra.title">🇪🇺 CRA Compliance Dashboard</h3><p data-i18n="cra.desc">Track your EU Cyber Resilience Act compliance in real-time. Automated reports, gap analysis, NIS2 mapping, multilingual PDF export (EN/CS/DE).</p></div>
+                <a href="/cra-dashboard" class="btn-primary" data-i18n="cra.btn">Open CRA Dashboard →</a>
+            </div>
+        </section>
+
+        <!-- ZKB / NIS2 COMPLIANCE SECTION -->
+        <section id="zkb" style="max-width:920px;margin:0 auto;padding:3rem 2rem">
+            <div style="text-align:center;margin-bottom:2.5rem">
+                <div style="display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;border:1px solid #ff9f1c44;border-radius:100px;font-size:.7rem;color:#ff9f1c;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5rem;background:#ff9f1c11;font-family:var(--font-mono)">
+                    <span style="width:6px;height:6px;border-radius:50%;background:#ff9f1c;display:inline-block"></span>
+                    <span data-i18n="zkb.badge">Zákon č. 264/2025 Sb. — účinný od 1.11.2025</span>
+                </div>
+                <h2 style="font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.4rem);font-weight:700;color:var(--text-bright);line-height:1.15;margin-bottom:1rem">
+                    🇨🇿 <span data-i18n="zkb.t1">Český ZKB &amp; NIS2</span><br><span class="accent" data-i18n="zkb.t2">Compliance pro firmy</span>
+                </h2>
+                <p style="font-size:.95rem;color:var(--text-dim);line-height:1.7;max-width:620px;margin:0 auto;font-family:var(--font-display);font-weight:300" data-i18n="zkb.desc">
+                    Nový zákon o kybernetické bezpečnosti se týká <strong style="color:var(--text-bright)">6 000+ českých organizací</strong>. 
+                    Pokuta za nesplnění: <strong style="color:#ff3b5c">až 250 mil. Kč</strong> nebo 2 % z obratu. 
+                    Q-CRA Dashboard vám pomůže splnit všechny požadavky.
+                </p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:2rem;text-align:center">
+                <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:1.25rem .75rem">
+                    <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:#ff3b5c">6 000+</div>
+                    <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem" data-i18n="zkb.s1">regulovaných firem</div>
+                </div>
+                <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:1.25rem .75rem">
+                    <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:#ff9f1c">250M</div>
+                    <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem" data-i18n="zkb.s2">Kč maximální pokuta</div>
+                </div>
+                <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:1.25rem .75rem">
+                    <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--green)">98%</div>
+                    <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem" data-i18n="zkb.s3">Q-CORE compliance score</div>
+                </div>
+                <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;padding:1.25rem .75rem">
+                    <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--cyan)">18</div>
+                    <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem" data-i18n="zkb.s4">§ paragrafů ZKB pokryto</div>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:2rem">
+                <div class="feat-card"><div class="feat-icon">📋</div><h3 data-i18n="zkb.f1.t">ZKB § Mapování</h3><p data-i18n="zkb.f1.d">Kompletní mapování vašich systémů na 18 paragrafů zákona č. 264/2025 Sb. Každý požadavek propojený s konkrétním Q-CORE modulem a NIS2 článkem.</p></div>
+                <div class="feat-card"><div class="feat-icon">🚨</div><h3 data-i18n="zkb.f2.t">Hlášení incidentů pro NÚKIB</h3><p data-i18n="zkb.f2.d">Předpřipravené formuláře 24h / 72h / 30d podle § 15 a § 16 ZKB. Vyplníte, stáhnete PDF a odešlete přes Portál NÚKIB.</p></div>
+                <div class="feat-card"><div class="feat-icon">📊</div><h3 data-i18n="zkb.f3.t">Sovereign Compliance Score</h3><p data-i18n="zkb.f3.d">Skóre 0–100 % v reálném čase. Vidíte přesně jak jste na tom se zákonem. Detailní rozpis po oblastech.</p></div>
+                <div class="feat-card"><div class="feat-icon">🔍</div><h3 data-i18n="zkb.f4.t">Gap Analysis</h3><p data-i18n="zkb.f4.d">Přesný checklist co splňujete a co vám chybí k 100% shodě. Ke každé mezeře konkrétní doporučení.</p></div>
+                <div class="feat-card"><div class="feat-icon">🏢</div><h3 data-i18n="zkb.f5.t">Samoidentifikace</h3><p data-i18n="zkb.f5.d">Kalkulačka podle vyhlášky č. 408/2025 Sb. Zadáte odvětví a velikost firmy — okamžitě víte jestli spadáte pod zákon.</p></div>
+                <div class="feat-card"><div class="feat-icon">📄</div><h3 data-i18n="zkb.f6.t">PDF reporty CZ / DE / EN</h3><p data-i18n="zkb.f6.d">Profesionální compliance reporty v češtině, němčině a angličtině. Digitálně podepsané. Připravené pro audit NÚKIB.</p></div>
+            </div>
+            <div style="border:1px solid #ff9f1c44;border-radius:16px;padding:2.5rem;text-align:center;background:linear-gradient(135deg,#ff9f1c06,#00e5ff06);position:relative;overflow:hidden">
+                <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#ff9f1c,transparent)"></div>
+                <h3 style="font-family:var(--font-display);font-size:1.2rem;font-weight:600;color:var(--text-bright);margin-bottom:.5rem" data-i18n="zkb.cta.t">Spadáte pod nový zákon o kybernetické bezpečnosti?</h3>
+                <p style="color:var(--text-dim);font-size:.85rem;font-family:var(--font-display);margin-bottom:1.5rem" data-i18n="zkb.cta.d">Zjistěte to za 30 sekund. Zkontrolujte svou firmu a začněte s compliance ještě dnes.</p>
+                <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap">
+                    <a href="/cra-dashboard" class="btn-primary" data-i18n="zkb.cta.btn1">Otevřít CRA Dashboard →</a>
+                    <a href="https://portal.nukib.gov.cz" target="_blank" class="btn-secondary" data-i18n="zkb.cta.btn2">Portál NÚKIB ↗</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRICING -->
+        <section class="pricing-section" id="pricing">
+            <div class="sec-header">
+                <h2><span data-i18n="price.t1">Choose Your</span> <span class="accent" data-i18n="price.t2">Protection Level</span></h2>
+                <p data-i18n="price.desc">From SME essentials to sovereign-grade defense. All packages include Q-SCANNER. Prices on request.</p>
+            </div>
+            <div class="pricing-grid">
+
+                <!-- STARTER -->
+                <div class="pricing-card">
+                    <div class="pricing-tier tier-starter">Starter</div>
+                    <div class="pricing-name">Starter</div>
+                    <div class="pricing-price" style="font-size:0.85rem;color:var(--text-dim);">5 modules · Price on request</div>
+                    <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:1rem;font-family:var(--font-display);">For small businesses taking their first quantum-safe step.</div>
+                    <ul class="pricing-features">
+                        <li>Q-AUTOPILOT — AI orchestrator</li>
+                        <li>Q-SHIELD — PQC encryption</li>
+                        <li>Q-GATE — Zero-trust access</li>
+                        <li>Q-SUPPLY — Supply chain</li>
+                        <li>Q-RANSOM — Ransomware defense</li>
+                        <li>Q-SCANNER — Free included</li>
+                    </ul>
+                    <span onclick="window.location='mai'+'lto:info'+'@qcore.systems'" style="cursor:pointer;color:var(--cyan);text-decoration:underline;">info&#64;qcore&#46;systems</span>
+                </div>
+
+                <!-- BUSINESS -->
+                <div class="pricing-card featured">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="pricing-tier tier-business">Business</div>
+                    <div class="pricing-name">Business</div>
+                    <div class="pricing-price" style="font-size:0.85rem;color:var(--text-dim);">12 modules · Price on request</div>
+                    <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:1rem;font-family:var(--font-display);">For growing companies that need full visibility and compliance.</div>
+                    <ul class="pricing-features">
+                        <li>Everything in Starter</li>
+                        <li>Q-GENESIS — Hardware integrity</li>
+                        <li>Q-PANOPTICON — Sensor fusion</li>
+                        <li>Q-LEVIATHAN — OSINT &amp; dark web</li>
+                        <li>Q-ORACLE — AI attack prediction</li>
+                        <li>Q-SCADA-ZT — Industrial ZT</li>
+                        <li>Q-HARVEST — PQC migration</li>
+                        <li>Q-IDENTITY — Anti-deepfake ID</li>
+                        <li>CRA / NIS2 / ZKB dashboard</li>
+                    </ul>
+                    <span onclick="window.location='mai'+'lto:info'+'@qcore.systems'" style="cursor:pointer;color:var(--cyan);text-decoration:underline;">info&#64;qcore&#46;systems</span>
+                </div>
+
+                <!-- ENTERPRISE -->
+                <div class="pricing-card">
+                    <div class="pricing-tier tier-enterprise">Enterprise</div>
+                    <div class="pricing-name">Enterprise</div>
+                    <div class="pricing-price" style="font-size:0.85rem;color:var(--text-dim);">20 modules · Price on request</div>
+                    <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:1rem;font-family:var(--font-display);">For banks, hospitals and corporations — full deception layer.</div>
+                    <ul class="pricing-features">
+                        <li>Everything in Business</li>
+                        <li>Q-MIRAGE — Honeypot network</li>
+                        <li>Q-ECHO — Deepfake detection</li>
+                        <li>Q-TEMPEST — EM shield</li>
+                        <li>Q-MIDAS — Financial warfare</li>
+                        <li>Q-NEXUS — Quantum comms</li>
+                        <li>Q-SENTINEL — AI vs AI combat</li>
+                        <li>Q-PROVENANCE — C2PA auth</li>
+                        <li>Q-GENOME — DNA backup</li>
+                        <li>On-premise deployment</li>
+                    </ul>
+                    <span onclick="window.location='mai'+'lto:info'+'@qcore.systems'" style="cursor:pointer;color:var(--cyan);text-decoration:underline;">info&#64;qcore&#46;systems</span>
+                </div>
+
+                <!-- SOVEREIGN -->
+                <div class="pricing-card" style="border-color:#ff336633;background:linear-gradient(160deg,var(--bg-panel),#ff336608);">
+                    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#ff3366,#a855f7,#ff3366);"></div>
+                    <div class="pricing-tier tier-sovereign">⚔ Sovereign</div>
+                    <div class="pricing-name" style="color:#ff6699;">Sovereign</div>
+                    <div class="pricing-price" style="font-size:0.85rem;color:var(--text-dim);">33 modules · Authorization required</div>
+                    <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:1rem;font-family:var(--font-display);">For governments &amp; defense. Strategic frameworks, kinetic-layer modules.</div>
+                    <ul class="pricing-features">
+                        <li>Everything in Enterprise</li>
+                        <li>Q-AETHER</li>
+                        <li>Q-STRIKE</li>
+                        <li>Q-DOMINANCE</li>
+                        <li>Q-ORBITAL</li>
+                        <li>Q-CHRONOS</li>
+                        <li>Q-ABYSS</li>
+                        <li>Q-SYNAPSE</li>
+                        <li>Q-GAIA</li>
+                        <li>Q-vCISO</li>
+                        <li>Q-ELECTION</li>
+                        <li>Q-AIRGAP</li>
+                        <li style="color:#ff6699;font-weight:600;">Q-modules on request<br><span style="font-size:0.68rem;font-weight:400;color:var(--text-dim);">Government / defense verification required</span></li>
+                    </ul>
+                    <span onclick="window.location='mai'+'lto:info'+'@qcore.systems'" style="cursor:pointer;color:var(--cyan);text-decoration:underline;">info&#64;qcore&#46;systems</span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section class="about-section" id="about">
+            <div class="about-card">
+                <div class="about-content">
+                    <h2><span data-i18n="about.title">About <span class="accent">Q-CORE Systems</span></span></h2>
+                    <p data-i18n="about.p1">Q-CORE Systems is a cybersecurity company focused on post-quantum cryptography. We build tools that help organizations understand and prepare for the quantum computing era — from free scanning to full enterprise PQC migration.</p>
+                    <p data-i18n="about.p2">Our mission: make post-quantum security accessible — before it's too late.</p>
+                    <div class="about-stats">
+                        <div class="about-stat"><div class="about-stat-num">66</div><div class="about-stat-label" data-i18n="about.modules">Modules</div></div>
+                        <div class="about-stat"><div class="about-stat-num">9</div><div class="about-stat-label" data-i18n="about.categories">Categories</div></div>
+                        <div class="about-stat"><div class="about-stat-num">117</div><div class="about-stat-label" data-i18n="about.tests">Scan Tests</div></div>
+                        <div class="about-stat"><div class="about-stat-num">FIPS</div><div class="about-stat-label" data-i18n="about.compliant">Compliant</div></div>
+                    </div>
+                </div>
+                <div class="about-logo">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#ga1)" stroke-width="1.5" transform="rotate(-30 50 50)" opacity="0.7"/><ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#ga2)" stroke-width="1.5" transform="rotate(30 50 50)" opacity="0.7"/><ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#ga3)" stroke-width="1.5" transform="rotate(90 50 50)" opacity="0.7"/><circle cx="50" cy="50" r="8" fill="url(#gac)"/><circle cx="50" cy="50" r="14" fill="none" stroke="var(--cyan)" stroke-width="0.5" opacity="0.2"/><circle cx="20" cy="28" r="3.5" fill="#a855f7" opacity="0.8"/><circle cx="80" cy="28" r="3.5" fill="#00e5ff" opacity="0.8"/><circle cx="50" cy="84" r="3.5" fill="#33edff" opacity="0.8"/><defs><linearGradient id="ga1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient><linearGradient id="ga2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#33edff"/></linearGradient><linearGradient id="ga3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></linearGradient><radialGradient id="gac"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></radialGradient></defs></svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section" id="contact">
+            <div class="cta-card">
+                <h2 data-i18n="cta.title">Ready to go quantum-safe?</h2>
+                <p data-i18n="cta.desc">Whether you need a free scan or a full enterprise PQC migration — we're here to help.</p>
+                <div class="cta-buttons">
+                    <span onclick="window.location='mai'+'lto:info'+'@qcore.systems'" style="cursor:pointer;color:var(--cyan);text-decoration:underline;">info&#64;qcore&#46;systems</span>
+                    <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="btn-secondary">View on GitHub →</a>
+                    <a href="https://linkedin.com/in/josef-boudný-a274aa3aa/" target="_blank" rel="noopener" class="btn-secondary">in — LinkedIn</a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">© 2025–2026 Q-CORE SYSTEMS · Built by <a href="https://linkedin.com/in/josef-boudný-a274aa3aa/" target="_blank" rel="noopener">Josef Boudny</a> · <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener">Open Source</a></footer>
+    </div>
+
+    
+    <script>
+    /* === I18N & LANGUAGE SWITCHER (isolated from Cloudflare interference) === */
+    var currentLang = localStorage.getItem('qcore_lang') || 'en';
+    var i18n = {
+        en: {
+            'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Platform','nav.pricing':'Pricing','nav.academy':'Q-Academy',
+            'hero.badge':'Q-SCANNER v2.1 \u2014 Free PQC Vulnerability Audit','hero.title1':'Is your server ready for','hero.title2':'quantum threats?',
+            'hero.desc':'Scan any domain to analyze TLS configuration, cipher suites, certificates, and post-quantum cryptography readiness. Free, open-source, instant results.',
+            'hero.scan_btn':'Scan','hero.hint':'Try: google.com \u00b7 github.com \u00b7 cloudflare.com',
+            'feat.quantum':'Quantum Risk Analysis','feat.quantum.d':'Evaluates Shor\'s & Grover\'s algorithm impact on your key exchange, encryption and certificates.',
+            'feat.tls':'TLS Deep Scan','feat.tls.d':'Probes all TLS versions, cipher suites, certificate chain, and HTTP security headers.',
+            'feat.pqc':'PQC Readiness','feat.pqc.d':'Detects ML-KEM (Kyber), ML-DSA (Dilithium) and other NIST post-quantum standards.',
+            'ap.title':'\u2014 SOC Orchestrator','ap.desc':'Autonomous Security Operations Center. Q-AUTOPILOT connects all 52 modules into a self-operating security engine that monitors, triages, and responds \u2014 24/7.',
+            'ap.c1t':'Threat Correlation Engine','ap.c2t':'Automated Incident Response','ap.c3t':'Risk Scoring & Prioritization',
+            'ap.c4t':'Cross-Module Orchestration','ap.c5t':'Adaptive Threat Hunting','ap.c6t':'Compliance Automation',
+            'plat.t1':'The','plat.t2':'Platform \u2014 66 Modules','plat.desc':'A complete post-quantum cybersecurity stack. From scanning to forensics.',
+            'plat.search':'Search modules...',
+            'cat.crypto':'Core Cryptography','cat.scanning':'Scanning & Compliance','cat.ai':'AI-Powered Security',
+            'cat.advcrypto':'Advanced Cryptography','cat.network':'Network Defense','cat.forensics':'Forensics & Incident Response',
+            'cat.ops':'Security Operations','cat.gov':'Governance & Risk','cat.edu':'Education & Planning',
+            'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'Track your EU Cyber Resilience Act compliance in real-time. Automated reports, gap analysis, NIS2 mapping, multilingual PDF export (EN/CS/DE).','cra.btn':'Open CRA Dashboard \u2192',
+            'zkb.badge':'Czech Cybersecurity Act No. 264/2025 — effective Nov 1, 2025','zkb.t1':'Czech ZKB & NIS2','zkb.t2':'Compliance for businesses','zkb.desc':'The new Cybersecurity Act applies to <strong style="color:var(--text-bright)">6,000+ Czech organizations</strong>. Penalty for non-compliance: <strong style="color:#ff3b5c">up to 250M CZK</strong> or 2% of revenue. Q-CRA Dashboard helps you meet all requirements.','zkb.s1':'regulated organizations','zkb.s2':'CZK maximum penalty','zkb.s3':'Q-CORE compliance score','zkb.s4':'§ ZKB articles covered','zkb.f1.t':'ZKB § Mapping','zkb.f1.d':'Complete mapping of your systems to 18 articles of Act No. 264/2025. Each requirement linked to a specific Q-CORE module and NIS2 article.','zkb.f2.t':'NÚKIB Incident Reporting','zkb.f2.d':'Pre-built 24h / 72h / 30d report templates per § 15 and § 16 ZKB. Fill in, download PDF, submit via NÚKIB Portal.','zkb.f3.t':'Sovereign Compliance Score','zkb.f3.d':'Real-time 0–100% score. See exactly where you stand. Detailed breakdown by area.','zkb.f4.t':'Gap Analysis','zkb.f4.d':'Precise checklist of what you meet and what\'s missing for 100% compliance. Specific recommendations for each gap.','zkb.f5.t':'Self-Identification','zkb.f5.d':'Calculator per Decree No. 408/2025. Enter your sector and company size — instantly know if you fall under the law.','zkb.f6.t':'PDF Reports CZ / DE / EN','zkb.f6.d':'Professional compliance reports in Czech, German and English. Digitally signed. Ready for NÚKIB audit.','zkb.cta.t':'Does the new Cybersecurity Act apply to you?','zkb.cta.d':'Find out in 30 seconds. Check your organization and start compliance today.','zkb.cta.btn1':'Open CRA Dashboard \u2192','zkb.cta.btn2':'NÚKIB Portal \u2197',
+            'price.t1':'Choose Your','price.t2':'Protection Level','price.desc':'Start free. Scale when you need enterprise-grade post-quantum protection.',
+            'price.community':'Community','price.free':'Free','price.free.price':'$0 / forever',
+            'price.start':'Start Scanning','price.popular':'Most Popular','price.pro':'Professional','price.pro.name':'Pro',
+            'price.touch':'Get in Touch','price.ent':'Enterprise','price.sales':'Contact Sales',
+            'about.title':'About <span class="accent">Q-CORE Systems</span>',
+            'about.p1':'Q-CORE Systems is a cybersecurity company focused on post-quantum cryptography. We build tools that help organizations prepare for the quantum era.',
+            'about.p2':'Our mission: make post-quantum security accessible \u2014 before it\'s too late.',
+            'about.modules':'Modules','about.categories':'Categories','about.tests':'Scan Tests','about.compliant':'Compliant',
+            'cta.title':'Ready to go quantum-safe?','cta.desc':'Whether you need a free scan or a full enterprise PQC migration \u2014 we\'re here to help.'
+        },
+        cs: {
+            'nav.scanner':'Skener','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Platforma','nav.pricing':'Cen\u00edk',
+            'hero.badge':'Q-SCANNER v2.1 \u2014 Bezplatn\u00fd PQC audit','hero.title1':'Je v\u00e1\u0161 server p\u0159ipraven na','hero.title2':'kvantov\u00e9 hrozby?',
+            'hero.desc':'Skenujte libovolnou dom\u00e9nu \u2014 TLS, \u0161ifrovac\u00ed sady, certifik\u00e1ty a p\u0159ipravenost na post-kvantovou kryptografii. Zdarma, open-source.',
+            'hero.scan_btn':'Skenovat','hero.hint':'Zkuste: google.com \u00b7 github.com \u00b7 cloudflare.com',
+            'feat.quantum':'Anal\u00fdza kvantov\u00fdch rizik','feat.quantum.d':'Vyhodnocuje dopad Shorova a Groverova algoritmu na v\u00fdm\u011bnu kl\u00ed\u010d\u016f, \u0161ifrov\u00e1n\u00ed a certifik\u00e1ty.',
+            'feat.tls':'Hloubkov\u00fd TLS sken','feat.tls.d':'Testuje v\u0161echny verze TLS, \u0161ifrovac\u00ed sady, \u0159et\u011bzec certifik\u00e1t\u016f a HTTP bezpe\u010dnostn\u00ed hlavi\u010dky.',
+            'feat.pqc':'PQC p\u0159ipravenost','feat.pqc.d':'Detekuje ML-KEM (Kyber), ML-DSA (Dilithium) a dal\u0161\u00ed NIST post-kvantov\u00e9 standardy.',
+            'ap.title':'\u2014 SOC orchestr\u00e1tor','ap.desc':'Autonomn\u00ed Security Operations Center. Q-AUTOPILOT propojuje v\u0161ech 52 modul\u016f do samo\u010dinn\u00e9ho bezpe\u010dnostn\u00edho enginu \u2014 24/7.',
+            'ap.c1t':'Korela\u010dn\u00ed engine hrozeb','ap.c2t':'Automatick\u00e1 reakce na incidenty','ap.c3t':'Hodnocen\u00ed a prioritizace rizik',
+            'ap.c4t':'Cross-modulov\u00e1 orchestrace','ap.c5t':'Adaptivn\u00ed threat hunting','ap.c6t':'Automatizace compliance',
+            'plat.t1':'','plat.t2':'Platforma \u2014 66 modul\u016f','plat.desc':'Kompletn\u00ed post-kvantov\u00fd bezpe\u010dnostn\u00ed stack. Od skenov\u00e1n\u00ed po forenziku.',
+            'plat.search':'Hledat moduly...',
+            'cat.crypto':'J\u00e1drov\u00e1 kryptografie','cat.scanning':'Skenov\u00e1n\u00ed a compliance','cat.ai':'AI bezpe\u010dnost',
+            'cat.advcrypto':'Pokro\u010dil\u00e1 kryptografie','cat.network':'S\u00ed\u0165ov\u00e1 obrana','cat.forensics':'Forenzika a IR',
+            'cat.ops':'Bezpe\u010dnostn\u00ed operace','cat.gov':'Governance a rizika','cat.edu':'Vzd\u011bl\u00e1v\u00e1n\u00ed a pl\u00e1nov\u00e1n\u00ed',
+            'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'Sledujte compliance s EU CRA v re\u00e1ln\u00e9m \u010dase. Automatick\u00e9 reporty, NIS2 mapov\u00e1n\u00ed, PDF export (EN/CS/DE).','cra.btn':'Otev\u0159\u00edt CRA Dashboard \u2192',
+            'zkb.badge':'Z\u00e1kon \u010d. 264/2025 Sb. \u2014 \u00fa\u010dinn\u00fd od 1.11.2025','zkb.t1':'\u010cesk\u00fd ZKB & NIS2','zkb.t2':'Compliance pro firmy','zkb.desc':'Nov\u00fd z\u00e1kon o kybernetick\u00e9 bezpe\u010dnosti se t\u00fdk\u00e1 <strong style="color:var(--text-bright)">6 000+ \u010desk\u00fdch organizac\u00ed</strong>. Pokuta za nespln\u011bn\u00ed: <strong style="color:#ff3b5c">a\u017e 250 mil. K\u010d</strong> nebo 2 % z obratu. Q-CRA Dashboard v\u00e1m pom\u016f\u017ee splnit v\u0161echny po\u017eadavky.','zkb.s1':'regulovan\u00fdch firem','zkb.s2':'K\u010d maxim\u00e1ln\u00ed pokuta','zkb.s3':'Q-CORE compliance sk\u00f3re','zkb.s4':'\u00a7 paragraf\u016f ZKB pokryto','zkb.f1.t':'ZKB \u00a7 Mapov\u00e1n\u00ed','zkb.f1.d':'Kompletn\u00ed mapov\u00e1n\u00ed va\u0161ich syst\u00e9m\u016f na 18 paragraf\u016f z\u00e1kona \u010d. 264/2025 Sb. Ka\u017ed\u00fd po\u017eadavek propojen\u00fd s konkr\u00e9tn\u00edm Q-CORE modulem a NIS2 \u010dl\u00e1nkem.','zkb.f2.t':'Hl\u00e1\u0161en\u00ed incident\u016f pro N\u00daKIB','zkb.f2.d':'P\u0159edp\u0159ipraven\u00e9 formul\u00e1\u0159e 24h / 72h / 30d podle \u00a7 15 a \u00a7 16 ZKB. Vypln\u00edte, st\u00e1hnete PDF a ode\u0161lete p\u0159es Port\u00e1l N\u00daKIB.','zkb.f3.t':'Sovereign Compliance Score','zkb.f3.d':'Sk\u00f3re 0\u2013100 % v re\u00e1ln\u00e9m \u010dase. Vid\u00edte p\u0159esn\u011b jak jste na tom se z\u00e1konem. Detailn\u00ed rozpis po oblastech.','zkb.f4.t':'Gap Anal\u00fdza','zkb.f4.d':'P\u0159esn\u00fd checklist co spl\u0148ujete a co v\u00e1m chyb\u00ed k 100% shod\u011b. Ke ka\u017ed\u00e9 meze\u0159e konkr\u00e9tn\u00ed doporu\u010den\u00ed.','zkb.f5.t':'Samoidentifikace','zkb.f5.d':'Kalkula\u010dka podle vyhl\u00e1\u0161ky \u010d. 408/2025 Sb. Zad\u00e1te odv\u011btv\u00ed a velikost firmy \u2014 okam\u017eit\u011b v\u00edte jestli spad\u00e1te pod z\u00e1kon.','zkb.f6.t':'PDF reporty CZ / DE / EN','zkb.f6.d':'Profesion\u00e1ln\u00ed compliance reporty v \u010de\u0161tin\u011b, n\u011bm\u010din\u011b a angli\u010dtin\u011b. Digit\u00e1ln\u011b podepsan\u00e9. P\u0159ipraven\u00e9 pro audit N\u00daKIB.','zkb.cta.t':'Spad\u00e1te pod nov\u00fd z\u00e1kon o kybernetick\u00e9 bezpe\u010dnosti?','zkb.cta.d':'Zjist\u011bte to za 30 sekund. Zkontrolujte svou firmu a za\u010dn\u011bte s compliance je\u0161t\u011b dnes.','zkb.cta.btn1':'Otev\u0159\u00edt CRA Dashboard \u2192','zkb.cta.btn2':'Port\u00e1l N\u00daKIB \u2197',
+            'price.t1':'Jednoduch\u00fd','price.t2':'cen\u00edk','price.desc':'Za\u010dn\u011bte zdarma. \u0160k\u00e1lujte pro enterprise-grade post-kvantovou ochranu.',
+            'price.community':'Komunita','price.free':'Zdarma','price.free.price':'$0 / nav\u017edy',
+            'price.start':'Za\u010d\u00edt skenovat','price.popular':'Nejobl\u00edben\u011bj\u0161\u00ed','price.pro':'Profesion\u00e1ln\u00ed','price.pro.name':'Pro',
+            'price.touch':'Kontaktujte n\u00e1s','price.ent':'Enterprise','price.sales':'Kontaktovat obchod',
+            'about.title':'O <span class="accent">Q-CORE Systems</span>',
+            'about.p1':'Q-CORE Systems je kyberbezpe\u010dnostn\u00ed firma zam\u011b\u0159en\u00e1 na post-kvantovou kryptografii.',
+            'about.p2':'Na\u0161e mise: zp\u0159\u00edstupnit post-kvantovou bezpe\u010dnost \u2014 ne\u017e bude pozd\u011b.',
+            'about.modules':'Modul\u016f','about.categories':'Kategori\u00ed','about.tests':'Test\u016f','about.compliant':'Kompatibiln\u00ed',
+            'cta.title':'P\u0159ipraveni na kvantovou bezpe\u010dnost?','cta.desc':'A\u0165 pot\u0159ebujete bezplatn\u00fd sken nebo enterprise PQC migraci \u2014 jsme tu pro v\u00e1s.'
+        },
+        de: {
+            'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Plattform','nav.pricing':'Preise','nav.academy':'Q-Akademie',
+            'hero.badge':'Q-SCANNER v2.1 \u2014 Kostenloser PQC-Audit','hero.title1':'Ist Ihr Server bereit f\u00fcr','hero.title2':'Quantenbedrohungen?',
+            'hero.desc':'Scannen Sie jede Domain \u2014 TLS-Konfiguration, Cipher Suites, Zertifikate und Post-Quanten-Kryptografie-Bereitschaft. Kostenlos, Open-Source.',
+            'hero.scan_btn':'Scannen','hero.hint':'Versuchen: google.com \u00b7 github.com \u00b7 cloudflare.com',
+            'feat.quantum':'Quantenrisiko-Analyse','feat.quantum.d':'Bewertet den Einfluss von Shors und Grovers Algorithmus auf Schl\u00fcsseltausch und Zertifikate.',
+            'feat.tls':'TLS-Tiefenscan','feat.tls.d':'Pr\u00fcft alle TLS-Versionen, Cipher Suites, Zertifikatketten und HTTP-Sicherheitsheader.',
+            'feat.pqc':'PQC-Bereitschaft','feat.pqc.d':'Erkennt ML-KEM (Kyber), ML-DSA (Dilithium) und andere NIST Post-Quanten-Standards.',
+            'ap.title':'\u2014 SOC-Orchestrator','ap.desc':'Autonomes Security Operations Center. Q-AUTOPILOT verbindet alle 52 Module zu einer selbstoperierenden Sicherheitsengine \u2014 24/7.',
+            'ap.c1t':'Bedrohungs-Korrelationsengine','ap.c2t':'Automatische Vorfallreaktion','ap.c3t':'Risikobewertung & Priorisierung',
+            'ap.c4t':'Cross-Modul-Orchestrierung','ap.c5t':'Adaptives Threat Hunting','ap.c6t':'Compliance-Automatisierung',
+            'plat.t1':'Die','plat.t2':'Plattform \u2014 66 Module','plat.desc':'Ein kompletter Post-Quanten-Sicherheitsstack. Vom Scannen bis zur Forensik.',
+            'plat.search':'Module suchen...',
+            'cat.crypto':'Kernkryptografie','cat.scanning':'Scanning & Compliance','cat.ai':'KI-Sicherheit',
+            'cat.advcrypto':'Erweiterte Kryptografie','cat.network':'Netzwerkverteidigung','cat.forensics':'Forensik & IR',
+            'cat.ops':'Sicherheitsoperationen','cat.gov':'Governance & Risiko','cat.edu':'Bildung & Planung',
+            'cra.title':'\U0001f1ea\U0001f1fa CRA Compliance Dashboard','cra.desc':'EU CRA-Compliance in Echtzeit. Automatische Berichte, NIS2-Zuordnung, PDF-Export (EN/CS/DE).','cra.btn':'CRA Dashboard \u00f6ffnen \u2192',
+            'zkb.badge':'Tschechisches Cybersicherheitsgesetz Nr. 264/2025 \u2014 g\u00fcltig ab 1.11.2025','zkb.t1':'Tschechisches ZKB & NIS2','zkb.t2':'Compliance f\u00fcr Unternehmen','zkb.desc':'Das neue Cybersicherheitsgesetz betrifft <strong style="color:var(--text-bright)">6.000+ tschechische Organisationen</strong>. Strafe bei Nichteinhalten: <strong style="color:#ff3b5c">bis zu 250 Mio. CZK</strong> oder 2% des Umsatzes. Q-CRA Dashboard hilft bei der Erf\u00fcllung aller Anforderungen.','zkb.s1':'regulierte Unternehmen','zkb.s2':'CZK H\u00f6chststrafe','zkb.s3':'Q-CORE Compliance-Score','zkb.s4':'\u00a7 ZKB-Artikel abgedeckt','zkb.f1.t':'ZKB \u00a7 Zuordnung','zkb.f1.d':'Vollst\u00e4ndige Zuordnung Ihrer Systeme zu 18 Paragraphen des Gesetzes Nr. 264/2025. Jede Anforderung mit Q-CORE Modul und NIS2-Artikel verkn\u00fcpft.','zkb.f2.t':'N\u00daKIB Vorfallmeldung','zkb.f2.d':'Vorgefertigte Formulare 24h / 72h / 30d gem\u00e4\u00df \u00a7 15 und \u00a7 16 ZKB. Ausf\u00fcllen, PDF herunterladen, \u00fcber N\u00daKIB-Portal einreichen.','zkb.f3.t':'Sovereign Compliance Score','zkb.f3.d':'Echtzeit-Score 0\u2013100%. Sehen Sie genau wo Sie stehen. Detaillierte Aufschl\u00fcsselung nach Bereichen.','zkb.f4.t':'Gap-Analyse','zkb.f4.d':'Pr\u00e4zise Checkliste was Sie erf\u00fcllen und was fehlt. Konkrete Empfehlungen f\u00fcr jede L\u00fccke.','zkb.f5.t':'Selbstidentifikation','zkb.f5.d':'Rechner gem\u00e4\u00df Verordnung Nr. 408/2025. Branche und Unternehmensgr\u00f6\u00dfe eingeben \u2014 sofort wissen ob Sie unter das Gesetz fallen.','zkb.f6.t':'PDF-Berichte CZ / DE / EN','zkb.f6.d':'Professionelle Compliance-Berichte in Tschechisch, Deutsch und Englisch. Digital signiert. Bereit f\u00fcr N\u00daKIB-Audit.','zkb.cta.t':'F\u00e4llt Ihr Unternehmen unter das neue Cybersicherheitsgesetz?','zkb.cta.d':'Finden Sie es in 30 Sekunden heraus. Pr\u00fcfen Sie Ihr Unternehmen und starten Sie noch heute.','zkb.cta.btn1':'CRA Dashboard \u00f6ffnen \u2192','zkb.cta.btn2':'N\u00daKIB-Portal \u2197',
+            'price.t1':'Wählen Sie Ihren','price.t2':'Schutzlevel','price.desc':'Starten Sie kostenlos. Skalieren Sie f\u00fcr Enterprise-Grade Post-Quanten-Schutz.',
+            'price.community':'Community','price.free':'Kostenlos','price.free.price':'$0 / f\u00fcr immer',
+            'price.start':'Scannen starten','price.popular':'Beliebteste','price.pro':'Professionell','price.pro.name':'Pro',
+            'price.touch':'Kontaktieren Sie uns','price.ent':'Enterprise','price.sales':'Vertrieb kontaktieren',
+            'about.title':'\u00dcber <span class="accent">Q-CORE Systems</span>',
+            'about.p1':'Q-CORE Systems ist ein Cybersicherheitsunternehmen mit Fokus auf Post-Quanten-Kryptografie.',
+            'about.p2':'Unsere Mission: Post-Quanten-Sicherheit zug\u00e4nglich machen \u2014 bevor es zu sp\u00e4t ist.',
+            'about.modules':'Module','about.categories':'Kategorien','about.tests':'Scantests','about.compliant':'Konform',
+            'cta.title':'Bereit f\u00fcr Quantensicherheit?','cta.desc':'Ob kostenloser Scan oder Enterprise PQC-Migration \u2014 wir helfen Ihnen.'
+        }
+    };
+    function setLang(lang) {
+        currentLang = lang;
+        try { localStorage.setItem('qcore_lang', lang); } catch(e) {}
+        document.querySelectorAll('.flag-btn').forEach(function(b) { b.classList.remove('active'); });
+        var btns = document.querySelectorAll('.flag-btn');
+        for (var i = 0; i < btns.length; i++) {
+            if (btns[i].getAttribute('data-lang') === lang) btns[i].classList.add('active');
+        }
+        var t = i18n[lang];
+        if (!t) return;
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n');
+            if (t[key] !== undefined) el.innerHTML = t[key];
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n-placeholder');
+            if (t[key]) el.placeholder = t[key];
+        });
+        document.documentElement.lang = lang;
+    }
+    if (currentLang !== 'en') setLang(currentLang);
+    </script>
+
+    <script>
+    /* === SCANNER ENGINE === */
+    const domainInput=document.getElementById('domainInput'),scanBtn=document.getElementById('scanBtn'),progressEl=document.getElementById('scanProgress'),progressLog=document.getElementById('progressLog'),errorEl=document.getElementById('scanError'),resultsEl=document.getElementById('results');domainInput.addEventListener('keydown',e=>{if(e.key==='Enter')startScan()});const SCAN_STEPS=['Resolving DNS...','Establishing TLS connection...','Analyzing cipher suite...','Inspecting certificate chain...','Probing supported TLS versions...','Checking HTTP security headers...','Evaluating quantum risks...','Generating report...'];async function startScan(){const domain=domainInput.value.trim();if(!domain){domainInput.focus();return}errorEl.classList.remove('active');resultsEl.classList.remove('active');resultsEl.innerHTML='';progressEl.classList.add('active');progressLog.innerHTML='';scanBtn.disabled=true;scanBtn.textContent=(currentLang==='cs'?'Skenuji...':currentLang==='de'?'Scanne....':'Scanning...');let stepIndex=0;const stepInterval=setInterval(()=>{if(stepIndex<SCAN_STEPS.length){const prev=progressLog.querySelector('.active-step');if(prev){prev.classList.remove('active-step');prev.classList.add('done');prev.textContent='✓ '+prev.textContent.replace('→ ','')}const div=document.createElement('div');div.className='active-step';div.textContent='→ '+SCAN_STEPS[stepIndex];progressLog.appendChild(div);stepIndex++}},800);try{const resp=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain})});clearInterval(stepInterval);const data=await resp.json();if(!resp.ok)throw new Error(data.error||'Scan failed');const prev=progressLog.querySelector('.active-step');if(prev){prev.classList.remove('active-step');prev.classList.add('done');prev.textContent='✓ '+prev.textContent.replace('→ ','')}await new Promise(r=>setTimeout(r,400));progressEl.classList.remove('active');renderResults(data)}catch(err){clearInterval(stepInterval);progressEl.classList.remove('active');errorEl.textContent='✕ '+(err.message||'Connection failed.');errorEl.classList.add('active')}finally{scanBtn.disabled=false;scanBtn.textContent='Scan'}}function scoreColor(s){if(s<=20)return'var(--green)';if(s<=40)return'var(--yellow)';if(s<=65)return'var(--orange)';return'var(--red)'}function riskClass(l){return'risk-'+(l||'MEDIUM').toUpperCase()}function statusLabel(s){return{'SAFE':'Quantum Safe','LOW_RISK':'Low Risk','MEDIUM_RISK':'Medium Risk','VULNERABLE':'Vulnerable','CRITICAL':'Critical','ERROR':'Error'}[s]||s}function renderResults(d){const c=2*Math.PI*54,o=c-(d.overall_risk_score/100)*c,cl=scoreColor(d.overall_risk_score);let h=`<div class="results-header"><div class="results-target">${esc(d.hostname)} <span>· ${esc(d.ip_address)}:${d.port}</span></div><div class="status-badge status-${d.overall_pqc_status}">${statusLabel(d.overall_pqc_status)}</div></div><div class="score-section"><div class="score-ring-wrap"><svg width="130" height="130" viewBox="0 0 130 130"><circle class="score-ring-bg" cx="65" cy="65" r="54"/><circle class="score-ring-fill" cx="65" cy="65" r="54" stroke="${cl}" stroke-dasharray="${c}" stroke-dashoffset="${o}"/></svg><div class="score-value"><div class="score-number" style="color:${cl}">${d.overall_risk_score}</div><div class="score-label">Risk Score</div></div></div><div class="score-details"><div class="score-detail-row"><span class="score-detail-key">TLS Version</span><span class="score-detail-val">${esc(d.tls_version)}</span></div><div class="score-detail-row"><span class="score-detail-key">Cipher Suite</span><span class="score-detail-val">${esc(d.cipher.name)}</span></div><div class="score-detail-row"><span class="score-detail-key">Key Exchange</span><span class="score-detail-val">${esc(d.cipher.key_exchange)}</span></div><div class="score-detail-row"><span class="score-detail-key">Encryption</span><span class="score-detail-val">${esc(d.cipher.encryption)} (${d.cipher.encryption_bits}-bit)</span></div><div class="score-detail-row"><span class="score-detail-key">PQC Key Exchange</span><span class="score-detail-val" style="color:${d.cipher.is_pqc?'var(--green)':'var(--red)'}">${d.cipher.is_pqc?'✓ YES':'✕ NO'}</span></div></div></div>`;const ce=d.certificate;h+=`<div class="cards-grid"><div class="card"><div class="card-label">Certificate Subject</div><div class="card-value">${esc(ce.subject)}</div><div class="card-sub">Issuer: ${esc(ce.issuer)}</div></div><div class="card"><div class="card-label">Key Type</div><div class="card-value">${esc(ce.key_type)} (${ce.key_size}-bit)</div><div class="card-sub">Sig: ${esc(ce.signature_algorithm)}</div></div><div class="card"><div class="card-label">Expiry</div><div class="card-value" style="color:${ce.is_expired?'var(--red)':ce.days_until_expiry<30?'var(--orange)':'var(--text-bright)'}">${ce.is_expired?'EXPIRED':ce.days_until_expiry+' days'}</div><div class="card-sub">${esc(ce.not_after)}</div></div></div>`;if(d.quantum_risks&&d.quantum_risks.length>0){h+=`<div class="section-title">Quantum Risk Assessment</div><table class="risk-table"><thead><tr><th>Component</th><th>Level</th><th>Threat</th><th>Details</th></tr></thead><tbody>`;for(const r of d.quantum_risks)h+=`<tr><td style="color:var(--text-bright);font-weight:500">${esc(r.component)}</td><td><span class="risk-level ${riskClass(r.level)}">${esc(r.level)}</span></td><td>${esc(r.threat)}</td><td><div>${esc(r.detail)}</div><div class="risk-detail">→ ${esc(r.recommendation)}</div></td></tr>`;h+='</tbody></table>'}if(d.supported_protocols&&d.supported_protocols.length>0){h+=`<div class="section-title">Supported TLS Versions</div><div class="proto-grid">`;for(const p of d.supported_protocols){const cs=p.supported?(p.status==='CRITICAL'?'proto-critical':'proto-enabled'):'proto-disabled',lb=p.supported?(p.status==='CRITICAL'?'⚠ ENABLED':'✓ Enabled'):'— Disabled';h+=`<div class="proto-item"><div class="proto-name">${esc(p.protocol)}</div><div class="proto-status ${cs}">${lb}</div></div>`}h+='</div>'}if(d.http_headers){const hd=d.http_headers,hc=hd.score>=80?'var(--green)':hd.score>=50?'var(--orange)':'var(--red)';h+=`<div class="section-title">HTTP Security Headers</div><div class="headers-bar"><div><div class="headers-score" style="color:${hc}">${hd.score}/100</div><div class="headers-label">Header Score</div></div>`;if(hd.missing_headers&&hd.missing_headers.length>0)h+=`<div class="headers-missing">Missing: ${hd.missing_headers.map(esc).join(', ')}</div>`;h+='</div>'}if(d.recommendations&&d.recommendations.length>0){h+=`<div class="section-title">Recommendations</div><ul class="recs-list">`;d.recommendations.forEach((r,i)=>{h+=`<li><span class="rec-num">${i+1}.</span> ${esc(r)}</li>`});h+='</ul>'}if(d.chain_issues&&d.chain_issues.length>0){h+=`<div class="section-title">⚠ Warnings</div><ul class="recs-list">`;d.chain_issues.forEach(i=>{h+=`<li><span class="rec-num" style="color:var(--orange)">!</span> ${esc(i)}</li>`});h+='</ul>'}if(d.errors&&d.errors.length>0){h+=`<div class="section-title" style="color:var(--red)">Errors</div><ul class="recs-list">`;d.errors.forEach(e=>{h+=`<li><span class="rec-num" style="color:var(--red)">✕</span> ${esc(e)}</li>`});h+='</ul>'}resultsEl.innerHTML=h;resultsEl.classList.add('active')}function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+
+    /* MODULE SEARCH */
+    document.getElementById('moduleSearch').addEventListener('input', function() {
+        const q = this.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.mc');
+        const blocks = document.querySelectorAll('.cat-block');
+        let visible = 0;
+        cards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            const ma
