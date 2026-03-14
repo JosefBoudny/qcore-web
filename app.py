@@ -89,55 +89,9 @@ def _result_to_dict(result: ScanResult) -> dict:
 
 @app.after_request
 def add_security_headers(response):
-    """
-    Security headers + Cloudflare fix.
-    Opravuje CRA Art.10(4) HTTP Security Headers a Art.10(6) HSTS.
-    Q-CORE SYSTEMS — qcore.systems
-    """
-    # Cloudflare email obfuscation fix
-    if response.content_type and 'text/html' in response.content_type:
-        response.headers['CF-Email-Obfuscation'] = 'off'
-
-    # ═══ SECURITY HEADERS (CRA Compliance) ═══
-
-    # HSTS — Strict Transport Security (opraví Art.10(6) FAIL)
-    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains; preload'
-
-    # Content Security Policy (opraví Art.10(4) FAIL)
-    response.headers['Content-Security-Policy'] = (
-        "default-src 'self'; "
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; "
-        "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; "
-        "img-src 'self' data: https:; "
-        "connect-src 'self'; "
-        "frame-ancestors 'none'; "
-        "base-uri 'self'; "
-        "form-action 'self'"
-    )
-
-    # X-Frame-Options — ochrana proti clickjacking
-    response.headers['X-Frame-Options'] = 'DENY'
-
-    # X-Content-Type-Options — ochrana proti MIME sniffing
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-
-    # Referrer-Policy
-    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-
-    # Permissions-Policy
-    response.headers['Permissions-Policy'] = (
-        'camera=(), microphone=(), geolocation=(), '
-        'interest-cohort=(), payment=()'
-    )
-
-    # X-XSS-Protection
-    response.headers['X-XSS-Protection'] = '1; mode=block'
-
-    # PQC Shield header
+    """Q-CORE SYSTEMS — minimal headers, scanner friendly."""
     response.headers['X-PQC-Shield'] = 'Q-CORE/hybrid-ready'
     response.headers['X-Powered-By'] = 'Q-CORE SYSTEMS'
-
     return response
 
 
