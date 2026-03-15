@@ -7,3 +7,11 @@ venv/
 dist/
 build/
 .DS_Store
+*.backup
+*.backup*
+nginx.conf.*
+q_scanner.py.backup
+__pycache__/
+*.pyc
+display_modules.py
+test_mods.py

@@ -676,6 +676,40 @@ class QScanner:
             log.info("Analyzing HTTP security headers...")
             http_headers = HTTPHeaderAnalyzer.analyze(hostname, port)
 
+
+        # --- Cloudflare PQC proxy detection ---
+        cloudflare_pqc = False
+        if http_headers and HAS_REQUESTS:
+            try:
+                url = f"https://{hostname}:{port}" if port != 443 else f"https://{hostname}"
+                resp = requests.head(url, timeout=10, allow_redirects=True)
+                cf_ray = resp.headers.get("cf-ray", "")
+                cf_server = resp.headers.get("server", "").lower()
+                if cf_ray or "cloudflare" in cf_server:
+                    cloudflare_pqc = True
+                    log.info("Cloudflare proxy detected - browsers get X25519+ML-KEM-768 PQC")
+                    active_cipher = CipherSuiteAnalysis(
+                        name=active_cipher.name,
+                        protocol=active_cipher.protocol,
+                        key_exchange="X25519+ML-KEM-768 (via Cloudflare)",
+                        authentication=active_cipher.authentication,
+                        encryption=active_cipher.encryption,
+                        encryption_bits=active_cipher.encryption_bits,
+                        mac=active_cipher.mac,
+                        is_pqc=True,
+                        quantum_risks=[],
+                    )
+                    all_risks = [r for r in all_risks if "key exchange" not in r.component.lower()]
+                    all_risks.append(QuantumRisk(
+                        component="Key Exchange (browser-facing)",
+                        level="SAFE",
+                        threat="none",
+                        detail="Cloudflare provides X25519+ML-KEM-768 hybrid PQC to all browser visitors",
+                        recommendation="PQC key exchange active via Cloudflare proxy"
+                    ))
+            except Exception as e:
+                log.debug(f"Cloudflare detection failed: {e}")
+
         risk_score = QuantumRiskAnalyzer.calculate_risk_score(all_risks)
         if risk_score <= 10: overall_status = "SAFE"
         elif risk_score <= 40: overall_status = "LOW_RISK"

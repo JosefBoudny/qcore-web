@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-CORE Platform — Live Post-Quantum Modules | qcore.systems</title>
+    <meta name="description" content="Q-CORE Platform — live post-quantum cryptography modules. ML-KEM-768, AES-256-GCM, Zero-Knowledge Proofs. 66 modules, NIST FIPS 203/204.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg:#07080c;--bg-panel:#0c0e14;--bg-elevated:#11141d;--border:#1a1f2e;--text:#c8cdd8;--text-dim:#5a6178;--text-bright:#eaecf2;--cyan:#00e5ff;--cyan-dim:#00e5ff44;--green:#00ff9d;--green-dim:#00ff9d33;--red:#ff3b5c;--red-dim:#ff3b5c33;--orange:#ff9f1c;--orange-dim:#ff9f1c33;--yellow:#ffd60a;--purple:#a855f7;--purple-dim:#a855f744;--pink:#ec4899;--teal:#14b8a6;--font-mono:'JetBrains Mono',monospace;--font-display:'Outfit',sans-serif}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+        body{font-family:var(--font-mono);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+        body::before{content:'';position:fixed;inset:0;background:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.12;pointer-events:none;z-index:0}
+        body::after{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 20%,#00e5ff06 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,#a855f708 0%,transparent 50%);pointer-events:none;z-index:0}
+        .pw{position:relative;z-index:1}
+        ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--cyan);border-radius:3px}
+        .accent{color:var(--cyan)}
+        .nav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 2rem;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;background:rgba(7,8,12,.92)}
+        .nav-logo{display:flex;align-items:center;gap:.75rem;text-decoration:none}.nav-logo svg{width:36px;height:36px}
+        .nav-brand{font-family:var(--font-display);font-weight:600;font-size:1.05rem;color:var(--text-bright)}.nav-brand span{color:var(--cyan)}
+        .nav-links{display:flex;gap:1.5rem;align-items:center}
+        .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.72rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;transition:color .2s}
+        .nav-links a:hover{color:var(--cyan)}.nav-links a.act{color:var(--cyan);font-weight:600}
+        .nav-github{display:flex;align-items:center;gap:.4rem;padding:.4rem .85rem;border:1px solid var(--border);border-radius:6px;font-size:.72rem;transition:border-color .2s,color .2s}.nav-github:hover{border-color:var(--cyan);color:var(--cyan)!important}
+        .fs{display:flex;gap:4px;align-items:center}
+        .fb{background:none;border:1px solid rgba(0,188,212,.3);border-radius:4px;cursor:pointer;font-size:.75rem;font-weight:600;font-family:var(--font-mono);padding:3px 8px;color:var(--cyan);opacity:.6;transition:opacity .2s;line-height:1;letter-spacing:1px}.fb:hover{opacity:.9}.fb.active{opacity:1;border-color:var(--cyan);background:rgba(0,188,212,.15)}
+        .nmt{display:none;background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-bright);font-size:1.2rem;cursor:pointer;padding:.3rem .6rem}
+        .hero{text-align:center;padding:4rem 2rem 3rem;max-width:850px;margin:0 auto}
+        .hb{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;border:1px solid var(--cyan-dim);border-radius:100px;font-size:.7rem;color:var(--cyan);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2rem;background:var(--cyan-dim)}
+        .hb::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pd 2s infinite}
+        @keyframes pd{0%,100%{opacity:1}50%{opacity:.3}}
+        .hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3rem);font-weight:800;color:var(--text-bright);line-height:1.1;margin-bottom:1rem}
+        .hero p{font-size:.95rem;color:var(--text-dim);line-height:1.7;max-width:600px;margin:0 auto 2rem;font-family:var(--font-display);font-weight:300}
+        .sts{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap}
+        .sv{font-family:var(--font-display);font-size:1.75rem;font-weight:700;color:var(--cyan)}
+        .sl{font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem}
+        .ln{max-width:800px;margin:0 auto 3rem;padding:1.25rem 2rem;border:1px solid var(--orange-dim);border-radius:12px;background:#ff9f1c08;text-align:center}
+        .ln p{font-family:var(--font-display);font-size:.85rem;color:var(--orange);line-height:1.6}.ln a{color:var(--cyan);text-decoration:none;font-weight:600}
+        .mc{max-width:1200px;margin:0 auto;padding:0 2rem 4rem}
+        .st{font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--text-bright);margin:2.5rem 0 1.25rem;display:flex;align-items:center;gap:.5rem}
+        .st::before{content:'';width:3px;height:1.1em;background:var(--cyan);border-radius:2px}
+        .pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:1rem}
+        .pc{padding:1.5rem;border:1px solid var(--border);border-radius:14px;background:var(--bg-panel);transition:border-color .3s,transform .2s;position:relative;overflow:hidden}
+        .pc:hover{border-color:var(--cyan-dim);transform:translateY(-2px)}
+        .pc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--purple));opacity:0;transition:opacity .3s}.pc:hover::before{opacity:1}
+        .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+        .pn{font-family:var(--font-mono);font-weight:700;font-size:.9rem;color:var(--cyan)}
+        .tb{font-size:.6rem;padding:.2rem .6rem;border-radius:100px;font-family:var(--font-mono);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+        .tb-r{background:var(--green-dim);color:var(--green);border:1px solid #00ff9d44}
+        .tb-h{background:var(--orange-dim);color:var(--orange);border:1px solid #ff9f1c44}
+        .tb-s{background:var(--green-dim);color:var(--green);border:1px solid #00ff9d44}
+        .tb-b{background:var(--cyan-dim);color:var(--cyan);border:1px solid #00e5ff44}
+        .tb-e{background:var(--purple-dim);color:var(--purple);border:1px solid #a855f744}
+        .tb-v{background:linear-gradient(135deg,#ff336622,#a855f722);color:#ff6699;border:1px solid #ff336644}
+        .pd{font-family:var(--font-display);font-size:.78rem;color:var(--text-dim);line-height:1.5;margin-bottom:.75rem}
+        .ps{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+        .sp{font-family:var(--font-mono);font-size:.6rem;padding:.15rem .5rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:4px;color:var(--text-dim)}
+        .pi{margin-bottom:.75rem}.pi label{display:block;font-size:.65rem;color:var(--text-dim);margin-bottom:.3rem;font-family:var(--font-mono);letter-spacing:.05em;text-transform:uppercase}
+        .pi textarea,.pi input{width:100%;padding:.5rem .75rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text-bright);font-family:var(--font-mono);font-size:.8rem;outline:none;resize:vertical}
+        .pi textarea:focus,.pi input:focus{border-color:var(--cyan)}.pi textarea{min-height:50px}
+        .pa{display:flex;gap:.5rem;flex-wrap:wrap}
+        .bt{font-family:var(--font-mono);font-size:.72rem;padding:.5rem 1rem;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;background:var(--bg-elevated);color:var(--text)}
+        .bt:hover{border-color:var(--cyan);color:var(--cyan)}
+        .btp{background:var(--cyan);color:var(--bg);border-color:var(--cyan);font-weight:600}.btp:hover{background:#33edff;border-color:#33edff;color:var(--bg)}
+        .pr{margin-top:1rem;background:var(--bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;display:none}
+        .pr.active{display:block;animation:fi .3s ease-out}@keyframes fi{from{opacity:0}to{opacity:1}}
+        .prh{padding:.5rem 1rem;background:var(--bg-elevated);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+        .prt{font-family:var(--font-mono);font-size:.7rem;color:var(--text-dim)}
+        .prtm{font-family:var(--font-mono);font-size:.65rem;color:var(--green)}
+        .prb{padding:.75rem 1rem;font-family:var(--font-mono);font-size:.72rem;line-height:1.8;max-height:350px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
+        .prb .k{color:var(--cyan)}.prb .vs{color:var(--green)}.prb .vn{color:var(--orange)}.prb .vt{color:var(--green)}.prb .vf{color:var(--red)}
+        .plic{font-size:.7rem;color:var(--text-dim);margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);font-family:var(--font-display)}
+        .plic a{color:var(--cyan);text-decoration:none}
+        .mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.75rem}
+        .mci{padding:1rem 1.1rem;background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;display:flex;gap:.85rem;align-items:flex-start;transition:all .2s}
+        .mci:hover{border-color:var(--cyan-dim);background:var(--bg-elevated)}
+        .md{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+        .mn{font-family:var(--font-display);font-size:.82rem;font-weight:600;color:var(--text-bright);margin-bottom:2px}
+        .ms{font-family:var(--font-mono);font-size:.6rem}
+        .mt{display:inline-block;margin-top:.3rem;padding:.1rem .4rem;border-radius:3px;font-size:.55rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+        .ct2{max-width:800px;margin:2rem auto 0;padding:2.5rem;border:1px solid var(--cyan-dim);border-radius:16px;text-align:center;background:linear-gradient(135deg,#00e5ff06,#a855f706);position:relative;overflow:hidden}
+        .ct2::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+        .ct2 h2{font-family:var(--font-display);font-size:1.4rem;font-weight:600;color:var(--text-bright);margin-bottom:.75rem}
+        .ct2 p{color:var(--text-dim);font-size:.85rem;font-family:var(--font-display);margin-bottom:1.5rem;line-height:1.6}
+        .bp{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 2rem;background:var(--cyan);color:var(--bg);border:none;border-radius:8px;font-family:var(--font-mono);font-weight:600;font-size:.8rem;text-decoration:none;cursor:pointer;transition:background .2s}.bp:hover{background:#33edff}
+        .footer{border-top:1px solid var(--border);padding:2rem;text-align:center;font-size:.7rem;color:var(--text-dim)}
+        .footer a{color:var(--text-dim);text-decoration:none}.footer a:hover{color:var(--cyan)}
+        @media(max-width:768px){.nav{padding:.9rem 1rem}.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(7,8,12,.98);padding:1.25rem;border-bottom:1px solid var(--border);gap:.75rem}.nmt{display:block}.pg{grid-template-columns:1fr}.mg{grid-template-columns:1fr}.hero{padding:3rem 1.25rem 2rem}}
+    </style>
+</head>
+<body>
+<div class="pw">
+    <nav class="nav">
+        <a href="/" class="nav-logo">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g1)" stroke-width="2.5" transform="rotate(-30 50 50)" opacity="0.9"/><ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g2)" stroke-width="2.5" transform="rotate(30 50 50)" opacity="0.9"/><ellipse cx="50" cy="50" rx="42" ry="16" stroke="url(#g3)" stroke-width="2.5" transform="rotate(90 50 50)" opacity="0.9"/><circle cx="50" cy="50" r="6" fill="url(#gc)"/><circle cx="50" cy="50" r="10" fill="none" stroke="var(--cyan)" stroke-width="1" opacity="0.3"/><circle cx="22" cy="30" r="3" fill="#a855f7"/><circle cx="78" cy="30" r="3" fill="var(--cyan)"/><circle cx="50" cy="82" r="3" fill="#33edff"/><defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient><linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#33edff"/></linearGradient><linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></linearGradient><radialGradient id="gc"><stop offset="0%" stop-color="#33edff"/><stop offset="100%" stop-color="#00e5ff"/></radialGradient></defs></svg>
+            <div class="nav-brand">Q-CORE <span>SYSTEMS</span></div>
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="/#scanner" data-i18n="nav.scanner">Scanner</a>
+            <a href="/#autopilot" data-i18n="nav.autopilot">Q-Autopilot</a>
+            <a href="/cra-dashboard" data-i18n="nav.cra">CRA Dashboard</a>
+            <a href="/platform" class="act" data-i18n="nav.platform">Platform</a>
+            <a href="/#pricing" data-i18n="nav.pricing">Pricing</a>
+            <div class="fs">
+                <button class="fb active" data-lang="en" onclick="setLang('en')">EN</button>
+                <button class="fb" data-lang="cs" onclick="setLang('cs')">CZ</button>
+                <button class="fb" data-lang="de" onclick="setLang('de')">DE</button>
+            </div>
+            <a href="/academy" data-i18n="nav.academy" style="color:var(--pink)">Q-Academy</a>
+            <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener" class="nav-github">GitHub</a>
+        </div>
+        <button class="nmt" onclick="document.getElementById('navLinks').classList.toggle('open')">&#9776;</button>
+    </nav>
+
+    <section class="hero">
+        <div class="hb" data-i18n="p.badge">LIVE MODULE PREVIEW — POST-QUANTUM CRYPTOGRAPHY</div>
+        <h1><span data-i18n="p.t1">Q-CORE</span> <span class="accent" data-i18n="p.t2">Platform</span></h1>
+        <p data-i18n="p.desc">Live preview of post-quantum cryptography modules. Real ML-KEM-768, AES-256-GCM, Zero-Knowledge Proofs running on our server. No simulations — pure mathematics.</p>
+        <div class="sts">
+            <div><div class="sv" id="stM">&mdash;</div><div class="sl" data-i18n="p.loaded">Modules Loaded</div></div>
+            <div><div class="sv">ML-KEM-768</div><div class="sl">NIST FIPS 203</div></div>
+            <div><div class="sv">AES-256</div><div class="sl">GCM</div></div>
+            <div><div class="sv">100/100</div><div class="sl" data-i18n="p.hdr">Security Headers</div></div>
+        </div>
+    </section>
+
+    <div class="ln"><p data-i18n="p.lic">&#9888; This is a <strong>preview</strong> of Q-CORE modules. Results are real but limited. Full access to all modules and production deployment requires a <strong>Q-CORE license</strong>. Contact <a href="/cdn-cgi/l/email-protection#d9b0b7bfb699a8bab6abbcf7aaa0aaadbcb4aa"><span class="__cf_email__" data-cfemail="4f262129200f3e2c203d2a613c363c3b2a223c">[email&#160;protected]</span></a> for pricing.</p></div>
+
+    <main class="mc">
+        <div class="st" data-i18n="p.s1">Post-Quantum Cryptography</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-SHIELD</span><span class="tb tb-s">STARTER</span></div>
+                <div class="pd" data-i18n="p.sh.d">ML-KEM-768 (Kyber-768) key encapsulation. NIST FIPS 203. Real keygen, encapsulation, decapsulation with verification.</div>
+                <div class="ps"><span class="sp">ML-KEM-768</span><span class="sp">1184B pk</span><span class="sp">1088B ct</span><span class="sp">32B secret</span></div>
+                <div class="pa">
+                    <button class="bt btp" onclick="run('/api/shield/keygen','POST','rs','Keygen')" data-i18n="p.kg">Generate Keypair</button>
+                    <button class="bt" onclick="run('/api/shield/encapsulate','POST','rs','Encapsulate')" data-i18n="p.enc">Encapsulate</button>
+                </div>
+                <div class="pr" id="rs"></div>
+                <div class="plic" data-i18n="p.fl">Full access requires <a href="/cdn-cgi/l/email-protection#721b1c141d3203111d00175c010b0106171f01">Q-CORE license</a></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-TUNNEL</span><span class="tb tb-s">STARTER</span></div>
+                <div class="pd" data-i18n="p.tu.d">Hybrid X25519 + ML-KEM-768 VPN tunnel. AES-256-GCM / ChaCha20-Poly1305 with anti-replay and traffic obfuscation.</div>
+                <div class="ps"><span class="sp">X25519 ECDH</span><span class="sp">AES-256-GCM</span><span class="sp">ChaCha20</span><span class="sp">Anti-replay</span></div>
+                <div class="pa">
+                    <button class="bt btp" onclick="run('/api/tunnel/handshake','POST','rt','Handshake')" data-i18n="p.hs">Initiate Handshake</button>
+                    <button class="bt" onclick="run('/api/tunnel/status','GET','rt','Status')">Status</button>
+                </div>
+                <div class="pr" id="rt"></div>
+                <div class="plic" data-i18n="p.fl">Full access requires <a href="/cdn-cgi/l/email-protection#2f464149406f5e4c405d4a015c565c5b4a425c">Q-CORE license</a></div>
+            </div>
+        </div>
+
+        <div class="st" data-i18n="p.s2">Encryption &amp; Zero-Knowledge</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-VAULT</span><span class="tb tb-s">STARTER</span></div>
+                <div class="pd" data-i18n="p.va.d">AES-256-GCM file encryption. HKDF-SHA256 key derivation, .qvault v2 format, atomic writes, 3x secure delete with fsync.</div>
+                <div class="ps"><span class="sp">AES-256-GCM</span><span class="sp">HKDF-SHA256</span><span class="sp">.qvault v2</span><span class="sp">Secure delete</span></div>
+                <div class="pi"><label data-i18n="p.va.l">Text to encrypt (max 256B preview)</label><textarea id="vi">Q-CORE Systems — Security as a Perfect Weld</textarea></div>
+                <div class="pa">
+                    <button class="bt btp" onclick="runV()" data-i18n="p.en">Encrypt</button>
+                    <button class="bt" onclick="run('/api/vault/status','GET','rv','Status')">Status</button>
+                </div>
+                <div class="pr" id="rv"></div>
+                <div class="plic" data-i18n="p.fl">Full access requires <a href="/cdn-cgi/l/email-protection#2c45424a436c5d4f435e49025f555f5849415f">Q-CORE license</a></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-ZKP</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd" data-i18n="p.zk.d">Zero-Knowledge Proofs: Pedersen commitments (SHA-384), range proofs, ECDSA-P384 signed attestations. Prove CRA/NIS2 compliance without revealing data.</div>
+                <div class="ps"><span class="sp">Pedersen SHA-384</span><span class="sp">Range proofs</span><span class="sp">Set membership</span><span class="sp">ECDSA-P384</span></div>
+                <div class="pa">
+                    <button class="bt btp" onclick="runZ()" data-i18n="p.at">Compliance Attestation</button>
+                    <button class="bt" onclick="run('/api/zkp/status','GET','rz','Status')">Status</button>
+                </div>
+                <div class="pr" id="rz"></div>
+                <div class="plic" data-i18n="p.fl">Full access requires <a href="/cdn-cgi/l/email-protection#5e373038311e2f3d312c3b702d272d2a3b332d">Q-CORE license</a></div>
+            </div>
+        </div>
+
+        <div class="st" data-i18n="p.s3">Operations &amp; AI</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-AUTOPILOT</span><span class="tb tb-s">STARTER</span></div>
+                <div class="pd" data-i18n="p.ap.d">Module orchestration engine. Manages all 66 modules, workflows, event correlation, ECDSA-P384 signed reports, auto-healing.</div>
+                <div class="ps"><span class="sp">Orchestration</span><span class="sp">ECDSA-P384</span><span class="sp">Auto-healing</span><span class="sp">Workflows</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/autopilot/status','GET','ra','Status')" data-i18n="p.cs">Check Status</button></div>
+                <div class="pr" id="ra"></div>
+                <div class="plic" data-i18n="p.fl">Full access requires <a href="/cdn-cgi/l/email-protection#94fdfaf2fbd4e5f7fbe6f1bae7ede7e0f1f9e7">Q-CORE license</a></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-WATERMARK</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd" data-i18n="p.wm.d">Unicode steganography with ECDSA-P384 signatures. Embed invisible watermarks into text, detect tampering, verify authenticity.</div>
+                <div class="ps"><span class="sp">Unicode stego</span><span class="sp">ECDSA-P384</span><span class="sp">Tamper detection</span><span class="sp">Verify</span></div>
+                <div class="pi"><label data-i18n="p.wm.l">Text to watermark (max 500 chars)</label><textarea id="wi">This document is classified as Q-CORE CONFIDENTIAL.</textarea></div>
+                <div class="pa"><button class="bt btp" onclick="runW()" data-i18n="p.em">Embed Watermark</button></div>
+                <div class="pr" id="rw"></div>
+                <div class="plic" data-i18n="p.fl">Full access requires <a href="/cdn-cgi/l/email-protection#6f060109002f1e0c001d0a411c161c1b0a021c">Q-CORE license</a></div>
+            </div>
+        </div>
+
+        <div class="st">Authentication &amp; Identity</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-GATE</span><span class="tb tb-s">STARTER</span></div>
+                <div class="pd">PBKDF2 600K iterations + FIDO2 authentication. Quantum-resistant password hashing and hardware key support.</div>
+                <div class="ps"><span class="sp">PBKDF2-600K</span><span class="sp">FIDO2/WebAuthn</span><span class="sp">Argon2id</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/gate/challenge','POST','rgate','Challenge',{})">Challenge</button><button class="bt" onclick="run('/api/gate/status','GET','rgate','Status')">Status</button></div>
+                <div class="pr" id="rgate"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-DID</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Decentralized Identity documents with ECDSA verification. W3C DID-compliant identity creation.</div>
+                <div class="ps"><span class="sp">W3C DID</span><span class="sp">ECDSA</span><span class="sp">Verifiable</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/did/create','POST','rdid','Create DID',{})">Create DID</button></div>
+                <div class="pr" id="rdid"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-IDENTITY</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Non-human identity management. Machine &amp; service identity lifecycle for zero-trust architectures.</div>
+                <div class="ps"><span class="sp">Machine ID</span><span class="sp">Service accounts</span><span class="sp">Lifecycle</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/identity/create','POST','rident','Create Identity',{})">Create Identity</button></div>
+                <div class="pr" id="rident"></div>
+            </div>
+        </div>
+
+        <div class="st">Forensics &amp; Audit</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-FORENSICS</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Merkle Tree SHA-384 evidence chain. Tamper-proof forensic logging with cryptographic verification.</div>
+                <div class="ps"><span class="sp">Merkle Tree</span><span class="sp">SHA-384</span><span class="sp">Evidence chain</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/forensics/ingest','POST','rfor','Ingest Event',{event_type:'security_alert',source:'platform_test',severity:'medium',message:'Test forensic event'})">Ingest Event</button><button class="bt" onclick="run('/api/forensics/status','GET','rfor','Status')">Status</button></div>
+                <div class="pr" id="rfor"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-AUDIT-SIGN</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Cryptographic audit trail. ECDSA-signed, tamper-proof event logs with chain verification.</div>
+                <div class="ps"><span class="sp">ECDSA signing</span><span class="sp">Chain verify</span><span class="sp">Tamper-proof</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/audit-sign/test','POST','raudit','Test Audit',{})">Test Audit</button></div>
+                <div class="pr" id="raudit"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-CHAIN</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Blockchain ledger with Merkle root verification &amp; ECDSA signatures. Immutable transaction log.</div>
+                <div class="ps"><span class="sp">Blockchain</span><span class="sp">Merkle root</span><span class="sp">ECDSA</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/chain/transaction','POST','rchain','Transaction',{})">Create Transaction</button></div>
+                <div class="pr" id="rchain"></div>
+            </div>
+        </div>
+
+        <div class="st">Threat Intelligence &amp; Monitoring</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-THREAT</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">MITRE ATT&amp;CK prediction engine with ECDSA-signed threat analysis reports.</div>
+                <div class="ps"><span class="sp">MITRE ATT&CK</span><span class="sp">Prediction</span><span class="sp">ECDSA</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/threat/analyze','POST','rthreat','Analyze',{})">Analyze Threat</button></div>
+                <div class="pr" id="rthreat"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-SIEM</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Security event correlation engine. Real-time threat dashboard and alert management.</div>
+                <div class="ps"><span class="sp">Event correlation</span><span class="sp">Real-time</span><span class="sp">Dashboard</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/siem/ingest','POST','rsiem','Ingest',{source:'test',event_type:'alert',severity:'medium',message:'Platform test event'})">Ingest Event</button></div>
+                <div class="pr" id="rsiem"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-DECEPTION</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">DNS canary tokens for intrusion detection. Deploy honeypots and track unauthorized access.</div>
+                <div class="ps"><span class="sp">DNS canary</span><span class="sp">Honeypots</span><span class="sp">Intrusion detect</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/deception/canary','POST','rdecep','Deploy Canary',{})">Deploy Canary</button></div>
+                <div class="pr" id="rdecep"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-SENTRY</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Shannon entropy analysis. Detect encrypted, compressed, or anomalous data patterns.</div>
+                <div class="ps"><span class="sp">Shannon entropy</span><span class="sp">Anomaly detect</span><span class="sp">Pattern analysis</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/sentry/analyze','POST','rsentry','Analyze',{})">Analyze Entropy</button></div>
+                <div class="pr" id="rsentry"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-COVERT</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Covert channel detection. Shannon entropy &amp; traffic regularity scoring for hidden data exfiltration.</div>
+                <div class="ps"><span class="sp">Covert channels</span><span class="sp">KS test</span><span class="sp">Traffic analysis</span></div>
+                <div class="pa"><button class="bt" onclick="run('/api/covert/status','GET','rcovert','Status')">Check Status</button></div>
+                <div class="pr" id="rcovert"></div>
+            </div>
+        </div>
+
+        <div class="st">Advanced Cryptography</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-ENTROPY</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">5 entropy sources with NIST SP 800-22 randomness testing. Cryptographically secure random generation.</div>
+                <div class="ps"><span class="sp">5 sources</span><span class="sp">NIST SP 800-22</span><span class="sp">CSPRNG</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/entropy/generate','POST','rentropy','Generate',{num_bytes:32})">Generate 32B</button></div>
+                <div class="pr" id="rentropy"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-KDF</span><span class="tb tb-s">STARTER</span></div>
+                <div class="pd">HKDF key derivation. Derive secure AES-256 keys from shared secrets with cryptographic salt.</div>
+                <div class="ps"><span class="sp">HKDF-SHA256</span><span class="sp">AES-256</span><span class="sp">Salt generation</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/kdf/derive','POST','rkdf','Derive Key',{})">Derive Key</button></div>
+                <div class="pr" id="rkdf"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-SMPC</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Shamir 5/3 secret sharing. Split secrets into shares — any 3 of 5 can reconstruct.</div>
+                <div class="ps"><span class="sp">Shamir SSS</span><span class="sp">5/3 threshold</span><span class="sp">GF(2^8)</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/smpc/share','POST','rsmpc','Share Secret',{})">Share Secret</button></div>
+                <div class="pr" id="rsmpc"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-FHE</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Fully Homomorphic Encryption (LWE). Compute on encrypted data without decryption. ±5 noise is normal.</div>
+                <div class="ps"><span class="sp">LWE</span><span class="sp">Homomorphic</span><span class="sp">Encrypted compute</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/fhe/compute','POST','rfhe','Compute',{})">Encrypted Compute</button></div>
+                <div class="pr" id="rfhe"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-HARDEN</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Side-channel resistance. Constant-time operations &amp; boolean masking against timing attacks.</div>
+                <div class="ps"><span class="sp">Constant-time</span><span class="sp">Boolean masking</span><span class="sp">Side-channel</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/harden/test','POST','rharden','Test',{})">Test Hardening</button></div>
+                <div class="pr" id="rharden"></div>
+            </div>
+        </div>
+
+        <div class="st">Data Protection &amp; Privacy</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-OBLIVION</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">3-pass cryptographic data shredder. GDPR Article 17 compliant — right to be forgotten.</div>
+                <div class="ps"><span class="sp">3-pass shred</span><span class="sp">GDPR Art. 17</span><span class="sp">Crypto wipe</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/oblivion/shred','POST','robliv','Shred',{})">Shred Data</button></div>
+                <div class="pr" id="robliv"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-PROX</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">PII anonymization engine. GDPR-compliant data scrubbing — names, emails, IPs, phone numbers.</div>
+                <div class="ps"><span class="sp">PII scrub</span><span class="sp">GDPR</span><span class="sp">Anonymization</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/prox/scrub','POST','rprox','Scrub PII',{})">Scrub PII</button></div>
+                <div class="pr" id="rprox"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-CONFID</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Confidentiality policy engine. Automated data classification and access control verification.</div>
+                <div class="ps"><span class="sp">Data classification</span><span class="sp">Policy engine</span><span class="sp">Access control</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/confid/test','POST','rconfid','Test Policy',{})">Test Policy</button></div>
+                <div class="pr" id="rconfid"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-DRIVER</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Encrypted database fields. Column-level encryption with key rotation and wrapped key search.</div>
+                <div class="ps"><span class="sp">Column-level</span><span class="sp">Key rotation</span><span class="sp">Encrypted search</span></div>
+                <div class="pa"><button class="bt" onclick="run('/api/driver/status','GET','rdriver','Status')">Check Status</button></div>
+                <div class="pr" id="rdriver"></div>
+            </div>
+        </div>
+
+        <div class="st">AI Security</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-INFERENCE</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Secure AI inference with PII scrubbing, prompt guard &amp; ECDSA-signed responses. Protect LLM pipelines.</div>
+                <div class="ps"><span class="sp">PII scrub</span><span class="sp">Prompt guard</span><span class="sp">ECDSA signing</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/inference/query','POST','rinfer','Query',{query:'What is post-quantum cryptography?'})">Secure Query</button></div>
+                <div class="pr" id="rinfer"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-GUARD</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">AI prompt injection detection. Protect LLM-powered applications from adversarial inputs.</div>
+                <div class="ps"><span class="sp">Injection detect</span><span class="sp">Pattern matching</span><span class="sp">LLM security</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/guard/analyze','POST','rguard','Analyze',{})">Analyze Prompt</button></div>
+                <div class="pr" id="rguard"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-NEURAL</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Data poisoning detection for ML pipelines. Neural network integrity verification.</div>
+                <div class="ps"><span class="sp">Data poisoning</span><span class="sp">ML pipeline</span><span class="sp">Integrity</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/neural/analyze','POST','rneural','Analyze',{})">Detect Poisoning</button></div>
+                <div class="pr" id="rneural"></div>
+            </div>
+        </div>
+
+        <div class="st">Compliance &amp; Supply Chain</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-POLICY</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">CRA framework compliance checker. EU Cyber Resilience Act readiness assessment.</div>
+                <div class="ps"><span class="sp">CRA</span><span class="sp">NIS2</span><span class="sp">EU compliance</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/policy/check','POST','rpolicy','Check',{})">Check Compliance</button></div>
+                <div class="pr" id="rpolicy"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-CBOM</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Cryptographic Bill of Materials. Inventory all crypto algorithms in your codebase.</div>
+                <div class="ps"><span class="sp">Crypto inventory</span><span class="sp">SBOM</span><span class="sp">Algorithm scan</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/cbom/scan','POST','rcbom','Scan',{})">Scan Crypto</button></div>
+                <div class="pr" id="rcbom"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-TRACE</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Supply chain SBOM scanner. Software composition analysis with vulnerability correlation.</div>
+                <div class="ps"><span class="sp">SBOM</span><span class="sp">Supply chain</span><span class="sp">SCA</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/trace/scan','POST','rtrace','Scan',{})">Scan Supply Chain</button></div>
+                <div class="pr" id="rtrace"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-VEX</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Vulnerability Exploitability Assessment. CVSS scoring &amp; risk prioritization.</div>
+                <div class="ps"><span class="sp">VEX</span><span class="sp">CVSS</span><span class="sp">Prioritization</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/vex/analyze','POST','rvex','Analyze',{})">Assess Vulnerability</button></div>
+                <div class="pr" id="rvex"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-FORMAL</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">State machine formal verification. Mathematically prove cryptographic protocol correctness.</div>
+                <div class="ps"><span class="sp">State machine</span><span class="sp">Formal proof</span><span class="sp">Protocol verify</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/formal/verify','POST','rformal','Verify',{})">Verify Protocol</button></div>
+                <div class="pr" id="rformal"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-SOVEREIGN</span><span class="tb tb-v">SOVEREIGN</span></div>
+                <div class="pd">Data sovereignty &amp; cross-border transfer assessment. GDPR compliance for multinational operations.</div>
+                <div class="ps"><span class="sp">Data sovereignty</span><span class="sp">Cross-border</span><span class="sp">GDPR</span></div>
+                <div class="pa"><button class="bt" onclick="run('/api/sovereign/status','GET','rsov','Status')">Check Status</button></div>
+                <div class="pr" id="rsov"></div>
+            </div>
+        </div>
+
+        <div class="st">Scanning &amp; Vulnerability</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-PHANTOM</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Vulnerability scanner with auto-patching recommendations. Detect and fix before attackers do.</div>
+                <div class="ps"><span class="sp">Vuln scanner</span><span class="sp">Auto-patch</span><span class="sp">CVE database</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/phantom/scan','POST','rphantom','Scan',{})">Scan Vulnerabilities</button></div>
+                <div class="pr" id="rphantom"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-TWIN</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Digital twin simulation. 100% blast radius modeling — see impact before it happens.</div>
+                <div class="ps"><span class="sp">Digital twin</span><span class="sp">Blast radius</span><span class="sp">Simulation</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/twin/simulate','POST','rtwin','Simulate',{})">Run Simulation</button></div>
+                <div class="pr" id="rtwin"></div>
+            </div>
+        </div>
+
+        <div class="st">Operations &amp; Recovery</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-HEAL</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Self-healing infrastructure. Automated health checks, anomaly detection &amp; auto-recovery.</div>
+                <div class="ps"><span class="sp">Self-healing</span><span class="sp">Health checks</span><span class="sp">Auto-recovery</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/heal/check','POST','rheal','Health Check',{})">Run Health Check</button></div>
+                <div class="pr" id="rheal"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-RECOVER</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">ECDSA-P384 signed backup verification. Disaster recovery with cryptographic integrity proof.</div>
+                <div class="ps"><span class="sp">ECDSA-P384</span><span class="sp">Backup verify</span><span class="sp">DR testing</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/recover/test','POST','rrecover','Test Recovery',{})">Test Recovery</button></div>
+                <div class="pr" id="rrecover"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-MIGRATE</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">RSA &rarr; ML-DSA migration roadmap. Crypto agility planning for post-quantum transition.</div>
+                <div class="ps"><span class="sp">RSA&rarr;ML-DSA</span><span class="sp">Crypto agility</span><span class="sp">Roadmap</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/migrate/analyze','POST','rmigrate','Analyze',{})">Analyze Migration</button></div>
+                <div class="pr" id="rmigrate"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-CYCLE</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Key lifecycle management. Rotation, re-encryption, expiration tracking &amp; atomic key operations.</div>
+                <div class="ps"><span class="sp">Key rotation</span><span class="sp">Re-encryption</span><span class="sp">Expiration</span></div>
+                <div class="pa"><button class="bt" onclick="run('/api/cycle/status','GET','rcycle','Status')">Check Status</button></div>
+                <div class="pr" id="rcycle"></div>
+            </div>
+        </div>
+
+        <div class="st">Analytics &amp; Network</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-INSIGHT</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Business impact analysis. Breach cost estimation &amp; risk quantification in dollars.</div>
+                <div class="ps"><span class="sp">Breach cost</span><span class="sp">Risk scoring</span><span class="sp">Impact analysis</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/insight/analyze','POST','rinsight','Analyze',{})">Analyze Impact</button></div>
+                <div class="pr" id="rinsight"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-MEMEX</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Semantic vector similarity search. Knowledge retrieval engine for security intelligence.</div>
+                <div class="ps"><span class="sp">Vector search</span><span class="sp">Semantic</span><span class="sp">Knowledge base</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/memex/search','POST','rmemex','Search',{})">Semantic Search</button></div>
+                <div class="pr" id="rmemex"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-MESH</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Zero-trust service mesh with ECDSA mutual TLS authentication between microservices.</div>
+                <div class="ps"><span class="sp">Zero-trust</span><span class="sp">mTLS</span><span class="sp">Service mesh</span></div>
+                <div class="pa"><button class="bt btp" onclick="run('/api/mesh/test','POST','rmesh','Test Mesh',{})">Test Mesh</button></div>
+                <div class="pr" id="rmesh"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-DISTRIB</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Distributed encrypted computation. X25519 peer-to-peer with tensor sharding for secure inference.</div>
+                <div class="ps"><span class="sp">X25519 P2P</span><span class="sp">Tensor sharding</span><span class="sp">Distributed</span></div>
+                <div class="pa"><button class="bt" onclick="run('/api/distrib/status','GET','rdistrib','Status')">Check Status</button></div>
+                <div class="pr" id="rdistrib"></div>
+            </div>
+        </div>
+
+        <div class="st">Education &amp; Hardware</div>
+        <div class="pg">
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-WORKSHOP</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Interactive PQC training platform. Lessons, quizzes &amp; certification for security teams.</div>
+                <div class="ps"><span class="sp">Training</span><span class="sp">Quizzes</span><span class="sp">Certification</span></div>
+                <div class="pa"><button class="bt" onclick="run('/api/workshop/status','GET','rworkshop','Status')">Check Status</button></div>
+                <div class="pr" id="rworkshop"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-ACADEMY-BRIDGE</span><span class="tb tb-b">BUSINESS</span></div>
+                <div class="pd">Scanner-to-learning bridge. Generate personalized learning plans from scan findings.</div>
+                <div class="ps"><span class="sp">Scan&rarr;Learn</span><span class="sp">Personalized</span><span class="sp">Fix cycle</span></div>
+                <div class="pa"><button class="bt" onclick="run('/api/academy-bridge/status','GET','racademy','Status')">Check Status</button></div>
+                <div class="pr" id="racademy"></div>
+            </div>
+            <div class="pc">
+                <div class="ph"><span class="pn">Q-HSM</span><span class="tb tb-e">ENTERPRISE</span></div>
+                <div class="pd">Hardware Security Module interface. ECDSA-P384 signing, TPM 2.0 &amp; PKCS#11. Requires physical HSM.</div>
+                <div class="ps"><span class="sp">ECDSA-P384</span><span class="sp">TPM 2.0</span><span class="sp">PKCS#11</span></div>
+                <div class="pa"><button class="bt" onclick="run('/api/hsm/status','GET','rhsm','Status')">Check Status</button></div>
+                <div class="pr" id="rhsm"></div>
+            </div>
+        </div>
+
+        <div class="st" data-i18n="p.s4">All Loaded Modules</div>
+        <div class="mg" id="am"><div class="mci"><div class="md" style="background:var(--text-dim)"></div><div><div class="mn" style="color:var(--text-dim)" data-i18n="p.lo">Loading modules...</div></div></div></div>
+
+        <div class="ct2">
+            <h2 data-i18n="p.ct.t">Ready for full access?</h2>
+            <p data-i18n="p.ct.d">Get production deployment, all 66 modules, unlimited API, and dedicated support. Starter from 4 990 CZK/month.</p>
+            <span class="bp" onclick="window.location='mai'+'lto:'+'info'+'@'+'qcore'+'.systems'" style="cursor:pointer" data-i18n="p.ct.b"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c7aea9a1a887b6a4a8b5a2e9b4beb4b3a2aab4">[email&#160;protected]</a> &rarr; Get License</span>
+        </div>
+    </main>
+
+    <footer class="footer">&copy; 2025&ndash;2026 Q-CORE SYSTEMS &middot; Built by <a href="https://linkedin.com/in/josef-boudn%C3%BD-a274aa3aa/" target="_blank" rel="noopener">Josef Boudny</a> &middot; <a href="https://github.com/JosefBoudny/q-core-systems" target="_blank" rel="noopener">Open Source</a></footer>
+</div>
+
+
+
+
+{% raw %}
+<script>
+var cL=localStorage.getItem('qcore_lang')||'en';
+var i18n={en:{'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Platform','nav.pricing':'Pricing','nav.academy':'Q-Academy','p.badge':'LIVE MODULE PREVIEW \u2014 POST-QUANTUM CRYPTOGRAPHY','p.t1':'Q-CORE','p.t2':'Platform','p.desc':'Live preview of post-quantum cryptography modules. Real ML-KEM-768, AES-256-GCM, Zero-Knowledge Proofs running on our server. No simulations \u2014 pure mathematics.','p.loaded':'Modules Loaded','p.hdr':'Security Headers','p.lic':'\u26a0 This is a <strong>preview</strong> of Q-CORE modules. Results are real but limited. Full access requires a <strong>Q-CORE license</strong>. Contact <a href="mailto:info@qcore.systems">info@qcore.systems</a>.','p.s1':'Post-Quantum Cryptography','p.s2':'Encryption & Zero-Knowledge','p.s3':'Operations & AI','p.s4':'All Loaded Modules','p.sh.d':'ML-KEM-768 (Kyber-768) key encapsulation. NIST FIPS 203. Real keygen, encapsulation, decapsulation with verification.','p.tu.d':'Hybrid X25519 + ML-KEM-768 VPN tunnel. AES-256-GCM / ChaCha20-Poly1305 with anti-replay and traffic obfuscation.','p.va.d':'AES-256-GCM file encryption. HKDF-SHA256 key derivation, .qvault v2 format, atomic writes, 3x secure delete with fsync.','p.va.l':'Text to encrypt (max 256B preview)','p.zk.d':'Zero-Knowledge Proofs: Pedersen commitments (SHA-384), range proofs, ECDSA-P384 signed attestations. Prove CRA/NIS2 compliance without revealing data.','p.ap.d':'Module orchestration engine. Manages all 66 modules, workflows, event correlation, ECDSA-P384 signed reports, auto-healing.','p.wm.d':'Unicode steganography with ECDSA-P384 signatures. Embed invisible watermarks into text, detect tampering, verify authenticity.','p.wm.l':'Text to watermark (max 500 chars)','p.kg':'Generate Keypair','p.enc':'Encapsulate','p.hs':'Initiate Handshake','p.en':'Encrypt','p.at':'Compliance Attestation','p.cs':'Check Status','p.em':'Embed Watermark','p.fl':'Full access requires <a href="mailto:info@qcore.systems">Q-CORE license</a>','p.lo':'Loading modules...','p.ct.t':'Ready for full access?','p.ct.d':'Get production deployment, all 66 modules, unlimited API, and dedicated support. Starter from 4 990 CZK/month.','p.ct.b':'info@qcore.systems \u2192 Get License'},cs:{'nav.scanner':'Skener','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Platforma','nav.pricing':'Cen\u00edk','nav.academy':'Q-Akademie','p.badge':'\u017dIV\u00dd N\u00c1HLED \u2014 POST-KVANTOV\u00c1 KRYPTOGRAFIE','p.t1':'Q-CORE','p.t2':'Platforma','p.desc':'\u017div\u00fd n\u00e1hled post-kvantov\u00fdch modul\u016f. Re\u00e1ln\u00fd ML-KEM-768, AES-256-GCM, ZKP. \u017d\u00e1dn\u00e9 simulace \u2014 \u010dist\u00e1 matematika.','p.loaded':'Na\u010dten\u00e9 moduly','p.hdr':'Security Headers','p.lic':'\u26a0 Toto je <strong>n\u00e1hled</strong> Q-CORE modul\u016f. V\u00fdsledky jsou re\u00e1ln\u00e9, ale omezen\u00e9. Pln\u00fd p\u0159\u00edstup vy\u017eaduje <strong>licenci Q-CORE</strong>. Kontakt: <a href="mailto:info@qcore.systems">info@qcore.systems</a>','p.s1':'Post-kvantov\u00e1 kryptografie','p.s2':'\u0160ifrov\u00e1n\u00ed & Zero-Knowledge','p.s3':'Operace & AI','p.s4':'V\u0161echny na\u010dten\u00e9 moduly','p.kg':'Generovat kl\u00ed\u010de','p.enc':'Enkapulace','p.hs':'Zah\u00e1jit handshake','p.en':'Za\u0161ifrovat','p.at':'Atestace shody','p.cs':'Zkontrolovat stav','p.em':'Vlo\u017eit vodoznak','p.fl':'Pln\u00fd p\u0159\u00edstup vy\u017eaduje <a href="mailto:info@qcore.systems">licenci Q-CORE</a>','p.lo':'Na\u010d\u00edt\u00e1m moduly...','p.ct.t':'Chcete pln\u00fd p\u0159\u00edstup?','p.ct.d':'Produk\u010dn\u00ed nasazen\u00ed, v\u0161ech 66 modul\u016f, neomezen\u00e9 API. Starter od 4 990 K\u010d/m\u011bs\u00edc.','p.ct.b':'info@qcore.systems \u2192 Z\u00edskat licenci'},de:{'nav.scanner':'Scanner','nav.autopilot':'Q-Autopilot','nav.cra':'CRA Dashboard','nav.platform':'Plattform','nav.pricing':'Preise','nav.academy':'Q-Akademie','p.badge':'LIVE MODUL-VORSCHAU \u2014 POST-QUANTEN-KRYPTOGRAFIE','p.t1':'Q-CORE','p.t2':'Plattform','p.desc':'Live-Vorschau: Echtes ML-KEM-768, AES-256-GCM, Zero-Knowledge Proofs. Keine Simulationen \u2014 reine Mathematik.','p.loaded':'Module geladen','p.hdr':'Security Headers','p.lic':'\u26a0 <strong>Vorschau</strong> der Q-CORE Module. Voller Zugriff erfordert eine <strong>Q-CORE Lizenz</strong>. Kontakt: <a href="mailto:info@qcore.systems">info@qcore.systems</a>','p.s1':'Post-Quanten-Kryptografie','p.s2':'Verschl\u00fcsselung & Zero-Knowledge','p.s3':'Operationen & KI','p.s4':'Alle geladenen Module','p.kg':'Schl\u00fcssel generieren','p.enc':'Einkapseln','p.hs':'Handshake starten','p.en':'Verschl\u00fcsseln','p.at':'Compliance-Attestierung','p.cs':'Status pr\u00fcfen','p.em':'Wasserzeichen','p.fl':'Voller Zugriff erfordert <a href="mailto:info@qcore.systems">Q-CORE Lizenz</a>','p.lo':'Module werden geladen...','p.ct.t':'Bereit f\u00fcr vollen Zugriff?','p.ct.d':'Alle 66 Module, unbegrenztes API. Starter ab 4.990 CZK/Monat.','p.ct.b':'info@qcore.systems \u2192 Lizenz erhalten'}};
+function setLang(l){cL=l;try{localStorage.setItem('qcore_lang',l)}catch(e){}document.querySelectorAll('.fb').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-lang')===l)});var t=i18n[l];if(!t)return;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k]!==undefined)el.innerHTML=t[k]});document.documentElement.lang=l}
+if(cL!=='en')setLang(cL);
+</script>
+{% endraw %}
+
+
+
+
+
+
+{% raw %}
+<script>
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function pad(n){var s='';for(var i=0;i<n;i++)s+='  ';return s}
+function fj(o,i){i=i||0;if(o==null)return'<span class="vs">null</span>';if(typeof o==='boolean')return'<span class="'+(o?'vt':'vf')+'">'+o+'</span>';if(typeof o==='number')return'<span class="vn">'+o+'</span>';if(typeof o==='string')return'<span class="vs">"'+esc(o)+'"</span>';if(Array.isArray(o)){if(!o.length)return'[]';return'[\n'+o.map(function(x){return pad(i+1)+fj(x,i+1)}).join(',\n')+'\n'+pad(i)+']'}if(typeof o==='object'){var k=Object.keys(o);if(!k.length)return'{}';return'{\n'+k.map(function(x){return pad(i+1)+'<span class="k">"'+esc(x)+'"</span>: '+fj(o[x],i+1)}).join(',\n')+'\n'+pad(i)+'}'}return String(o)}
+function sR(id,t,d,tm){var p=document.getElementById(id);if(!p)return;p.classList.add('active');p.innerHTML='<div class="prh"><span class="prt">'+esc(t)+'</span>'+(tm?'<span class="prtm">'+tm+'ms</span>':'')+'</div><div class="prb">'+fj(d)+'</div>'}
+function sL(id,t){var p=document.getElementById(id);if(!p)return;p.classList.add('active');p.innerHTML='<div class="prh"><span class="prt">'+esc(t)+'</span><span class="prtm">running...</span></div><div class="prb" style="color:var(--text-dim)">\u280b Executing cryptographic operation...</div>'}
+async function run(ep,m,id,t,b){sL(id,t);try{var o={method:m,headers:{'Content-Type':'application/json'}};if(b)o.body=JSON.stringify(b);var r=await fetch(ep,o);var d=await r.json();var tm=d.keygen_time_ms||d.total_time_ms||d.encrypt_time_ms||d.attest_time_ms||d.handshake_time_ms||d.embed_time_ms||'';sR(id,t,d,tm)}catch(e){sR(id,t,{status:'error',error:e.message},'')}}
+function runV(){run('/api/vault/encrypt','POST','rv','AES-256-GCM',{plaintext:document.getElementById('vi').value})}
+function runZ(){run('/api/zkp/attest','POST','rz','ZKP Attestation',{score:85,threshold:80,framework:'CRA'})}
+function runW(){run('/api/watermark/embed','POST','rw','Watermark',{text:document.getElementById('wi').value})}
+
+var TIERS={STARTER:{color:'var(--green)',bg:'var(--green-dim)',cls:'tag-starter'},BUSINESS:{color:'var(--cyan)',bg:'var(--cyan-dim)',cls:'tag-business'},ENTERPRISE:{color:'var(--purple)',bg:'var(--purple-dim)',cls:'tag-enterprise'},SOVEREIGN:{color:'#ff6699',bg:'#ff336622',cls:'tag-sovereign'}};
+async function loadM(){try{var r=await fetch('/api/modules');var d=await r.json();var c=d.total||0;document.getElementById('stM').textContent=c;var g=document.getElementById('am');var h='';var m=d.modules||{};var n=Object.keys(m).sort();for(var i=0;i<n.length;i++){var nm=n[i];var inf=m[nm];var dn=nm.replace('q_','Q-').replace(/_/g,'-').toUpperCase();var tier=inf.tier||'BUSINESS';var ti=TIERS[tier]||TIERS.BUSINESS;var cl=inf.loaded?ti.color:'var(--red)';var isSov=(tier==='SOVEREIGN');h+='<div class="mci"><div class="md" style="background:'+cl+'"></div><div><div class="mn">'+esc(dn)+'</div>';if(isSov){h+='<div class="ms" style="color:#ff6699">\u26a0 Authorization required</div>'}else{var st=inf.loaded?'\u25cf LOADED':'\u25cb NOT LOADED';h+='<div class="ms" style="color:'+cl+'">'+st+'</div>'}h+='<span class="mt" style="background:'+ti.bg+';color:'+ti.color+'">'+tier+'</span></div></div>'}if(h)g.innerHTML=h}catch(e){console.error(e)}}
+loadM();</script>
+{% endraw %}
+</body>
+</html>
